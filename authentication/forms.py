@@ -1,14 +1,9 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import get_user_model
 
 
-class RegisterForm(forms.Form):
-    username = forms.CharField(required=True, min_length=4, max_length=16, strip=True)
-    email = forms.EmailField(
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Please enter a valid email address",
-            }
-        ),
-    )
+class RegisterForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        models = get_user_model()
+        fields = ("email",)
