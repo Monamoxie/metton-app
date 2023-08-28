@@ -9,6 +9,15 @@
   </head>
   <body>
     <h1>Hello, world!</h1>
+    {% block message %}
+      {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endblock%}
     {% block section %}{% endblock %}
   </body>
 </html>

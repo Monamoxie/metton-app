@@ -1,1 +1,19 @@
-Ready to login
+{% extends "Base/base.html" %}
+
+{% block section %}
+ Hello world. This is ready to login
+ <form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" name="password">
+    </div>
+    <div class="form-row">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+ </form>
+{% endblock %}

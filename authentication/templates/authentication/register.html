@@ -2,7 +2,6 @@
 
 {% block section %}
  Hello world. This is ready to register
-
  <form action="{% url 'register' %}" method="post">
     {% csrf_token %}
     {{ form.as_div }}
