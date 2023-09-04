@@ -1,12 +1,13 @@
-{% extends "Base/base.html" %}
+{% extends "Base/auth.html" %}
 
-{% block section %}
- Hello world. This is ready to register
- <form action="{% url 'register' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_div }}
-    <div class="form-row">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
- </form>
-{% endblock %}
+{% block authForm %}
+    <h3>Welcome <strong>Back</strong></h3>
+        <p class="mb-4">dddLorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+        <form action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_div }}
+            <div class="form-row">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+ {% endblock %}

@@ -1,0 +1,16 @@
+{% extends './base.html' %}
+
+{% block body %}
+    <div class="d-lg-flex auth-wrapper">
+        <div class="auth-form-area order-1 order-md-1">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-7">
+                        {% block authForm %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="auth-bg order-2 order-md-2"></div>
+    </div
+{% endblock %}
