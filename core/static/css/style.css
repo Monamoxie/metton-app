@@ -17,30 +17,30 @@ body {
     background-color: var(--purple);
 }
 
-
-
 .main-nav a {
     color: var(--white);
     font-weight: 500;
     font-size: 16px;
 }
 
+
+/* Authentication */
+.auth-wrapper {
+    margin-top: 0;
+}
+
 .auth-bg {
     background-image: url("/assets/img/bg.jpeg");
-}
-
-.content {
-    padding: 7rem 0;
-}
-
-h2 {
-    font-size: 20px;
 }
 
 .auth-wrapper,
 .auth-wrapper .container>.row {
     height: 100vh;
     min-height: 700px;
+}
+
+.auth-wrapper .auth-form-area .auth-box {
+    padding: 60px 80px;
 }
 
 @media (max-width: 991.98px) {

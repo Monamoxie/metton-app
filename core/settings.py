@@ -35,15 +35,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "authentication",
-    "dashboard",
-    "django.contrib.admin",
-    "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_dump_die",
+    "dashboard",
+    "authentication",
+    "django.contrib.admin",
+    "django.contrib.auth",
 ]
 
 AUTH_USER_MODEL = "dashboard.User"

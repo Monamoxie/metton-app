@@ -13,7 +13,7 @@
     
     {% block message %}
       {% if messages %}
-        <div>
+        <div class="mt-3">
             {% for message in messages %}
               <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
             {% endfor %}

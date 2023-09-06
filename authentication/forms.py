@@ -11,10 +11,17 @@ class RegisterForm(UserCreationForm):
         ),
     )
 
-    password1 = forms.TextInput(
+    password1 = forms.CharField(
         label="Choose a Password",
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Password"}
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Create Password"}
+        ),
+    )
+
+    password2 = forms.CharField(
+        label="Confirm your Password",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Confirm Password"}
         ),
     )
 
