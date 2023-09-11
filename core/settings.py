@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "dashboard.User"
 
+LOGIN_URL = '/auth/login'
+
 MESSAGE_TAGS = {
     messages.INFO: "alert-primary",
     messages.SUCCESS: "alert-success",
