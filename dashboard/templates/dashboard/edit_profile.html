@@ -1,0 +1,41 @@
+{% extends "Base/dashboard.html" %}
+
+{% block dashboard-content %}
+    <div class="card text-center">
+        <div class="card-header">
+            <h3 class="card-title">Edit Profile</h3>
+        </div>
+        <div class="card-body profile-form">
+            <form method="POST" action="{% url 'edit-profile' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-5" >
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <div class="profile-photo-preview mb-3">
+                                    <img src="http://placehold.it/180" alt="Profile Photo" />
+                                </div>
+                                <input type="file" class="form-control" name="profile_photo" onchange="previewProfilePhoto(this);">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        {% for field in form %}
+                            <div class="form-group row">
+                                <label for="" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                                <div class="col-sm-7">
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group m-auto">
+                            <button type="submit" class="btn btn-primary btn-block">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
