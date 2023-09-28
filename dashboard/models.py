@@ -14,6 +14,10 @@ class User(AbstractUser):
 
     email = models.EmailField("email_address", unique=True)
     name = models.CharField("name", max_length=190, blank=True)
+    company = models.CharField("company", max_length=190, blank=True)
+    position = models.CharField("position", max_length=190, blank=True)
+    profile_summary = models.TextField("profile_summary", blank=True)
+    profile_photo = models.CharField("profile_photo", max_length=190, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

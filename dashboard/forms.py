@@ -11,4 +11,4 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         exclude = ("user",)
-        # fields = []
+        fields = ["name", "company", "position", "profile_summary"]
