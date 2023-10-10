@@ -1,9 +1,18 @@
+import os
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager,
     AbstractUser,
     UserManager as PackageUserManager,
 )
+
+
+def rename_file(instance, filename):
+    directory = "profile_photos/"
+    file_ext = filename.split(".")[-1]
+
+    file_name = "profile_photo_" + str(instance.id) + "." + file_ext
+    return directory + file_name
 
 
 # Create your models here.
@@ -17,7 +26,18 @@ class User(AbstractUser):
     company = models.CharField("company", max_length=190, blank=True)
     position = models.CharField("position", max_length=190, blank=True)
     profile_summary = models.TextField("profile_summary", blank=True)
-    profile_photo = models.CharField("profile_photo", max_length=190, blank=True)
+    # profile_photo = models.CharField("profile_photo", max_length=190, blank=True)
+    profile_photo = models.ImageField(
+        name="profile_photo",
+        upload_to=rename_file,
+        blank=True,
+        null=True,
+        width_field="width_field",
+        height_field="height_field",
+    )
+
+    height_field = models.IntegerField(default=180)
+    width_field = models.IntegerField(default=180)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -62,3 +82,8 @@ class CustomUserManager(BaseUserManager):
     #     return package_user_manager.with_perm(
     #         perm, is_active=True, include_superusers=True, backend=None, obj=None
     #     )
+
+
+class Utilities:
+    def renameFile():
+        pass

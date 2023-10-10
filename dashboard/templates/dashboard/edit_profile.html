@@ -6,27 +6,33 @@
             <h3 class="card-title">Edit Profile</h3>
         </div>
         <div class="card-body profile-form">
-            <form method="POST" action="{% url 'edit-profile' %}">
+            <form method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-5" >
                         <div class="form-group">
                             <div class="col-md-10">
                                 <div class="profile-photo-preview mb-3">
-                                    <img src="http://placehold.it/180" alt="Profile Photo" />
+                                    {% if user.profile_photo is not None %}
+                                        <img src="{{ user.profile_photo.url }}" alt="Profile Photo" />
+                                    {% else %}                                        
+                                        <img src="http://placehold.it/180" alt="Profile Photo" />
+                                    {% endif %}
                                 </div>
-                                <input type="file" class="form-control" name="profile_photo" onchange="previewProfilePhoto(this);">
+                                <input type="file" class="form-control" name="profile_photo" id="id_profile_photo" accept="image/*" onchange="previewProfilePhoto(this);">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-7">
                         {% for field in form %}
-                            <div class="form-group row">
-                                <label for="" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                                <div class="col-sm-7">
-                                    {{ field }}
+                            {% if field.name != 'profile_photo' %}
+                                <div class="form-group row">
+                                    <label for="" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                                    <div class="col-sm-7">
+                                        {{ field }}
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="col-md-12">
