@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as authLogin, logout as authLogout
 from django.contrib import messages
 from django.shortcuts import redirect, render
+
+from dashboard.models import User
 from .forms import RegisterForm, LoginForm
 from django.contrib.auth import get_user_model
 
