@@ -1,5 +1,18 @@
 {% extends "Base/dashboard.html" %}
 
+{% block head_script %}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'timeGridWeek'
+        });
+        calendar.render();
+      });
+    </script>
+{% endblock %}
+
 {% block dashboard-content %}
 <div class="row">
     <div class="col-md-4">
@@ -10,92 +23,37 @@
                 <img src="http://placehold.it/180" alt="Profile Photo" />
             {% endif %}
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="profile-head">
-            <h2>{{ user.name }} </h2>
-            <h6 class="mb-5">
-                {% if user.position is not None %}
-                    {{ user.position }},
-                {% endif %}
-                {{ user.company }}
-            </h6>
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="meetings">
-            <h4> Friday, 28th Janaury </h4>
-            <span>Next Meeting</span>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
         <div class="profile-work">
             <p>ABOUT ME</p>
             {{ user.profile_summary }}
         </div>
     </div>
     <div class="col-md-8">
-        <div class="tab-content profile-tab" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                
-            </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Experience</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>Expert</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Hourly Rate</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>10$/hr</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Total Projects</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>230</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>English Level</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>Expert</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Availability</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>6 months</p>
-                            </div>
-                        </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label>Your Bio</label><br/>
-                        <p>Your detail description</p>
-                    </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="profile-head">
+                    <h2>{{ user.name }} </h2>
+                    <h6 class="mb-5">
+                        {% if user.position is not None %}
+                            {{ user.position }},
+                        {% endif %}
+                        {{ user.company }}
+                    </h6>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <div class="meetings">
+                    <h4> Friday, 28th Janaury </h4>
+                    <span>Next Meeting</span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">S</a>
+                        </li>
+                    </ul>
+                    <div id='calendar'></div>
             </div>
         </div>
     </div>
