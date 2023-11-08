@@ -31,8 +31,8 @@
     <div class="col-md-8">
         <div class="row">
             <div class="col-md-8">
-                <div class="profile-head">
-                    <h2>{{ user.name }} </h2>
+                <div class="profile-header-section">
+                    <h2>{{ user.name }}</h2>
                     <h6 class="mb-5">
                         {% if user.position is not None %}
                             {{ user.position }},
@@ -50,7 +50,7 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">S</a>
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Schedule</a>
                         </li>
                     </ul>
                     <div id='calendar'></div>
