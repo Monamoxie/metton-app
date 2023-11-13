@@ -54,3 +54,22 @@ def changePassword(request):
         form = ChangePasswordForm(instance=user)
 
     return render(request, "dashboard/password_update.html", {"form": form})
+
+
+@login_required
+def manageSchedule(request):
+    user = User.objects.get(id=request.user.id)
+    if request.method == "POST":
+        form = ChangePasswordForm(request.POST or None, instance=user)
+        if form.is_valid():
+            user.set_password(form.cleaned_data.get("password1"))
+            user.save()
+
+            messages.success(request, "Password update was successful!")
+            return redirect("dashboard")
+        else:
+            messages.error(request, form.errors)
+    else:
+        form = ChangePasswordForm(instance=user)
+
+    return render(request, "dashboard/password_update.html", {"form": form})

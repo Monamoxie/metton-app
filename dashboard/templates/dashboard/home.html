@@ -49,24 +49,32 @@
                     start: '2023-11-18T10:00:00',
                     end: '2023-11-20T16:00:00',
                     display: 'background'
+                },
+                {
+                    groupId: 'testGroupId',
+                    start: '2014-11-10T10:00:00',
+                    end: '2014-11-10T16:00:00',
+                    display: 'inverse-background'
                 }
             ],
-            // eventClick: function(arg) { // confirm and delete event or event re-occurence
-            //     if (confirm('delete event?')) {
-            //     arg.event.remove()
-            //     }
-            // },
+            eventClick: function(arg) { // confirm and delete event or event re-occurence
+                // if (confirm('delete event?')) {
+                //     arg.event.remove()
+                // }
+                // console.log(arg, 'ccc')
+            },
             eventColor: '#7e0cf5',
             navLinks: true,
             navLinkDayClick: function(date, jsEvent) {
                 // when a date is clicked
             },
             dateClick: function(info) {
-                console.log('clicked ' + info.dateStr);
+                // console.log('clicked ' + info.dateStr, info.view);
+                console.log(info.view.calendar.currentData.options)
             },
             selectable: true,
             select: function(info) {
-                console.log('selected ' + info.startStr + ' to ' + info.endStr);
+                // console.log('selected ' + info.startStr + ' to ' + info.endStr);
             },
             unselectAuto: false,
             selectOverlap: true,
@@ -97,7 +105,7 @@
     </script>
     <style>
         .fc .fc-non-business {
-            background: #900;
+            /* background: #900; */
         }
     </style>
 {% endblock %}
