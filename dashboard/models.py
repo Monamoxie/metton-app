@@ -1,4 +1,6 @@
 import os
+from time import timezone
+import uuid
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager,
@@ -26,7 +28,6 @@ class User(AbstractUser):
     company = models.CharField("company", max_length=190, blank=True)
     position = models.CharField("position", max_length=190, blank=True)
     profile_summary = models.TextField("profile_summary", blank=True)
-    # profile_photo = models.CharField("profile_photo", max_length=190, blank=True)
     profile_photo = models.ImageField(
         name="profile_photo",
         upload_to=rename_file,
@@ -84,6 +85,20 @@ class CustomUserManager(BaseUserManager):
     #     )
 
 
-class Utilities:
-    def renameFile():
-        pass
+class Event(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField("title", blank=True, max_length=100)
+    start_date = models.DateField("start_date", blank=False)
+    start_time = models.TimeField("start_time", blank=False)
+    end_date = models.DateField("end_date", blank=True)
+    end_time = models.TimeField("end_time", blank=True)
+    frequency = models.CharField("frequency", blank=True, max_length=100)
+    owner_closed = models.BooleanField("owner_closed", blank=False, default=False)
+    note = models.TextField("note", blank=True, max_length=250)
+    timezone = models.CharField("timezone", blank=True, max_length=100)
+    attendees = models.TextField("attendee_emails", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Event {self.id}"

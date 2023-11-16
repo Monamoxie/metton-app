@@ -1,6 +1,7 @@
 import os
 from django import forms
 from django.contrib.auth import get_user_model
+from .models import Event
 
 
 class EditProfileForm(forms.ModelForm):
@@ -78,3 +79,22 @@ class ChangePasswordForm(forms.ModelForm):
         model = get_user_model()
         exclude = ("user",)
         fields = []
+
+
+# Set Unavailable dates
+class UnavailableDatesForm(forms.ModelForm):
+    start_date = forms.DateField(
+        label="Choose a start date",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "password": "password",
+                "placeholder": "Create Password",
+            }
+        ),
+    )
+
+    class Meta:
+        model = Event
+        exclude = ("event",)
+        fields = ["start_date", "start_time", "end_date", "end_time", "frequency"]
