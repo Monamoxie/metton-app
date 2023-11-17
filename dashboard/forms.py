@@ -2,6 +2,8 @@ import os
 from django import forms
 from django.contrib.auth import get_user_model
 from .models import Event
+import datetime
+from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 
 class EditProfileForm(forms.ModelForm):
@@ -84,14 +86,16 @@ class ChangePasswordForm(forms.ModelForm):
 # Set Unavailable dates
 class UnavailableDatesForm(forms.ModelForm):
     start_date = forms.DateField(
+        required=True,
         label="Choose a start date",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "password": "password",
-                "placeholder": "Create Password",
-            }
-        ),
+        widget=DatePicker(),
+        initial="2023-11-01",
+        # options={"minDate": "2023-11-01"},
+    )
+
+    start_time = forms.TimeField(
+        label="Choose a start time",
+        widget=TimePicker(attrs={"class": "form-control", "type": "time"}),
     )
 
     class Meta:

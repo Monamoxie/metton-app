@@ -59,18 +59,18 @@ def changePassword(request):
 
 @login_required
 def manageSchedule(request):
-    user = Event(user=request.user, owner_closed=True)
+    event = Event(user=request.user, owner_closed=True)
     if request.method == "POST":
-        form = UnavailableDatesForm(request.POST or None, instance=user)
+        form = UnavailableDatesForm(request.POST or None, instance=event)
         if form.is_valid():
-            user.set_password(form.cleaned_data.get("password1"))
-            user.save()
+            # user.set_password(form.cleaned_data.get("password1"))
+            # user.save()
 
             messages.success(request, "Password update was successful!")
             return redirect("dashboard")
         else:
             messages.error(request, form.errors)
     else:
-        form = ChangePasswordForm(instance=user)
+        form = UnavailableDatesForm(instance=event)
 
     return render(request, "dashboard/manage_schedules.html", {"form": form})
