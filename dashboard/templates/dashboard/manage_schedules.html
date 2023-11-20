@@ -1,5 +1,142 @@
 {% extends "Base/dashboard.html" %}
+{% block head_content %}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('manage-schedules');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            themeSystem: 'bootstrap5',
+            initialView: 'timeGridWeek',
+            firstDay: 1,
+            headerToolbar: { center: 'dayGridMonth,timeGridWeek,timeGridDay,multiMonthYear', },
+            views: {
+                dayGridMonth: { // name of view
+                    titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
+                },
+                timeGridWeek: {
+                    titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
+                }
+            },
+            events: [
+                {
+                    id: 'UUID1',
+                    title  : 'event1',
+                    start  : '2023-11-13T12:00:00',
+                    end    : '2023-11-13T14:00:00',
+                    allDay: false
+                },
+                {
+                    id: 'UUID2',
+                    title  : 'event2',
+                    startRecur: '2023-11-13',
+                    // endRecur: '2023-11-14',
+                    startTime  : '13:00:00',
+                    endTime    : '14:00:00',
+                    daysOfWeek: [1,3,5], // Repeat frequency
+                    allDay: false,
+                    groupId: 'Series-group-id',
+                },
+                {
+                    id: 'UUID3',
+                    title  : 'event3',
+                    start  : '2023-11-15T12:30:00',
+                    start  : '2023-11-16T00:00:00',
+                    allDay : true
+                },
+                {
+                    id: 'UUID4',
+                    start: '2023-11-24T00:00:00',
+                    end: '2023-11-25T23:59:00',
+                    display: 'background',
+                    backgroundColor: '#900',
+                    selectable: false,
+                    classNames: "fc-unavailable",
+                    title  : 'Unavailable',
+                    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
+                },
+            ],
+            // eventClick: function(arg) { // confirm and delete event or event re-occurence
+            //     // if (confirm('delete event?')) {
+            //     //     arg.event.remove()
+            //     // }
+            //     console.log(arg.event)
+            // },
+            eventColor: '#7e0cf5',
+            navLinks: true,
+            navLinkDayClick: function(date, jsEvent) {
+                // when a date is clicked
+            },
+            dateClick: function(info) {
+                // console.log('clicked ' + info.dateStr, info.view);
+                // console.log(info.view.calendar.currentData.options)
+                const ve = calendar.getEventById('UUID4')
+                // console.log( ve )
+                const currEl = info.dayEl
+                const non_business_day = currEl.querySelector(".fc-unavailable")
+            
+                // if (non_business_day !== null && non_business_day !== undefined) {
+                //     console.log('true', non_business_day, currEl)
+                // } else {
+                //     console.log('false', currEl)
+                // }
+            },
+            selectable: true,
+            eventMouseEnter: function (info) {
+                console.log(info)
+                const elem = info.jsEvent.srcElement
+                const select_region = elem.className
 
+                elem.setAttribute('title', 'Hello world!')
+               
+            },
+            select: function(info) {
+                const elem = info.jsEvent.srcElement
+                const select_region = elem.className
+
+                // elem.setAttribute('title', 'Hello world!')
+                // console.log('selected ' + info.startStr + ' to ' + info.endStr);
+
+                $('.' + select_region).tooltip({
+                    show: true,
+                    html: true,
+                })
+                
+                // $('.' + select_region).on('show.bs.tooltip', function () {
+                //     $('.' + select_region).tooltip({
+                //         update: true,
+                //     })
+                // })
+              
+            },
+            unselectAuto: false,
+            selectOverlap: true,
+            nowIndicator: true,
+            // now: // set from DB, per user's timezone and locale,
+            // businessHours: {
+            //     // days of week. an array of zero-based day of week integers (0=Sunday)
+            //     daysOfWeek: [ 1, 2, 3, 4 ], // Monday - Thursday
+
+            //     startTime: '10:00', // a start time (10am in this example)
+            //     endTime: '18:00', // an end time (6pm in this example)
+            // },
+            // businessHours: [ // specify an array instead
+            //     {
+            //         daysOfWeek: [ 1, 2, 3 ], // Monday, Tuesday, Wednesday
+            //         startTime: '08:00', // 8am
+            //         endTime: '18:00' // 6pm
+            //     },
+            //     {
+            //         daysOfWeek: [ 4, 5 ], // Thursday, Friday
+            //         startTime: '10:00', // 10am
+            //         endTime: '16:00' // 4pm
+            //     }
+            // ]
+        });
+        calendar.render();
+      });
+    </script>
+{% endblock %}
 {% block dashboard-content %}
     <div class="card">
         <div class="card-header">
@@ -7,7 +144,7 @@
             <small><i class="fa fa-info-circle"></i> No entry will be accepted within these dates/hours. You can make it a one-off or a re-occurence.</small>
         </div>
         <div class="card-body profile-form">
-            <form method="POST" action="{% url 'password.update' %}" >
+            <!-- <form method="POST" action="{% url 'password.update' %}" >
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-12">
@@ -22,11 +159,16 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group m-auto">
-                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                            <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
                         </div>
                     </div>
                 </div>
-            </form>
+            </form> -->
+            <div id='manage-schedules'></div>
         </div>
+        
+        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" title="<em>Tooltip</em> <u>with</u> <b>HTML</b>">
+            Tooltip with HTML
+        </button>
     </div>
 {% endblock %}

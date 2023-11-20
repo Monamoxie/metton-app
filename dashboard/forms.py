@@ -1,8 +1,8 @@
+from dataclasses import fields
 import os
 from django import forms
 from django.contrib.auth import get_user_model
 from .models import Event
-import datetime
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 
@@ -88,17 +88,58 @@ class UnavailableDatesForm(forms.ModelForm):
     start_date = forms.DateField(
         required=True,
         label="Choose a start date",
-        widget=DatePicker(),
-        initial="2023-11-01",
-        # options={"minDate": "2023-11-01"},
+        widget=DatePicker(
+            options={
+                "minDate": "2023-11-20",
+                "disabledDates": ["2023-11-24", "2023-11-27"],
+                # "enabledHours": [9, 10, 12, 13, 14, 15, 16],
+                "ignoreReadonly": False,
+                "keepInvalid": False,
+                "useCurrent": False,
+                # "disabledTimeIntervals": [
+                #     [moment({h: 0}), moment({h: 8})],
+                #     [moment({h: 18}), moment({h: 24})],
+                # ],
+                # "disabledTimeIntervals": True,
+            },
+            attrs={
+                "class": "form-control",
+                "type": "date",
+                "append": "fa fa-calendar",
+                "input_toggle": False,
+                "icon_toggle": True,
+                "readonly": True,
+            },
+        ),
     )
 
     start_time = forms.TimeField(
         label="Choose a start time",
-        widget=TimePicker(attrs={"class": "form-control", "type": "time"}),
+        widget=TimePicker(
+            options={
+                "format": "HH:mm",
+                # "disabledHours": True,
+                # "disabledHours": [0, 1, 2, 3, 4, 5, 6, 7, 10],
+                # 2, 3, 6, 9, 10, 12-17
+                "useCurrent": False,
+                "disabledTimeIntervals": True,
+                "disabledTimeIntervals": [
+                    [0, 8],
+                ],
+            },
+            attrs={
+                "class": "form-control",
+                "type": "time",
+                "append": "fa fa-clock",
+                "input_toggle": False,
+                "icon_toggle": True,
+                "readonly": True,
+            },
+        ),
     )
 
     class Meta:
         model = Event
         exclude = ("event",)
-        fields = ["start_date", "start_time", "end_date", "end_time", "frequency"]
+        # fields = ["start_date", "start_time", "end_date", "end_time", "frequency"]
+        fields = []

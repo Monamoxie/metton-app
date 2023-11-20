@@ -1,6 +1,6 @@
 {% extends "Base/dashboard.html" %}
 {% load static %}
-{% block head_script %}
+{% block head_content %}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -46,8 +46,8 @@
                 },
                 {
                     id: 'UUID4',
-                    start: '2023-11-18T00:00:00',
-                    end: '2023-11-20T23:59:00',
+                    start: '2023-11-24T00:00:00',
+                    end: '2023-11-25T23:59:00',
                     display: 'background',
                     backgroundColor: '#900',
                     selectable: false,
@@ -83,7 +83,7 @@
             },
             selectable: true,
             select: function(info) {
-                // console.log('selected ' + info.startStr + ' to ' + info.endStr);
+                console.log('selected ' + info.startStr + ' to ' + info.endStr);
                 // console.log(info)
             },
             unselectAuto: false,
@@ -113,14 +113,6 @@
         calendar.render();
       });
     </script>
-    <style>
-        .fc .fc-non-business {
-            background: #900; 
-        }
-        .fc .fc-unavailable {
-            background: orange;
-        }
-    </style>
 {% endblock %}
 
 {% block dashboard-content %}

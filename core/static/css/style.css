@@ -319,3 +319,11 @@ body {
     width: 100%;
     height: 100%;
 }
+
+.fc .fc-non-business {
+    background: #900;
+}
+
+.fc .fc-unavailable {
+    background: orange;
+}
