@@ -1,7 +1,13 @@
 {% extends "Base/dashboard.html" %}
 {% block head_content %}
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script> -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('manage-schedules');
@@ -82,31 +88,40 @@
                 // }
             },
             selectable: true,
-            eventMouseEnter: function (info) {
-                console.log(info)
-                const elem = info.jsEvent.srcElement
-                const select_region = elem.className
+            selectMirror: true,
+            // eventMouseEnter: function (info) {
+            //     console.log(info)
+            //     const elem = info.jsEvent.srcElement
+            //     const select_region = elem.className
 
-                elem.setAttribute('title', 'Hello world!')
+            //     elem.setAttribute('title', 'Hello world!')
                
-            },
+            // },
+            
             select: function(info) {
-                const elem = info.jsEvent.srcElement
-                const select_region = elem.className
-
-                // elem.setAttribute('title', 'Hello world!')
-                // console.log('selected ' + info.startStr + ' to ' + info.endStr);
-
-                $('.' + select_region).tooltip({
-                    show: true,
-                    html: true,
-                })
                 
-                // $('.' + select_region).on('show.bs.tooltip', function () {
-                //     $('.' + select_region).tooltip({
-                //         update: true,
-                //     })
-                // })
+                const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
+                const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
+
+                document.getElementById('id_start_date').value = start_date
+                document.getElementById('id_start_time').value = start_time
+                document.getElementById('id_end_date').value = end_date
+                document.getElementById('id_end_time').value = end_time
+                 
+
+                // console.log(start_date, start_time)
+                // console.log(end_date, end_time)
+                setTimeout(() => {
+                    $('#manage-schedule-modal').modal({
+                        show: true
+                    }) 
+                }, 500);
+                $('#manage-schedule-modal').on('hidden.bs.modal', function (e) {
+                    // do something...
+                    console.log('cleared')
+                    calendar.unselect()
+                        calendar.scrollToTime(2)
+                })
               
             },
             unselectAuto: false,
@@ -144,31 +159,54 @@
             <small><i class="fa fa-info-circle"></i> No entry will be accepted within these dates/hours. You can make it a one-off or a re-occurence.</small>
         </div>
         <div class="card-body profile-form">
-            <!-- <form method="POST" action="{% url 'password.update' %}" >
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-12">
-                        {% for field in form %}
-                            <div class="form-group row mb-2">
-                                <label for="" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                                <div class="col-sm-7">
-                                    {{ field }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group m-auto">
-                            <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
-                        </div>
-                    </div>
-                </div>
-            </form> -->
             <div id='manage-schedules'></div>
         </div>
-        
-        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" title="<em>Tooltip</em> <u>with</u> <b>HTML</b>">
-            Tooltip with HTML
-        </button>
+    </div>
+    <div class="modal"  role="dialog" id="manage-schedule-modal">
+        <form method="POST" action="{% url 'manage.schedule' %}" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Please confirm your changes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="fa fa-times-circle text-danger"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body pl-3 pr-3">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group row mb-2">
+                                <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
+                                <div class="col-md-12">
+                                    <div class="list-group">
+                                        {% for key, choice in choices.items %}
+                                            <label class="list-group-item">
+                                                <input class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
+                                                {{ choice }}
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div> 
+                            <hr/>
+                            {% for field in form %}
+                                {% if field.name != 'frequency' %}
+                                    <div class="form-group row mb-2">
+                                        <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                                        <div class="col-sm-7">
+                                            {{ field }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock %}

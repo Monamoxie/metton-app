@@ -85,55 +85,67 @@ class ChangePasswordForm(forms.ModelForm):
 
 # Set Unavailable dates
 class UnavailableDatesForm(forms.ModelForm):
+    # frequency = forms.CharField(
+    #     required=False,
+    #     label="Choose frequency",
+    #     widget=forms.CheckboxSelectMultiple(
+    #         attrs={
+    #             "class": "form-control form-check-input me-1",
+    #         },
+    #         choices=(
+    #             (0, "R1"),
+    #             (1, "R2"),
+    #             (2, "F"),
+    #         ),
+    #     ),
+    # )
+
     start_date = forms.DateField(
         required=True,
-        label="Choose a start date",
+        label="Start Date",
         widget=DatePicker(
-            options={
-                "minDate": "2023-11-20",
-                "disabledDates": ["2023-11-24", "2023-11-27"],
-                # "enabledHours": [9, 10, 12, 13, 14, 15, 16],
-                "ignoreReadonly": False,
-                "keepInvalid": False,
-                "useCurrent": False,
-                # "disabledTimeIntervals": [
-                #     [moment({h: 0}), moment({h: 8})],
-                #     [moment({h: 18}), moment({h: 24})],
-                # ],
-                # "disabledTimeIntervals": True,
-            },
             attrs={
                 "class": "form-control",
                 "type": "date",
-                "append": "fa fa-calendar",
-                "input_toggle": False,
-                "icon_toggle": True,
-                "readonly": True,
+                "disabled": "disabled",
             },
         ),
     )
 
     start_time = forms.TimeField(
-        label="Choose a start time",
+        required=True,
+        label="Start Time",
         widget=TimePicker(
-            options={
+            attrs={
                 "format": "HH:mm",
-                # "disabledHours": True,
-                # "disabledHours": [0, 1, 2, 3, 4, 5, 6, 7, 10],
-                # 2, 3, 6, 9, 10, 12-17
-                "useCurrent": False,
-                "disabledTimeIntervals": True,
-                "disabledTimeIntervals": [
-                    [0, 8],
-                ],
+                "class": "form-control",
+                "type": "date",
+                "disabled": "disabled",
             },
+        ),
+    )
+
+    end_date = forms.DateField(
+        required=True,
+        label="End Date",
+        widget=DatePicker(
             attrs={
                 "class": "form-control",
+                "type": "date",
+                "disabled": "disabled",
+            },
+        ),
+    )
+
+    end_time = forms.TimeField(
+        required=True,
+        label="End Time",
+        widget=TimePicker(
+            attrs={
+                "format": "HH:mm",
+                "class": "form-control",
+                "disabled": "disabled",
                 "type": "time",
-                "append": "fa fa-clock",
-                "input_toggle": False,
-                "icon_toggle": True,
-                "readonly": True,
             },
         ),
     )
@@ -141,5 +153,4 @@ class UnavailableDatesForm(forms.ModelForm):
     class Meta:
         model = Event
         exclude = ("event",)
-        # fields = ["start_date", "start_time", "end_date", "end_time", "frequency"]
         fields = []

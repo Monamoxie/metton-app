@@ -60,6 +60,8 @@ def changePassword(request):
 @login_required
 def manageSchedule(request):
     event = Event(user=request.user, owner_closed=True)
+    choices = Event().get_frequency_choices
+
     if request.method == "POST":
         form = UnavailableDatesForm(request.POST or None, instance=event)
         if form.is_valid():
@@ -73,4 +75,8 @@ def manageSchedule(request):
     else:
         form = UnavailableDatesForm(instance=event)
 
-    return render(request, "dashboard/manage_schedules.html", {"form": form})
+    return render(
+        request,
+        "dashboard/manage_schedules.html",
+        {"form": form, "choices": choices},
+    )

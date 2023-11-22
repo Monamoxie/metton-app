@@ -102,3 +102,17 @@ class Event(models.Model):
 
     def __str__(self):
         return f"Event {self.id}"
+
+    def get_frequency_choices(self):
+        choices = {
+            "no": "Once",
+            "0": "Every Sunday",
+            "1": "Every Monday",
+            "2": "Every Tuesday",
+            "3": "Every Wednesday",
+            "4": "Every Thursday",
+            "5": "Every Friday",
+            "6": "Every Saturday",
+        }
+
+        return choices
