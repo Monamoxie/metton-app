@@ -43,6 +43,9 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
+    def __str__(self):
+        return str(self.id)
+
 
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
@@ -94,7 +97,7 @@ class Event(models.Model):
     end_date = models.DateField("end_date", blank=True)
     end_time = models.TimeField("end_time", blank=True)
     frequency = models.CharField("frequency", blank=True, max_length=100)
-    owner_closed = models.BooleanField("owner_closed", blank=False, default=False)
+    closed_dates = models.BooleanField("closed_dates", blank=False, default=False)
     note = models.TextField("note", blank=True, max_length=250)
     timezone = models.CharField("timezone", blank=True, max_length=100)
     attendees = models.TextField("attendee_emails", blank=True)

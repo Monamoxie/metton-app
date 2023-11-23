@@ -14,6 +14,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             themeSystem: 'bootstrap5',
             initialView: 'timeGridWeek',
+            // showNonCurrentDates: false,
             firstDay: 1,
             headerToolbar: { center: 'dayGridMonth,timeGridWeek,timeGridDay,multiMonthYear', },
             views: {
@@ -22,6 +23,11 @@
                 },
                 timeGridWeek: {
                     titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
+                }
+            },
+            validRange: function(nowDate) {
+                return {
+                    start: nowDate, //grey out areas
                 }
             },
             events: [
@@ -39,7 +45,7 @@
                     // endRecur: '2023-11-14',
                     startTime  : '13:00:00',
                     endTime    : '14:00:00',
-                    daysOfWeek: [1,3,5], // Repeat frequency
+                    daysOfWeek: [1,3,5,], // Repeat frequency
                     allDay: false,
                     groupId: 'Series-group-id',
                 },
@@ -108,9 +114,6 @@
                 document.getElementById('id_end_date').value = end_date
                 document.getElementById('id_end_time').value = end_time
                  
-
-                // console.log(start_date, start_time)
-                // console.log(end_date, end_time)
                 setTimeout(() => {
                     $('#manage-schedule-modal').modal({
                         show: true
@@ -163,7 +166,8 @@
         </div>
     </div>
     <div class="modal"  role="dialog" id="manage-schedule-modal">
-        <form method="POST" action="{% url 'manage.schedule' %}" >
+        <form method="POST" action="{% url 'manage.schedule' %}">
+            {% csrf_token %}
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -173,7 +177,6 @@
                         </button>
                     </div>
                     <div class="modal-body pl-3 pr-3">
-                        {% csrf_token %}
                         <div class="row">
                             <div class="form-group row mb-2">
                                 <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
@@ -181,7 +184,7 @@
                                     <div class="list-group">
                                         {% for key, choice in choices.items %}
                                             <label class="list-group-item">
-                                                <input class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
+                                                <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
                                                 {{ choice }}
                                             </label>
                                         {% endfor %}

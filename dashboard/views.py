@@ -40,7 +40,6 @@ def editProfile(request):
 @login_required
 def changePassword(request):
     user = User.objects.get(id=request.user.id)
-    err = ""
     if request.method == "POST":
         form = ChangePasswordForm(request.POST or None, instance=user)
         if form.is_valid():
@@ -59,24 +58,48 @@ def changePassword(request):
 
 @login_required
 def manageSchedule(request):
-    event = Event(user=request.user, owner_closed=True)
     choices = Event().get_frequency_choices
-
     if request.method == "POST":
-        form = UnavailableDatesForm(request.POST or None, instance=event)
+        form = UnavailableDatesForm(request.POST or None)
         if form.is_valid():
-            # user.set_password(form.cleaned_data.get("password1"))
-            # user.save()
-
-            messages.success(request, "Password update was successful!")
-            return redirect("dashboard")
+            # dd(event)
+            event = Event(
+                frequency=get_frequency(form.cleaned_data["frequency"]),
+                user=User.objects.get(id=request.user.id),
+                title="Unavailable",
+                closed_dates=True,
+                start_date=form.cleaned_data["start_date"],
+                start_time=form.cleaned_data["start_time"],
+                end_date=form.cleaned_data["end_date"],
+                end_time=form.cleaned_data["end_time"],
+            )
+            event.save()
+            messages.success(request, "Your schedule has been updated!")
+            return redirect("manage.schedule")
         else:
             messages.error(request, form.errors)
     else:
-        form = UnavailableDatesForm(instance=event)
+        event = Event.objects.filter(user=request.user, closed_dates=True)
+        form = UnavailableDatesForm()
 
     return render(
         request,
         "dashboard/manage_schedules.html",
         {"form": form, "choices": choices},
     )
+
+
+def get_frequency(form_frequencies):
+    frequency = ""
+    if form_frequencies is not None:
+        form_frequencies = eval(form_frequencies)
+        for f in form_frequencies:
+            if f != "no":
+                prepender = (
+                    ","
+                    if len(form_frequencies) != (form_frequencies.index(f) + 1)
+                    else ""
+                )
+                frequency += str(f) + prepender
+
+    return frequency

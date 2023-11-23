@@ -85,21 +85,17 @@ class ChangePasswordForm(forms.ModelForm):
 
 # Set Unavailable dates
 class UnavailableDatesForm(forms.ModelForm):
-    # frequency = forms.CharField(
-    #     required=False,
-    #     label="Choose frequency",
-    #     widget=forms.CheckboxSelectMultiple(
-    #         attrs={
-    #             "class": "form-control form-check-input me-1",
-    #         },
-    #         choices=(
-    #             (0, "R1"),
-    #             (1, "R2"),
-    #             (2, "F"),
-    #         ),
-    #     ),
-    # )
-
+    frequency = forms.CharField(
+        required=True,
+        label="Choose Frequency",
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "form-control",
+                "type": "date",
+                "readonly": "readonly",
+            },
+        ),
+    )
     start_date = forms.DateField(
         required=True,
         label="Start Date",
@@ -107,7 +103,7 @@ class UnavailableDatesForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "type": "date",
-                "disabled": "disabled",
+                "readonly": "readonly",
             },
         ),
     )
@@ -120,7 +116,7 @@ class UnavailableDatesForm(forms.ModelForm):
                 "format": "HH:mm",
                 "class": "form-control",
                 "type": "date",
-                "disabled": "disabled",
+                "readonly": "readonly",
             },
         ),
     )
@@ -132,7 +128,7 @@ class UnavailableDatesForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "type": "date",
-                "disabled": "disabled",
+                "readonly": "readonly",
             },
         ),
     )
@@ -144,7 +140,7 @@ class UnavailableDatesForm(forms.ModelForm):
             attrs={
                 "format": "HH:mm",
                 "class": "form-control",
-                "disabled": "disabled",
+                "readonly": "readonly",
                 "type": "time",
             },
         ),
@@ -152,5 +148,5 @@ class UnavailableDatesForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ("event",)
-        fields = []
+        # exclude = ("event",)
+        fields = ["start_date", "start_time", "frequency", "end_date", "end_time"]
