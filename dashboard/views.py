@@ -1,4 +1,5 @@
 from email import message
+from datetime import datetime
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -85,7 +86,7 @@ def manageSchedule(request):
     return render(
         request,
         "dashboard/manage_schedules.html",
-        {"form": form, "choices": choices},
+        {"form": form, "choices": choices, "weekday_num": datetime.now().isoweekday()},
     )
 
 

@@ -14,8 +14,9 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             themeSystem: 'bootstrap5',
             initialView: 'timeGridWeek',
+            fixedWeekCount: false,
             // showNonCurrentDates: false,
-            firstDay: 1,
+            firstDay: {{ weekday_num }},
             headerToolbar: { center: 'dayGridMonth,timeGridWeek,timeGridDay,multiMonthYear', },
             views: {
                 dayGridMonth: { // name of view
@@ -68,6 +69,10 @@
                     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
                 },
             ],
+            selectConstraint: {
+                // start: moment().format('YYYY-MM-DD'),
+                // end: '2200-01-01'
+            },
             // eventClick: function(arg) { // confirm and delete event or event re-occurence
             //     // if (confirm('delete event?')) {
             //     //     arg.event.remove()
