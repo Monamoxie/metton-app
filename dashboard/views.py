@@ -1,5 +1,10 @@
 from email import message
 from datetime import datetime
+import json
+import dateutil.parser
+from tracemalloc import start
+
+from django.http import JsonResponse
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -90,6 +95,88 @@ def manageSchedule(request):
     )
 
 
+@login_required
+def getEvents(request):
+    params = request.GET
+
+    start_date = get_start_date(params)
+    end_date = get_end_date(params)
+    type = params["type"]
+
+    events = Event.objects.filter(user=request.user, start_date__gte=start_date)
+    data = []
+    for event in events:
+        event_data = {}
+        event_data["id"] = str(event.id)
+        event_data["title"] = str(event.title)
+        event_data["start"] = str(datetime.combine(event.start_date, event.start_time))
+        event_data["end"] = str(datetime.combine(event.end_date, event.end_time))
+
+        # str(dateutil.parser.parse(start_date).date())
+
+        if event.closed_dates is True:
+            event_data["display"] = "background"
+            # event_data["backgroundColor"] = "#900"
+            # event_data["color"] = "#060"
+            event_data["classNames"] = "fc-unavailable"
+            event_data["selectable"] = False
+
+        event_data = dict(event_data)
+        data.append(event_data)
+
+    # dd(data)
+    return JsonResponse(
+        data=data,
+        safe=False,
+    )
+
+    # JsonResponse(
+    #     [
+    #         {
+    #             "id": "UUID1",
+    #             "title": "event1",
+    #             "start": "2023-11-25T12:00:00",
+    #             "end": "2023-11-28T14:00:00",
+    #             "allDay": False,
+    #         },
+    #         {
+    #             "id": "UUID2",
+    #             "title": "event2",
+    #             "startRecur": "2023-11-13",
+    #             # // endRecur: '2023-11-14',
+    #             "startTime": "13:00:00",
+    #             "endTime": "14:00:00",
+    #             "daysOfWeek": [
+    #                 1,
+    #                 3,
+    #                 5,
+    #             ],  # Repeat frequency
+    #             "allDay": False,
+    #             "groupId": "Series-group-id",
+    #         }
+    #         # {
+    #         #     id: 'UUID3',
+    #         #     title  : 'event3',
+    #         #     start  : '2023-11-15T12:30:00',
+    #         #     start  : '2023-11-16T00:00:00',
+    #         #     allDay : true
+    #         # },
+    #         # {
+    #         #     id: 'UUID4',
+    #         #     start: '2023-11-24T00:00:00',
+    #         #     end: '2023-11-25T23:59:00',
+    #         #     display: 'background',
+    #         #     backgroundColor: '#900',
+    #         #     selectable: false,
+    #         #     classNames: "fc-unavailable",
+    #         #     title  : 'Unavailable',
+    #         #     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
+    #         # },
+    #     ],
+    #     safe=False,
+    # )
+
+
 def get_frequency(form_frequencies):
     frequency = ""
     if form_frequencies is not None:
@@ -104,3 +191,21 @@ def get_frequency(form_frequencies):
                 frequency += str(f) + prepender
 
     return frequency
+
+
+def get_start_date(params):
+    if "start" in params:
+        start_date = str(params["start"])
+    else:
+        start_date = str(datetime.now())
+
+    return str(dateutil.parser.parse(start_date).date())
+
+
+def get_end_date(params):
+    if "end" in params:
+        end_date = params["start"]
+    else:
+        end_date = None
+
+    return str(dateutil.parser.parse(end_date).date())
