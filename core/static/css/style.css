@@ -321,7 +321,9 @@ body {
 }
 
 .fc .fc-non-business {
-    background: #900;
+    background: #c0c0c0 !important;
+    opacity: 1 !important;
+    color: #2c3e50 !important;
 }
 
 .fc-unavailable {
