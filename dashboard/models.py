@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
     AbstractUser,
     UserManager as PackageUserManager,
 )
+from django.utils.translation import gettext_lazy as _
 
 
 def rename_file(instance, filename):
@@ -89,6 +90,11 @@ class CustomUserManager(BaseUserManager):
 
 
 class Event(models.Model):
+    class EventTypes(models.TextChoices):
+        PUBLIC = "1", _("Public")
+        NON_BUSINESS_HOURS = "2", _("Non Business Hours")
+        UNAVAILABLE = "3", _("Unavailable")
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField("title", blank=True, max_length=100)
@@ -97,7 +103,10 @@ class Event(models.Model):
     end_date = models.DateField("end_date", blank=True)
     end_time = models.TimeField("end_time", blank=True)
     frequency = models.CharField("frequency", blank=True, max_length=100)
-    closed_dates = models.BooleanField("closed_dates", blank=False, default=False)
+    # closed_dates = models.BooleanField("closed_dates", blank=False, default=False)
+    type = models.CharField(
+        choices=EventTypes.choices, default=EventTypes.PUBLIC, max_length=2
+    )
     note = models.TextField("note", blank=True, max_length=250)
     timezone = models.CharField("timezone", blank=True, max_length=100)
     attendees = models.TextField("attendee_emails", blank=True)

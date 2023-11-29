@@ -9,6 +9,7 @@
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script>
+        let hasBusinessHours = false
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('manage-schedules');
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -81,7 +82,7 @@
                     console.log('there was an error while fetching events!');
                 },
             },
-            selectConstraint: "businessHours",
+            selectConstraint:  "businessHours", // need to check if business hours is set or not
             // selectConstraint: {
             //     // start: moment().format('YYYY-MM-DD'),
             //     // end: '2200-01-01'
@@ -151,6 +152,7 @@
             },
             unselectAuto: false,
             nowIndicator: true,
+            businessHours: {}
             // now: // set from DB, per user's timezone and locale,
             // businessHours: {
             //     // days of week. an array of zero-based day of week integers (0=Sunday)
@@ -159,22 +161,20 @@
             //     startTime: '10:00', // a start time (10am in this example)
             //     endTime: '18:00', // an end time (6pm in this example)
             // },
-            businessHours: [ // specify an array instead
-                {
-                    daysOfWeek: [ 1, 2, 3, 4, 5, ], // Monday, Tuesday, Wednesday
-                    startTime: '8:00', // 8am
-                    endTime: '19:00' // 6pm
-                },
-                // {
-                //     daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6  ], // Thursday, Friday
-                //     startTime: '19:00', // 10am
-                //     endTime: '00:00' // 4pm
-                // }
-            ]
+            // businessHours: [ // specify an array instead
+            //     {
+            //         daysOfWeek: [ 1, 2, 3, 4, 5, ], // Monday, Tuesday, Wednesday
+            //         startTime: '8:00', // 8am
+            //         endTime: '19:00' // 6pm
+            //     },
+            //     // {
+            //     //     daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6  ], // Thursday, Friday
+            //     //     startTime: '19:00', // 10am
+            //     //     endTime: '00:00' // 4pm
+            //     // }
+            // ]
         });
         calendar.render();
-
-        
       }); 
     </script>
 {% endblock %}
@@ -201,7 +201,20 @@
                     </div>
                     <div class="modal-body pl-3 pr-3">
                         <div class="row">
-                            <div class="form-group row mb-2">
+                            <div class="mb-2 pl-3 pr-3">
+                                {% for field in form %}
+                                    {% if field.name != 'frequency' %}
+                                        <div class="form-group row mb-2">
+                                            <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                                            <div class="col-sm-7">
+                                                {{ field }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <hr/>
+                            <div class="form-group row">
                                 <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
                                 <div class="col-md-12">
                                     <div class="list-group">
@@ -214,17 +227,7 @@
                                     </div>
                                 </div>
                             </div> 
-                            <hr/>
-                            {% for field in form %}
-                                {% if field.name != 'frequency' %}
-                                    <div class="form-group row mb-2">
-                                        <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                                        <div class="col-sm-7">
-                                            {{ field }}
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                            
                         </div>
                     </div>
                     <div class="modal-footer">

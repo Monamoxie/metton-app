@@ -73,7 +73,7 @@ def manageSchedule(request):
                 frequency=get_frequency(form.cleaned_data["frequency"]),
                 user=User.objects.get(id=request.user.id),
                 title="Unavailable",
-                closed_dates=True,
+                type=form.cleaned_data["type"],
                 start_date=form.cleaned_data["start_date"],
                 start_time=form.cleaned_data["start_time"],
                 end_date=form.cleaned_data["end_date"],
@@ -85,7 +85,6 @@ def manageSchedule(request):
         else:
             messages.error(request, form.errors)
     else:
-        event = Event.objects.filter(user=request.user, closed_dates=True)
         form = UnavailableDatesForm()
 
     return render(
@@ -114,7 +113,7 @@ def getEvents(request):
 
         # str(dateutil.parser.parse(start_date).date())
 
-        if event.closed_dates is True:
+        if event.type == "unavailable":
             event_data["display"] = "background"
             # event_data["backgroundColor"] = "#900"
             # event_data["color"] = "#060"
