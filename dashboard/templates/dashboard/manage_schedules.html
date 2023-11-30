@@ -82,11 +82,6 @@
                     console.log('there was an error while fetching events!');
                 },
             },
-            selectConstraint:  "businessHours", // need to check if business hours is set or not
-            // selectConstraint: {
-            //     // start: moment().format('YYYY-MM-DD'),
-            //     // end: '2200-01-01'
-            // },
             eventClick: function(arg) { // confirm and delete event or event re-occurence
                 // if (confirm('delete event?')) {
                 //     arg.event.remove()
@@ -152,7 +147,14 @@
             },
             unselectAuto: false,
             nowIndicator: true,
-            businessHours: {}
+            businessHours: function () {
+                return hasBusinessHours
+            },
+            // selectConstraint:  "businessHours", // need to check if business hours is set or not
+            // selectConstraint: {
+            //     // start: moment().format('YYYY-MM-DD'),
+            //     // end: '2200-01-01'
+            // },
             // now: // set from DB, per user's timezone and locale,
             // businessHours: {
             //     // days of week. an array of zero-based day of week integers (0=Sunday)

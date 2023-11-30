@@ -113,7 +113,7 @@ class Event(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Event {self.id}"
+        return f"{self.user.name} - {self.title}"
 
     def get_frequency_choices(self):
         choices = {

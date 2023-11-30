@@ -16,6 +16,7 @@ from dashboard.models import User
 from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
 from django.core.files import File
 import os
+from .services.eventservice import EventService
 
 
 # Create your views here.
@@ -68,12 +69,16 @@ def manageSchedule(request):
     if request.method == "POST":
         form = UnavailableDatesForm(request.POST or None)
         if form.is_valid():
-            # dd(event)
+            type_input_value = (
+                form.cleaned_data["type"] if "type" in form.cleaned_data else 2
+            )  # unavailable
+
+            title = EventService.get_event_title(type_input_value)
             event = Event(
                 frequency=get_frequency(form.cleaned_data["frequency"]),
                 user=User.objects.get(id=request.user.id),
-                title="Unavailable",
-                type=form.cleaned_data["type"],
+                title=title,
+                type=type_input_value,
                 start_date=form.cleaned_data["start_date"],
                 start_time=form.cleaned_data["start_time"],
                 end_date=form.cleaned_data["end_date"],
