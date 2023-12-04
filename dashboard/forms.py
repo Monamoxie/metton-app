@@ -97,7 +97,7 @@ class UnavailableDatesForm(forms.ModelForm):
             choices=(
                 ("", "Please Select"),
                 (
-                    Event.EventTypes.NON_BUSINESS_HOURS,
+                    Event.EventTypes.BUSINESS_HOURS,
                     Event.EventTypes.labels[1],
                 ),
                 (Event.EventTypes.UNAVAILABLE, Event.EventTypes.labels[2]),

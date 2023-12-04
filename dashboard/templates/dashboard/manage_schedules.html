@@ -102,10 +102,10 @@
                         const ve = calendar.getEventById('UUID4')
                         // console.log( ve )
                         const currEl = info.dayEl
-                        const non_business_day = currEl.querySelector(".fc-unavailable")
+                        const business_day = currEl.querySelector(".fc-unavailable")
                     
-                        // if (non_business_day !== null && non_business_day !== undefined) {
-                        //     console.log('true', non_business_day, currEl)
+                        // if (business_day !== null && business_day !== undefined) {
+                        //     console.log('true', business_day, currEl)
                         // } else {
                         //     console.log('false', currEl)
                         // }
@@ -194,8 +194,9 @@
 {% block dashboard-content %}
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title text-left">Unavailable Dates/Hours</h3>
-            <small><i class="fa fa-info-circle"></i> No entry will be accepted within these dates/hours. You can make it a one-off or a re-occurence.</small>
+            <h3 class="card-title text-left">Manage Schedule/Availability</h3>
+            <p><small><i class="fa fa-briefcase text-success"></i> Business Hours: If set, anyone can book an appointment within these slots </small></p>
+            <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going for holiday, an event or just need time off? You can choose and set them as unavailable</small></p>
         </div>
         <div class="card-body profile-form">
             <div id='manage-schedules'></div>

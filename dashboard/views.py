@@ -149,7 +149,7 @@ def getEvents(request):
 @login_required
 def getNonBusinessHours(request):
     events = Event.objects.filter(
-        user=request.user, type=Event.EventTypes.NON_BUSINESS_HOURS
+        user=request.user, type=Event.EventTypes.BUSINESS_HOURS
     )
     data = []
     for event in events:

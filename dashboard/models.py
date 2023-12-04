@@ -92,7 +92,7 @@ class CustomUserManager(BaseUserManager):
 class Event(models.Model):
     class EventTypes(models.TextChoices):
         PUBLIC = "1", _("Public")
-        NON_BUSINESS_HOURS = "2", _("Non Business Hours")
+        BUSINESS_HOURS = "2", _("Business Hours")
         UNAVAILABLE = "3", _("Unavailable")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

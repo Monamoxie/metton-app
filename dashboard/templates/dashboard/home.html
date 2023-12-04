@@ -74,10 +74,10 @@
                 const ve = calendar.getEventById('UUID4')
                 // console.log( ve )
                 const currEl = info.dayEl
-                const non_business_day = currEl.querySelector(".fc-unavailable")
+                const business_day = currEl.querySelector(".fc-unavailable")
             
-                if (non_business_day !== null && non_business_day !== undefined) {
-                    console.log('true', non_business_day, currEl)
+                if (business_day !== null && business_day !== undefined) {
+                    console.log('true', business_day, currEl)
                 } else {
                     console.log('false', currEl)
                 }
