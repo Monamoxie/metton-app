@@ -10,174 +10,185 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script>
         let hasBusinessHours = false
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('manage-schedules');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            themeSystem: 'bootstrap5',
-            initialView: 'timeGridWeek',
-            fixedWeekCount: false,
-            // showNonCurrentDates: false,
-            firstDay: {{ weekday_num }},
-            headerToolbar: { center: 'timeGridWeek,timeGridDay', },
-            views: {
-                dayGridMonth: { // name of view
-                    titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
-                },
-                timeGridWeek: {
-                    titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
-                }
-            },
-            validRange: function(nowDate) {
-                return {
-                    start: nowDate, //grey out areas
-                }
-            },
-            // events: [
-                // {
-                //     id: 'UUID1',
-                //     title  : 'event1',
-                //     start  : '2023-11-13T12:00:00',
-                //     end    : '2023-11-13T14:00:00',
-                //     allDay: false
-                // },
-                // {
-                //     id: 'UUID2',
-                //     title  : 'event2',
-                //     startRecur: '2023-11-13',
-                //     // endRecur: '2023-11-14',
-                //     startTime  : '13:00:00',
-                //     endTime    : '14:00:00',
-                //     daysOfWeek: [1,3,5,], // Repeat frequency
-                //     allDay: false,
-                //     groupId: 'Series-group-id',
-                // },
-                // {
-                //     id: 'UUID3',
-                //     title  : 'event3',
-                //     start  : '2023-11-15T12:30:00',
-                //     start  : '2023-11-16T00:00:00',
-                //     allDay : true
-                // },
-                // {
-                //     id: 'UUID4',
-                //     start: '2023-11-24T00:00:00',
-                //     end: '2023-11-25T23:59:00',
-                //     display: 'background',
-                //     backgroundColor: '#900',
-                //     selectable: false,
-                //     classNames: "fc-unavailable",
-                //     title  : 'Unavailable',
-                //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
-                // },
-            // ],
-            events: {
-                url: "/dashboard/events",
-                method: 'GET',
-                // color: 'yellow',    // an option!
-                // textColor: 'black',  // an option!
-                extraParams: {
-                    type: 'schedule',
-                },
-                failure: function() {
-                    console.log('there was an error while fetching events!');
-                },
-            },
-            eventClick: function(arg) { // confirm and delete event or event re-occurence
-                // if (confirm('delete event?')) {
-                //     arg.event.remove()
-                // }
-            },
-            // eventColor: '#7e0cf5',
-            navLinks: true,
-            navLinkDayClick: function(date, jsEvent) {
-                // when a date is clicked
-            },
-            dateClick: function(info) {
-                // console.log('clicked ' + info.dateStr, info.view);
-                // console.log(info.view.calendar.currentData.options)
-                const ve = calendar.getEventById('UUID4')
-                // console.log( ve )
-                const currEl = info.dayEl
-                const non_business_day = currEl.querySelector(".fc-unavailable")
+        businessHours = false
+
+        document.addEventListener('DOMContentLoaded', function() {
             
-                // if (non_business_day !== null && non_business_day !== undefined) {
-                //     console.log('true', non_business_day, currEl)
-                // } else {
-                //     console.log('false', currEl)
-                // }
-            },
-            selectable: true,
-            selectMirror: true,
-            // eventMouseEnter: function (info) {
-            //     console.log(info)
-            //     const elem = info.jsEvent.srcElement
-            //     const select_region = elem.className
+            function renderCalender() {
+                var calendarEl = document.getElementById('manage-schedules');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    themeSystem: 'bootstrap5',
+                    initialView: 'timeGridWeek',
+                    fixedWeekCount: false,
+                    // showNonCurrentDates: false,
+                    firstDay: {{ weekday_num }},
+                    headerToolbar: { center: 'timeGridWeek,timeGridDay', },
+                    views: {
+                        dayGridMonth: { // name of view
+                            titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
+                        },
+                        timeGridWeek: {
+                            titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
+                        }
+                    },
+                    validRange: function(nowDate) {
+                        return {
+                            start: nowDate, //grey out areas
+                        }
+                    },
+                    // events: [
+                    // {
+                    //     id: 'UUID1',
+                    //     title  : 'event1',
+                    //     start  : '2023-11-13T12:00:00',
+                    //     end    : '2023-11-13T14:00:00',
+                    //     allDay: false
+                    // },
+                    // {
+                    //     id: 'UUID2',
+                    //     title  : 'event2',
+                    //     startRecur: '2023-11-13',
+                    //     // endRecur: '2023-11-14',
+                    //     startTime  : '13:00:00',
+                    //     endTime    : '14:00:00',
+                    //     daysOfWeek: [1,3,5,], // Repeat frequency
+                    //     allDay: false,
+                    //     groupId: 'Series-group-id',
+                    // },
+                    // {
+                    //     id: 'UUID3',
+                    //     title  : 'event3',
+                    //     start  : '2023-11-15T12:30:00',
+                    //     start  : '2023-11-16T00:00:00',
+                    //     allDay : true
+                    // },
+                    // {
+                    //     id: 'UUID4',
+                    //     start: '2023-11-24T00:00:00',
+                    //     end: '2023-11-25T23:59:00',
+                    //     display: 'background',
+                    //     backgroundColor: '#900',
+                    //     selectable: false,
+                    //     classNames: "fc-unavailable",
+                    //     title  : 'Unavailable',
+                    //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
+                    // },
+                    // ],
+                    events: {
+                        url: "/dashboard/events",
+                        method: 'GET',
+                        // color: 'yellow',    // an option!
+                        // textColor: 'black',  // an option!
+                        extraParams: {
+                            type: 'schedule',
+                        },
+                        failure: function() {
+                            console.log('there was an error while fetching events!');
+                        },
+                    },
+                    eventClick: function(arg) { // confirm and delete event or event re-occurence
+                        // if (confirm('delete event?')) {
+                        //     arg.event.remove()
+                        // }
+                    },
+                    // eventColor: '#7e0cf5',
+                    navLinks: true,
+                    navLinkDayClick: function(date, jsEvent) {
+                        // when a date is clicked
+                    },
+                    dateClick: function(info) {
+                        // console.log('clicked ' + info.dateStr, info.view);
+                        // console.log(info.view.calendar.currentData.options)
+                        const ve = calendar.getEventById('UUID4')
+                        // console.log( ve )
+                        const currEl = info.dayEl
+                        const non_business_day = currEl.querySelector(".fc-unavailable")
+                    
+                        // if (non_business_day !== null && non_business_day !== undefined) {
+                        //     console.log('true', non_business_day, currEl)
+                        // } else {
+                        //     console.log('false', currEl)
+                        // }
+                    },
+                    selectable: true,
+                    selectMirror: true,
+                    // eventMouseEnter: function (info) {
+                    //     console.log(info)
+                    //     const elem = info.jsEvent.srcElement
+                    //     const select_region = elem.className
 
-            //     elem.setAttribute('title', 'Hello world!')
-               
-            // },
-            select: function(info) {
- 
-                
-                const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
-                const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
+                    //     elem.setAttribute('title', 'Hello world!')
+                    
+                    // },
+                    select: function(info) {
+                        const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
+                        const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
 
-                document.getElementById('id_start_date').value = start_date
-                document.getElementById('id_start_time').value = start_time
-                document.getElementById('id_end_date').value = end_date
-                document.getElementById('id_end_time').value = end_time
+                        document.getElementById('id_start_date').value = start_date
+                        document.getElementById('id_start_time').value = start_time
+                        document.getElementById('id_end_date').value = end_date
+                        document.getElementById('id_end_time').value = end_time
 
-                const e = info.jsEvent
-                // console.log(e.target.classList.contains('fc-highlight'), e.target.classList)
-                
-                 
-                setTimeout(() => {
-                    $('#manage-schedule-modal').modal({
-                        show: true
-                    }) 
-                }, 500);
-                $('#manage-schedule-modal').on('hidden.bs.modal', function (e) {
-                    calendar.unselect()
-                    calendar.scrollToTime(2)
+                        const e = info.jsEvent
+                        // console.log(e.target.classList.contains('fc-highlight'), e.target.classList)
+                        
+                        
+                        setTimeout(() => {
+                            $('#manage-schedule-modal').modal({
+                                show: true
+                            }) 
+                        }, 500);
+                        $('#manage-schedule-modal').on('hidden.bs.modal', function (e) {
+                            calendar.unselect()
+                            calendar.scrollToTime(2)
+                        })
+                    
+                    },
+                    selectOverlap: function(event) {
+                        return false
+                    },
+                    unselectAuto: false,
+                    nowIndicator: true,
+                    businessHours: businessHours,
+                    selectConstraint:  "businessHours", // need to check if business hours is set or not
+                    // selectConstraint: {
+                    //     // start: moment().format('YYYY-MM-DD'),
+                    //     // end: '2200-01-01'
+                    // },
+                    // now: // set from DB, per user's timezone and locale,
+                    // businessHours: [ // specify an array instead
+                    //     {
+                    //         daysOfWeek: [ 1, 2, 3, 4, 5, ], // Monday, Tuesday, Wednesday
+                    //         startTime: '8:00', // 8am
+                    //         endTime: '19:00' // 6pm
+                    //     },
+                    // ]
+                });
+                calendar.render(); 
+            }
+
+            // pull NBH
+            async function getNbh() {
+                await fetch("/dashboard/non-business-hours", {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+                }).then((response) => {
+                    return response.json()
+                }).then((data) => {
+                    hasBusinessHours = true
+                    businessHours = data
+                }).catch((error) => {
+                    console.log(error)
+                }).finally(() => {
+                    renderCalender()
                 })
-              
-            },
-            selectOverlap: function(event) {
-                return false
-            },
-            unselectAuto: false,
-            nowIndicator: true,
-            businessHours: function () {
-                return hasBusinessHours
-            },
-            // selectConstraint:  "businessHours", // need to check if business hours is set or not
-            // selectConstraint: {
-            //     // start: moment().format('YYYY-MM-DD'),
-            //     // end: '2200-01-01'
-            // },
-            // now: // set from DB, per user's timezone and locale,
-            // businessHours: {
-            //     // days of week. an array of zero-based day of week integers (0=Sunday)
-            //     daysOfWeek: [ 1, 2, 3, 4 ], // Monday - Thursday
-
-            //     startTime: '10:00', // a start time (10am in this example)
-            //     endTime: '18:00', // an end time (6pm in this example)
-            // },
-            // businessHours: [ // specify an array instead
-            //     {
-            //         daysOfWeek: [ 1, 2, 3, 4, 5, ], // Monday, Tuesday, Wednesday
-            //         startTime: '8:00', // 8am
-            //         endTime: '19:00' // 6pm
-            //     },
-            //     // {
-            //     //     daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6  ], // Thursday, Friday
-            //     //     startTime: '19:00', // 10am
-            //     //     endTime: '00:00' // 4pm
-            //     // }
-            // ]
-        });
-        calendar.render();
-      }); 
+            }
+    
+            getNbh()        
+        }); 
     </script>
 {% endblock %}
 {% block dashboard-content %}

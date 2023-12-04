@@ -73,16 +73,28 @@ def manageSchedule(request):
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
             )  # unavailable
 
+            start_date = form.cleaned_data["start_date"]
+            start_time = form.cleaned_data["start_time"]
+            end_date = form.cleaned_data["end_date"]
+            end_time = form.cleaned_data["end_time"]
+
+            if start_date == end_date and start_time > end_time:
+                messages.error(
+                    request,
+                    "Start time cannot be greater than End time, when start date and end date are the same",
+                )
+                return redirect("manage.schedule")
+
             title = EventService.get_event_title(type_input_value)
             event = Event(
                 frequency=get_frequency(form.cleaned_data["frequency"]),
                 user=User.objects.get(id=request.user.id),
                 title=title,
                 type=type_input_value,
-                start_date=form.cleaned_data["start_date"],
-                start_time=form.cleaned_data["start_time"],
-                end_date=form.cleaned_data["end_date"],
-                end_time=form.cleaned_data["end_time"],
+                start_date=start_date,
+                start_time=start_time,
+                end_date=end_date,
+                end_time=end_time,
             )
             event.save()
             messages.success(request, "Your schedule has been updated!")
@@ -128,57 +140,31 @@ def getEvents(request):
         event_data = dict(event_data)
         data.append(event_data)
 
-    # dd(data)
     return JsonResponse(
         data=data,
         safe=False,
     )
 
-    # JsonResponse(
-    #     [
-    #         {
-    #             "id": "UUID1",
-    #             "title": "event1",
-    #             "start": "2023-11-25T12:00:00",
-    #             "end": "2023-11-28T14:00:00",
-    #             "allDay": False,
-    #         },
-    #         {
-    #             "id": "UUID2",
-    #             "title": "event2",
-    #             "startRecur": "2023-11-13",
-    #             # // endRecur: '2023-11-14',
-    #             "startTime": "13:00:00",
-    #             "endTime": "14:00:00",
-    #             "daysOfWeek": [
-    #                 1,
-    #                 3,
-    #                 5,
-    #             ],  # Repeat frequency
-    #             "allDay": False,
-    #             "groupId": "Series-group-id",
-    #         }
-    #         # {
-    #         #     id: 'UUID3',
-    #         #     title  : 'event3',
-    #         #     start  : '2023-11-15T12:30:00',
-    #         #     start  : '2023-11-16T00:00:00',
-    #         #     allDay : true
-    #         # },
-    #         # {
-    #         #     id: 'UUID4',
-    #         #     start: '2023-11-24T00:00:00',
-    #         #     end: '2023-11-25T23:59:00',
-    #         #     display: 'background',
-    #         #     backgroundColor: '#900',
-    #         #     selectable: false,
-    #         #     classNames: "fc-unavailable",
-    #         #     title  : 'Unavailable',
-    #         #     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
-    #         # },
-    #     ],
-    #     safe=False,
-    # )
+
+@login_required
+def getNonBusinessHours(request):
+    events = Event.objects.filter(
+        user=request.user, type=Event.EventTypes.NON_BUSINESS_HOURS
+    )
+    data = []
+    for event in events:
+        event_data = {}
+        event_data["daysOfWeek"] = event.frequency.split(",")
+        event_data["startTime"] = str(event.start_time)[0:5]
+        event_data["endTime"] = str(event.end_time)[0:5]
+
+        event_data = dict(event_data)
+        data.append(event_data)
+
+    return JsonResponse(
+        data=data,
+        safe=False,
+    )
 
 
 def get_frequency(form_frequencies):
