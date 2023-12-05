@@ -10,7 +10,7 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script>
         let hasBusinessHours = false
-        businessHours = false
+        let businessHours = false
 
         document.addEventListener('DOMContentLoaded', function() {
             
@@ -149,8 +149,8 @@
                     },
                     unselectAuto: false,
                     nowIndicator: true,
-                    businessHours: businessHours,
-                    selectConstraint:  "businessHours", // need to check if business hours is set or not
+                    businessHours: hasBusinessHours ? businessHours : false,
+                    selectConstraint:  hasBusinessHours ? "businessHours" : null,
                     // selectConstraint: {
                     //     // start: moment().format('YYYY-MM-DD'),
                     //     // end: '2200-01-01'
@@ -178,8 +178,10 @@
                 }).then((response) => {
                     return response.json()
                 }).then((data) => {
-                    hasBusinessHours = true
-                    businessHours = data
+                    if (data.length > 0) {
+                        hasBusinessHours = true
+                        businessHours = data
+                    }
                 }).catch((error) => {
                     console.log(error)
                 }).finally(() => {
@@ -196,7 +198,7 @@
         <div class="card-header">
             <h3 class="card-title text-left">Manage Schedule/Availability</h3>
             <p><small><i class="fa fa-briefcase text-success"></i> Business Hours: If set, anyone can book an appointment within these slots </small></p>
-            <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going for holiday, an event or just need time off? You can choose and set them as unavailable</small></p>
+            <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going for holiday, an event or just need time off? You can select those dates and set them as unavailable</small></p>
         </div>
         <div class="card-body profile-form">
             <div id='manage-schedules'></div>

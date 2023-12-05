@@ -88,7 +88,7 @@ class ChangePasswordForm(forms.ModelForm):
 class UnavailableDatesForm(forms.ModelForm):
     type = forms.IntegerField(
         required=True,
-        label="What type of closure is this?",
+        label="Choose Type",
         widget=forms.Select(
             attrs={
                 "class": "form-control",

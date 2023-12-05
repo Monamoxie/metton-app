@@ -119,7 +119,9 @@ def getEvents(request):
     end_date = get_end_date(params)
     type = params["type"]
 
-    events = Event.objects.filter(user=request.user, start_date__gte=start_date)
+    events = Event.objects.filter(
+        user=request.user, start_date__gte=start_date
+    ).exclude(type=Event.EventTypes.BUSINESS_HOURS)
     data = []
     for event in events:
         event_data = {}
