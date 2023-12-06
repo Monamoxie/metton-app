@@ -9,4 +9,4 @@ class EventService(Event):
         if type == 2:
             return Event.EventTypes.BUSINESS_HOURS.name.replace("_", " ")
         else:
-            return Event.EventTypes.UNAVAILABLE
+            return Event.EventTypes.UNAVAILABLE.name

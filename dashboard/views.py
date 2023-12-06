@@ -1,22 +1,21 @@
+from ast import dump
+from dbm import dumb
 from email import message
 from datetime import datetime
-import json
-import dateutil.parser
+import time
 from tracemalloc import start
-
+import dateutil.parser
 from django.http import JsonResponse
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from core.settings import MEDIA_ROOT
-
 from dashboard.models import User
 from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
 from django.core.files import File
 import os
 from .services.eventservice import EventService
+import pytz
 
 
 # Create your views here.
@@ -73,10 +72,27 @@ def manageSchedule(request):
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
             )  # unavailable
 
+            user_time_zone = extract_user_timezone(form.data)
+
             start_date = form.cleaned_data["start_date"]
-            start_time = form.cleaned_data["start_time"]
+            start_time = user_timezone_to_utc(
+                str(start_date),
+                str(form.cleaned_data["start_time"]),
+                user_time_zone,
+            )
             end_date = form.cleaned_data["end_date"]
-            end_time = form.cleaned_data["end_time"]
+            end_time = user_timezone_to_utc(
+                str(end_date),
+                str(form.cleaned_data["end_time"]),
+                user_time_zone,
+            )
+
+            if start_time == None or end_time == None:
+                messages.error(
+                    request,
+                    "Start time/End time could not be processed. Please ensure the correct slots were selected",
+                )
+                return redirect("manage.schedule")
 
             if start_date == end_date and start_time > end_time:
                 messages.error(
@@ -95,6 +111,7 @@ def manageSchedule(request):
                 start_time=start_time,
                 end_date=end_date,
                 end_time=end_time,
+                timezone=user_time_zone,
             )
             event.save()
             messages.success(request, "Your schedule has been updated!")
@@ -149,7 +166,7 @@ def getEvents(request):
 
 
 @login_required
-def getNonBusinessHours(request):
+def getBusinessHours(request):
     events = Event.objects.filter(
         user=request.user, type=Event.EventTypes.BUSINESS_HOURS
     )
@@ -201,3 +218,32 @@ def get_end_date(params):
         end_date = None
 
     return str(dateutil.parser.parse(end_date).date())
+
+
+def extract_user_timezone(data):
+    if "utz" in data and data["utz"]:
+        return data["utz"]
+    return "UTC"
+
+
+def user_timezone_to_utc(date_str, time_str, utz):
+    user_timezone = pytz.timezone(utz)
+    utc_timezone = pytz.UTC
+
+    date_list = date_str.split("-")
+    time_list = time_str.split(":")
+
+    if len(date_list) == 3 and len(time_list) == 3:
+        selected_dt = datetime(
+            year=int(date_list[0]),
+            month=int(date_list[1]),
+            day=int(date_list[2]),
+            hour=int(time_list[0]),
+            minute=int(time_list[1]),
+            second=int(time_list[2]),
+        )
+        user_timezone_aware = user_timezone.localize(selected_dt)
+
+        return user_timezone_aware.astimezone(utc_timezone).time()
+
+    return None

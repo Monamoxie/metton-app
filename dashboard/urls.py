@@ -7,5 +7,5 @@ urlpatterns = [
     path("password/update", views.changePassword, name="password.update"),
     path("manage/schedule", views.manageSchedule, name="manage.schedule"),
     path("events", views.getEvents, name="events"),
-    path("non-business-hours", views.getNonBusinessHours, name="non-business-hours"),
+    path("non-business-hours", views.getBusinessHours, name="non-business-hours"),
 ]

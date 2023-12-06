@@ -162,6 +162,18 @@ class UnavailableDatesForm(forms.ModelForm):
         ),
     )
 
+    utz = (
+        forms.CharField(
+            required=False,
+            label="Utz",
+            widget=forms.TextInput(
+                attrs={
+                    "readonly": "readonly",
+                },
+            ),
+        ),
+    )
+
     class Meta:
         model = Event
         # exclude = ("event",)

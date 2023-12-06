@@ -7,3 +7,8 @@ function previewProfilePhoto(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+function getTz() {
+    let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return tz ? tz : "UTC"
+}

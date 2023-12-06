@@ -1,8 +1,6 @@
 {% extends "Base/dashboard.html" %}
+{% load tz %}
 {% block head_content %}
-    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script> -->
-
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -19,8 +17,9 @@
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     themeSystem: 'bootstrap5',
                     initialView: 'timeGridWeek',
+                    timeZone: getTz(),
                     fixedWeekCount: false,
-                    // showNonCurrentDates: false,
+                    // showNonCurrentDates: true,
                     firstDay: {{ weekday_num }},
                     headerToolbar: { center: 'timeGridWeek,timeGridDay', },
                     views: {
@@ -36,44 +35,6 @@
                             start: nowDate, //grey out areas
                         }
                     },
-                    // events: [
-                    // {
-                    //     id: 'UUID1',
-                    //     title  : 'event1',
-                    //     start  : '2023-11-13T12:00:00',
-                    //     end    : '2023-11-13T14:00:00',
-                    //     allDay: false
-                    // },
-                    // {
-                    //     id: 'UUID2',
-                    //     title  : 'event2',
-                    //     startRecur: '2023-11-13',
-                    //     // endRecur: '2023-11-14',
-                    //     startTime  : '13:00:00',
-                    //     endTime    : '14:00:00',
-                    //     daysOfWeek: [1,3,5,], // Repeat frequency
-                    //     allDay: false,
-                    //     groupId: 'Series-group-id',
-                    // },
-                    // {
-                    //     id: 'UUID3',
-                    //     title  : 'event3',
-                    //     start  : '2023-11-15T12:30:00',
-                    //     start  : '2023-11-16T00:00:00',
-                    //     allDay : true
-                    // },
-                    // {
-                    //     id: 'UUID4',
-                    //     start: '2023-11-24T00:00:00',
-                    //     end: '2023-11-25T23:59:00',
-                    //     display: 'background',
-                    //     backgroundColor: '#900',
-                    //     selectable: false,
-                    //     classNames: "fc-unavailable",
-                    //     title  : 'Unavailable',
-                    //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
-                    // },
-                    // ],
                     events: {
                         url: "/dashboard/events",
                         method: 'GET',
@@ -93,23 +54,6 @@
                     },
                     // eventColor: '#7e0cf5',
                     navLinks: true,
-                    navLinkDayClick: function(date, jsEvent) {
-                        // when a date is clicked
-                    },
-                    dateClick: function(info) {
-                        // console.log('clicked ' + info.dateStr, info.view);
-                        // console.log(info.view.calendar.currentData.options)
-                        const ve = calendar.getEventById('UUID4')
-                        // console.log( ve )
-                        const currEl = info.dayEl
-                        const business_day = currEl.querySelector(".fc-unavailable")
-                    
-                        // if (business_day !== null && business_day !== undefined) {
-                        //     console.log('true', business_day, currEl)
-                        // } else {
-                        //     console.log('false', currEl)
-                        // }
-                    },
                     selectable: true,
                     selectMirror: true,
                     // eventMouseEnter: function (info) {
@@ -123,11 +67,13 @@
                     select: function(info) {
                         const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
                         const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
-
+                        
+                        console.log(info.start.toString())
                         document.getElementById('id_start_date').value = start_date
                         document.getElementById('id_start_time').value = start_time
                         document.getElementById('id_end_date').value = end_date
                         document.getElementById('id_end_time').value = end_time
+                        document.getElementById('utz').value = getTz()
 
                         const e = info.jsEvent
                         // console.log(e.target.classList.contains('fc-highlight'), e.target.classList)
@@ -151,18 +97,7 @@
                     nowIndicator: true,
                     businessHours: hasBusinessHours ? businessHours : false,
                     selectConstraint:  hasBusinessHours ? "businessHours" : null,
-                    // selectConstraint: {
-                    //     // start: moment().format('YYYY-MM-DD'),
-                    //     // end: '2200-01-01'
-                    // },
                     // now: // set from DB, per user's timezone and locale,
-                    // businessHours: [ // specify an array instead
-                    //     {
-                    //         daysOfWeek: [ 1, 2, 3, 4, 5, ], // Monday, Tuesday, Wednesday
-                    //         startTime: '8:00', // 8am
-                    //         endTime: '19:00' // 6pm
-                    //     },
-                    // ]
                 });
                 calendar.render(); 
             }
@@ -196,9 +131,12 @@
 {% block dashboard-content %}
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title text-left">Manage Schedule/Availability</h3>
+            <h3 class="card-title text-left">Manage Schedule/Availability </h3>
             <p><small><i class="fa fa-briefcase text-success"></i> Business Hours: If set, anyone can book an appointment within these slots </small></p>
             <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going for holiday, an event or just need time off? You can select those dates and set them as unavailable</small></p>
+            {% localtime on %} 
+                {{ value }}
+            {% endlocaltime %} kf
         </div>
         <div class="card-body profile-form">
             <div id='manage-schedules'></div>
@@ -240,6 +178,7 @@
                                                 {{ choice }}
                                             </label>
                                         {% endfor %}
+                                        <input type="hidden" id="utz" name="utz"/>
                                     </div>
                                 </div>
                             </div> 
