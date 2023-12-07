@@ -1,11 +1,12 @@
 from ast import dump
+from audioop import reverse
 from dbm import dumb
 from email import message
 from datetime import datetime
 import time
 from tracemalloc import start
 import dateutil.parser
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -115,11 +116,14 @@ def manageSchedule(request):
             )
             event.save()
             messages.success(request, "Your schedule has been updated!")
-            return redirect("manage.schedule")
+
+            # todo ::: use HttpResponseRedirect after POST operations
+            return HttpResponseRedirect(reverse("manage.schedule"))
+
         else:
             messages.error(request, form.errors)
     else:
-        form = UnavailableDatesForm()
+        form = UnavailableDatesForm(request)
 
     return render(
         request,

@@ -3,7 +3,7 @@ import os
 from random import choices
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import Event
+from .models import Event, User
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 
@@ -173,6 +173,29 @@ class UnavailableDatesForm(forms.ModelForm):
             ),
         ),
     )
+
+    def __init__(self, request, *args, **kwargs):
+        super(UnavailableDatesForm, self).__init__(*args, **kwargs)
+
+        # Pull the user model out, then get the value for has_business_hours
+        # user = User.objects.filter(id=request.user.id).first()
+
+        # choices = [("", "Please Select")]
+
+        # if not user.has_business_hours():
+        #     choices.append(
+        #         (Event.EventTypes.BUSINESS_HOURS, Event.EventTypes.labels[1])
+        #     )
+
+        # choices.append((Event.EventTypes.UNAVAILABLE, Event.EventTypes.labels[2]))
+
+        # self.fields["type"].widget = forms.Select(
+        #     attrs={
+        #         "class": "form-control",
+        #         "type": "text",
+        #     },
+        #     choices=choices,
+        # )
 
     class Meta:
         model = Event

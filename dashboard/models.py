@@ -47,6 +47,9 @@ class User(AbstractUser):
     def __str__(self):
         return str(self.id)
 
+    def has_business_hours(self):
+        return self.event_set.filter(type=Event.EventTypes.BUSINESS_HOURS).exists()
+
 
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
