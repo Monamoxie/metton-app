@@ -68,7 +68,6 @@
                         const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
                         const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
                         
-                        console.log(info.start.toString())
                         document.getElementById('id_start_date').value = start_date
                         document.getElementById('id_start_time').value = start_time
                         document.getElementById('id_end_date').value = end_date

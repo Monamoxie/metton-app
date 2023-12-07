@@ -67,7 +67,7 @@ def changePassword(request):
 def manageSchedule(request):
     choices = Event().get_frequency_choices
     if request.method == "POST":
-        form = UnavailableDatesForm(request.POST or None)
+        form = UnavailableDatesForm(request.user, request.POST or None)
         if form.is_valid():
             type_input_value = (
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
@@ -76,17 +76,22 @@ def manageSchedule(request):
             user_time_zone = extract_user_timezone(form.data)
 
             start_date = form.cleaned_data["start_date"]
-            start_time = user_timezone_to_utc(
-                str(start_date),
-                str(form.cleaned_data["start_time"]),
-                user_time_zone,
+            start_time = timezone_conversion(
+                start_date=str(start_date),
+                start_time=str(form.cleaned_data["start_time"]),
+                from_timezone=user_time_zone,
+                to_timezone="UTC",
             )
             end_date = form.cleaned_data["end_date"]
-            end_time = user_timezone_to_utc(
-                str(end_date),
-                str(form.cleaned_data["end_time"]),
-                user_time_zone,
+            end_time = timezone_conversion(
+                start_date=str(end_date),
+                start_time=str(form.cleaned_data["end_time"]),
+                from_timezone="UTC",
+                to_timezone=user_time_zone,
             )
+            dd(end_time)
+
+            frequency = get_frequency(form.cleaned_data["frequency"])
 
             if start_time == None or end_time == None:
                 messages.error(
@@ -95,7 +100,7 @@ def manageSchedule(request):
                 )
                 return redirect("manage.schedule")
 
-            if start_date == end_date and start_time > end_time:
+            if frequency == "" and (start_date == end_date and start_time > end_time):
                 messages.error(
                     request,
                     "Start time cannot be greater than End time, when start date and end date are the same",
@@ -118,12 +123,13 @@ def manageSchedule(request):
             messages.success(request, "Your schedule has been updated!")
 
             # todo ::: use HttpResponseRedirect after POST operations
-            return HttpResponseRedirect(reverse("manage.schedule"))
+            return redirect("manage.schedule")
+            # return HttpResponseRedirect(reverse("manage.schedule"))
 
         else:
             messages.error(request, form.errors)
     else:
-        form = UnavailableDatesForm(request)
+        form = UnavailableDatesForm(request.user, None)
 
     return render(
         request,
@@ -177,9 +183,21 @@ def getBusinessHours(request):
     data = []
     for event in events:
         event_data = {}
+
         event_data["daysOfWeek"] = event.frequency.split(",")
-        event_data["startTime"] = str(event.start_time)[0:5]
-        event_data["endTime"] = str(event.end_time)[0:5]
+
+        event_data["startTime"] = timezone_conversion(
+            date_str=str(event.start_date),
+            time_str=str(event.start_time),
+            from_timezone="UTC",
+            to_timezone=event.timezone,
+        )
+        event_data["endTime"] = timezone_conversion(
+            date_str=str(event.end_date),
+            time_str=str(event.end_time),
+            from_timezone="UTC",
+            to_timezone=event.timezone,
+        )
 
         event_data = dict(event_data)
         data.append(event_data)
@@ -230,9 +248,14 @@ def extract_user_timezone(data):
     return "UTC"
 
 
-def user_timezone_to_utc(date_str, time_str, utz):
-    user_timezone = pytz.timezone(utz)
-    utc_timezone = pytz.UTC
+def timezone_conversion(
+    date_str: str,
+    time_str=str,
+    from_timezone=str,
+    to_timezone=str,
+):
+    from_timezone = pytz.timezone(from_timezone)
+    to_timezone = pytz.timezone(to_timezone)
 
     date_list = date_str.split("-")
     time_list = time_str.split(":")
@@ -246,8 +269,8 @@ def user_timezone_to_utc(date_str, time_str, utz):
             minute=int(time_list[1]),
             second=int(time_list[2]),
         )
-        user_timezone_aware = user_timezone.localize(selected_dt)
+        user_timezone_aware = from_timezone.localize(selected_dt)
 
-        return user_timezone_aware.astimezone(utc_timezone).time()
+        return user_timezone_aware.astimezone(to_timezone).time()
 
     return None
