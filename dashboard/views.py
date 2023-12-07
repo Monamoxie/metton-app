@@ -76,18 +76,20 @@ def manageSchedule(request):
             user_time_zone = extract_user_timezone(form.data)
 
             start_date = form.cleaned_data["start_date"]
+
             start_time = timezone_conversion(
-                start_date=str(start_date),
-                start_time=str(form.cleaned_data["start_time"]),
+                date_str=str(start_date),
+                time_str=str(form.cleaned_data["start_time"]),
                 from_timezone=user_time_zone,
                 to_timezone="UTC",
             )
+
             end_date = form.cleaned_data["end_date"]
             end_time = timezone_conversion(
-                start_date=str(end_date),
-                start_time=str(form.cleaned_data["end_time"]),
-                from_timezone="UTC",
-                to_timezone=user_time_zone,
+                date_str=str(end_date),
+                time_str=str(form.cleaned_data["end_time"]),
+                from_timezone=user_time_zone,
+                to_timezone="UTC",
             )
 
             frequency = get_frequency(form.cleaned_data["frequency"])
@@ -148,8 +150,20 @@ def getEvents(request):
         event_data = {}
         event_data["id"] = str(event.id)
         event_data["title"] = str(event.title)
-        event_data["start"] = str(datetime.combine(event.start_date, event.start_time))
-        event_data["end"] = str(datetime.combine(event.end_date, event.end_time))
+        event_data["start"] = timezone_conversion(
+            date_str=str(event.start_date),
+            time_str=str(event.start_time),
+            from_timezone="UTC",
+            to_timezone=event.timezone,
+            time_only=False,
+        )
+        event_data["end"] = timezone_conversion(
+            date_str=str(event.end_date),
+            time_str=str(event.end_time),
+            from_timezone="UTC",
+            to_timezone=event.timezone,
+            time_only=False,
+        )
 
         if event.type == Event.EventTypes.UNAVAILABLE:
             event_data["display"] = "background"
@@ -240,10 +254,7 @@ def extract_user_timezone(data):
 
 
 def timezone_conversion(
-    date_str: str,
-    time_str=str,
-    from_timezone=str,
-    to_timezone=str,
+    date_str: str, time_str=str, from_timezone=str, to_timezone=str, time_only=True
 ):
     from_timezone = pytz.timezone(from_timezone)
     to_timezone = pytz.timezone(to_timezone)
@@ -262,6 +273,9 @@ def timezone_conversion(
         )
         user_timezone_aware = from_timezone.localize(selected_dt)
 
-        return user_timezone_aware.astimezone(to_timezone).time()
+        if time_only:
+            return user_timezone_aware.astimezone(to_timezone).time()
+
+        return user_timezone_aware.astimezone(to_timezone)
 
     return None

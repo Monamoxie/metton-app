@@ -326,3 +326,9 @@ body {
     color: #2c3e50 !important;
     border-color: rgb(188, 195, 229) !important;
 }
+
+.fc-unavailable {
+    background: #502c3c !important;
+    opacity: 1 !important;
+    color: #c0c0c0 !important;
+}
