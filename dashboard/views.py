@@ -71,7 +71,7 @@ def manageSchedule(request):
         if form.is_valid():
             type_input_value = (
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
-            )  # unavailable
+            )
 
             user_time_zone = extract_user_timezone(form.data)
 
@@ -89,7 +89,6 @@ def manageSchedule(request):
                 from_timezone="UTC",
                 to_timezone=user_time_zone,
             )
-            dd(end_time)
 
             frequency = get_frequency(form.cleaned_data["frequency"])
 
@@ -121,10 +120,7 @@ def manageSchedule(request):
             )
             event.save()
             messages.success(request, "Your schedule has been updated!")
-
-            # todo ::: use HttpResponseRedirect after POST operations
             return redirect("manage.schedule")
-            # return HttpResponseRedirect(reverse("manage.schedule"))
 
         else:
             messages.error(request, form.errors)
@@ -143,8 +139,6 @@ def getEvents(request):
     params = request.GET
 
     start_date = get_start_date(params)
-    end_date = get_end_date(params)
-    type = params["type"]
 
     events = Event.objects.filter(
         user=request.user, start_date__gte=start_date
@@ -157,14 +151,11 @@ def getEvents(request):
         event_data["start"] = str(datetime.combine(event.start_date, event.start_time))
         event_data["end"] = str(datetime.combine(event.end_date, event.end_time))
 
-        # str(dateutil.parser.parse(start_date).date())
-
-        if event.type == "unavailable":
+        if event.type == Event.EventTypes.UNAVAILABLE:
             event_data["display"] = "background"
-            # event_data["backgroundColor"] = "#900"
-            # event_data["color"] = "#060"
+            event_data["backgroundColor"] = "#502c3c"
+            event_data["color"] = "#c0c0c0"
             event_data["classNames"] = "fc-unavailable"
-            event_data["selectable"] = False
 
         event_data = dict(event_data)
         data.append(event_data)
