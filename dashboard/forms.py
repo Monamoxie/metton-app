@@ -174,28 +174,28 @@ class UnavailableDatesForm(forms.ModelForm):
         ),
     )
 
-    def __init__(self, user, *args, **kwargs):
-        super(UnavailableDatesForm, self).__init__(*args, **kwargs)
+    # def __init__(self, user, *args, **kwargs):
+    #     super(UnavailableDatesForm, self).__init__(*args, **kwargs)
 
-        # Pull the user model out, then get the value for has_business_hours
-        user = User.objects.filter(id=user.id).first()
+    #     # Pull the user model out, then get the value for has_business_hours
+    #     user = User.objects.filter(id=user.id).first()
 
-        choices = [("", "Please Select")]
+    #     choices = [("", "Please Select")]
 
-        if not user.has_business_hours():
-            choices.append(
-                (Event.EventTypes.BUSINESS_HOURS, Event.EventTypes.labels[1])
-            )
+    #     if not user.has_business_hours():
+    #         choices.append(
+    #             (Event.EventTypes.BUSINESS_HOURS, Event.EventTypes.labels[1])
+    #         )
 
-        choices.append((Event.EventTypes.UNAVAILABLE, Event.EventTypes.labels[2]))
+    #     choices.append((Event.EventTypes.UNAVAILABLE, Event.EventTypes.labels[2]))
 
-        self.fields["type"].widget = forms.Select(
-            attrs={
-                "class": "form-control",
-                "type": "text",
-            },
-            choices=choices,
-        )
+    #     self.fields["type"].widget = forms.Select(
+    #         attrs={
+    #             "class": "form-control",
+    #             "type": "text",
+    #         },
+    #         choices=choices,
+    #     )
 
     class Meta:
         model = Event

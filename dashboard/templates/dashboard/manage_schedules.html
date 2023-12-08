@@ -1,5 +1,4 @@
 {% extends "Base/dashboard.html" %}
-{% load tz %}
 {% block head_content %}
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -48,9 +47,25 @@
                         },
                     },
                     eventClick: function(arg) { // confirm and delete event or event re-occurence
-                        // if (confirm('delete event?')) {
-                        //     arg.event.remove()
-                        // }
+                        const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
+                        if (confirm('Do you wish to delete this event?')) {
+                            (async () => {
+                                arg.event.remove()
+                                const rawResponse = await fetch('/dashboard/events/detach', {
+                                    method: 'post',
+                                    credentials: 'same-origin',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': token
+                                    },
+                                    body: JSON.stringify({id: arg.event.id})
+                                });
+                                const content = await rawResponse.json();
+
+                                console.log(content);
+                            })();
+                        }
                     },
                     eventColor: '#008000',
                     navLinks: true,
@@ -85,7 +100,7 @@
                     unselectAuto: false,
                     nowIndicator: true,
                     businessHours: hasBusinessHours ? businessHours : false,
-                    selectConstraint:  hasBusinessHours ? "businessHours" : null,
+                    // selectConstraint:  hasBusinessHours ? "businessHours" : null,
                 });
                 calendar.render(); 
             }
@@ -116,12 +131,12 @@
         }); 
     </script>
 {% endblock %}
-{% block dashboard-content %}
+{% block dashboard-main-content %}
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-left">Manage Schedule/Availability </h3>
             <p><small><i class="fa fa-briefcase text-success"></i> Business Hours: If set, anyone can book an appointment within these slots </small></p>
-            <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going for holiday, an event or just need time off? You can select those dates and set them as unavailable</small></p>
+            <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going on holiday, an event or just need time off? That's fine. You can select those dates and set them as Unavailable</small></p>
         </div>
         <div class="card-body profile-form">
             <div id='manage-schedules'></div>
@@ -179,3 +194,27 @@
         </form>
     </div>
 {% endblock %}
+
+{% block dashboard-side-content %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title text-left"> <i class="fa fa-calendar-days text-success"></i>  Business Hours </h5>
+        </div>
+        <div class="card-body">
+            {% if business_hours  %}
+                {% for availability in business_hours %}
+                    {% if availability.timetable %}
+                        {% for entry in availability.timetable %}
+                            <p> {{ entry.0 }} : {{ entry.1 }} - 
+                                {{ entry.2 }}
+                            </p>
+                        {% endfor %}
+                        <hr/>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p><i class="fa fa-briefcase-clock text-danger"></i> You're yet to set your business hours.  </p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}  

@@ -3,6 +3,7 @@ from audioop import reverse
 from dbm import dumb
 from email import message
 from datetime import datetime
+import json
 import time
 from tracemalloc import start
 import dateutil.parser
@@ -67,7 +68,7 @@ def changePassword(request):
 def manageSchedule(request):
     choices = Event().get_frequency_choices
     if request.method == "POST":
-        form = UnavailableDatesForm(request.user, request.POST or None)
+        form = UnavailableDatesForm(request.POST or None)
         if form.is_valid():
             type_input_value = (
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
@@ -77,7 +78,7 @@ def manageSchedule(request):
 
             start_date = form.cleaned_data["start_date"]
 
-            start_time = timezone_conversion(
+            start_time = EventService().timezone_conversion(
                 date_str=str(start_date),
                 time_str=str(form.cleaned_data["start_time"]),
                 from_timezone=user_time_zone,
@@ -85,7 +86,7 @@ def manageSchedule(request):
             )
 
             end_date = form.cleaned_data["end_date"]
-            end_time = timezone_conversion(
+            end_time = EventService().timezone_conversion(
                 date_str=str(end_date),
                 time_str=str(form.cleaned_data["end_time"]),
                 from_timezone=user_time_zone,
@@ -127,12 +128,21 @@ def manageSchedule(request):
         else:
             messages.error(request, form.errors)
     else:
-        form = UnavailableDatesForm(request.user, None)
+        form = UnavailableDatesForm(None)
+
+    business_hours = EventService().get_business_hours(request=request)
 
     return render(
         request,
         "dashboard/manage_schedules.html",
-        {"form": form, "choices": choices, "weekday_num": datetime.now().isoweekday()},
+        {
+            "form": form,
+            "choices": choices,
+            "weekday_num": datetime.now().isoweekday(),
+            "business_hours": business_hours,
+            "display_name": request.user.name,
+            "position": request.user.position,
+        },
     )
 
 
@@ -150,14 +160,14 @@ def getEvents(request):
         event_data = {}
         event_data["id"] = str(event.id)
         event_data["title"] = str(event.title)
-        event_data["start"] = timezone_conversion(
+        event_data["start"] = EventService().timezone_conversion(
             date_str=str(event.start_date),
             time_str=str(event.start_time),
             from_timezone="UTC",
             to_timezone=event.timezone,
             time_only=False,
         )
-        event_data["end"] = timezone_conversion(
+        event_data["end"] = EventService().timezone_conversion(
             date_str=str(event.end_date),
             time_str=str(event.end_time),
             from_timezone="UTC",
@@ -181,31 +191,24 @@ def getEvents(request):
 
 
 @login_required
-def getBusinessHours(request):
-    events = Event.objects.filter(
-        user=request.user, type=Event.EventTypes.BUSINESS_HOURS
+def detachEvent(request):
+    if request.method == "POST":
+        body = request.body.decode("utf-8")
+        if "id" in body:
+            data = json.loads(body)
+            event = Event.objects.filter(user=request.user, id=data["id"]).first()
+            if event:
+                event.delete()
+
+    return JsonResponse(
+        data=[{"status": True}],
+        safe=False,
     )
-    data = []
-    for event in events:
-        event_data = {}
 
-        event_data["daysOfWeek"] = event.frequency.split(",")
 
-        event_data["startTime"] = timezone_conversion(
-            date_str=str(event.start_date),
-            time_str=str(event.start_time),
-            from_timezone="UTC",
-            to_timezone=event.timezone,
-        )
-        event_data["endTime"] = timezone_conversion(
-            date_str=str(event.end_date),
-            time_str=str(event.end_time),
-            from_timezone="UTC",
-            to_timezone=event.timezone,
-        )
-
-        event_data = dict(event_data)
-        data.append(event_data)
+@login_required
+def getBusinessHours(request):
+    data = EventService().get_business_hours(request)
 
     return JsonResponse(
         data=data,
@@ -251,31 +254,3 @@ def extract_user_timezone(data):
     if "utz" in data and data["utz"]:
         return data["utz"]
     return "UTC"
-
-
-def timezone_conversion(
-    date_str: str, time_str=str, from_timezone=str, to_timezone=str, time_only=True
-):
-    from_timezone = pytz.timezone(from_timezone)
-    to_timezone = pytz.timezone(to_timezone)
-
-    date_list = date_str.split("-")
-    time_list = time_str.split(":")
-
-    if len(date_list) == 3 and len(time_list) == 3:
-        selected_dt = datetime(
-            year=int(date_list[0]),
-            month=int(date_list[1]),
-            day=int(date_list[2]),
-            hour=int(time_list[0]),
-            minute=int(time_list[1]),
-            second=int(time_list[2]),
-        )
-        user_timezone_aware = from_timezone.localize(selected_dt)
-
-        if time_only:
-            return user_timezone_aware.astimezone(to_timezone).time()
-
-        return user_timezone_aware.astimezone(to_timezone)
-
-    return None
