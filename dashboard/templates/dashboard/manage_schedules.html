@@ -52,18 +52,10 @@
                         //     arg.event.remove()
                         // }
                     },
-                    // eventColor: '#7e0cf5',
+                    eventColor: '#008000',
                     navLinks: true,
                     selectable: true,
                     selectMirror: true,
-                    // eventMouseEnter: function (info) {
-                    //     console.log(info)
-                    //     const elem = info.jsEvent.srcElement
-                    //     const select_region = elem.className
-
-                    //     elem.setAttribute('title', 'Hello world!')
-                    
-                    // },
                     select: function(info) {
                         const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
                         const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
@@ -75,9 +67,7 @@
                         document.getElementById('utz').value = getTz()
 
                         const e = info.jsEvent
-                        // console.log(e.target.classList.contains('fc-highlight'), e.target.classList)
-                        
-                        
+
                         setTimeout(() => {
                             $('#manage-schedule-modal').modal({
                                 show: true
@@ -96,7 +86,6 @@
                     nowIndicator: true,
                     businessHours: hasBusinessHours ? businessHours : false,
                     selectConstraint:  hasBusinessHours ? "businessHours" : null,
-                    // now: // set from DB, per user's timezone and locale,
                 });
                 calendar.render(); 
             }

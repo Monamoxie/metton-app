@@ -332,3 +332,7 @@ body {
     opacity: 1 !important;
     color: #c0c0c0 !important;
 }
+
+.fc .fc-bg-event {
+    opacity: 1 !important;
+}
