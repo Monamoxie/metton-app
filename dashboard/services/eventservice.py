@@ -26,6 +26,7 @@ class EventService(Event):
 
             frequencies = event.frequency.split(",")
 
+            event_data["id"] = event.id
             event_data["daysOfWeek"] = frequencies
             days = [
                 "Sunday",

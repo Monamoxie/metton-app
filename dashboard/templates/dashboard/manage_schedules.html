@@ -9,6 +9,7 @@
         let hasBusinessHours = false
         let businessHours = false
 
+        
         document.addEventListener('DOMContentLoaded', function() {
             
             function renderCalender() {
@@ -46,7 +47,7 @@
                             console.log('there was an error while fetching events!');
                         },
                     },
-                    eventClick: function(arg) { // confirm and delete event or event re-occurence
+                    eventClick: function(arg) {
                         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
                         if (confirm('Do you wish to delete this event?')) {
                             (async () => {
@@ -127,7 +128,33 @@
                 })
             }
     
-            getNbh()        
+            getNbh()
+            
+            const buttons = document.querySelectorAll('.r-bh');
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function(event) {
+                    const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
+                    const id = btn.dataset.id;
+                    const p = document.getElementById("bh-" + id)
+                    p.style.display = "none"
+                    if (confirm('Do you wish to delete this business hour?')) {
+                        (async () => {
+                            const rawResponse = await fetch('/dashboard/business-hours/detach', {
+                                method: 'post',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': token
+                                },
+                                body: JSON.stringify({id: id})
+                            });
+                            const content = await rawResponse.json();
+                        })();
+                    }
+                });
+            });
+            
         }); 
     </script>
 {% endblock %}
@@ -198,19 +225,28 @@
 {% block dashboard-side-content %}
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title text-left"> <i class="fa fa-calendar-days text-success"></i>  Business Hours </h5>
+            <h5 class="card-title text-left" id="oka"> <i class="fa fa-calendar-days text-success"></i>  Business Hours </h5>
         </div>
         <div class="card-body">
             {% if business_hours  %}
                 {% for availability in business_hours %}
-                    {% if availability.timetable %}
-                        {% for entry in availability.timetable %}
-                            <p> {{ entry.0 }} : {{ entry.1 }} - 
-                                {{ entry.2 }}
+                    <div id="bh-{{ availability.id }}">
+                        {% if availability.timetable %}
+                            {% for entry in availability.timetable %}
+                                <p> {{ entry.0 }} : {{ entry.1 }} - 
+                                    {{ entry.2 }}
+                                </p>
+                            {% endfor %}
+                            
+                            <p class="d-flex flex-row-reverse">
+                                <button class="btn btn-sm btn-outline-info r-bh" data-id="{{ availability.id }}"><i class="fa fa-trash-arrow-up"></i></button>
                             </p>
-                        {% endfor %}
-                        <hr/>
-                    {% endif %}
+
+                            {% if forloop.counter != business_hours|length %}
+                                <hr class="clearfix"/>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 {% endfor %}
             {% else %}
                 <p><i class="fa fa-briefcase-clock text-danger"></i> You're yet to set your business hours.  </p>
