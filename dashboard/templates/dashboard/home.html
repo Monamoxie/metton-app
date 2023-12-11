@@ -119,20 +119,9 @@
 
 {% block dashboard-main-content %}
 <div class="row">
-    <div class="col-md-4">
-        <div class="profile-img">
-            {% if user.profile_photo is not None %}
-                <img src="{{ user.profile_photo.url }}" alt="Profile Photo" />
-            {% else %}                                        
-                <img src="http://placehold.it/180" alt="Profile Photo" />
-            {% endif %}
-        </div>
-        <div class="profile-work">
-            <p>ABOUT ME</p>
-            {{ user.profile_summary }}
-        </div>
-    </div>
-    <div class="col-md-8">
+    <!-- <div class="col-md-4">
+    </div> -->
+    <div class="col-md-12">
         <div class="row">
             <div class="col-md-8">
                 <div class="profile-header-section">
@@ -146,10 +135,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="meetings">
+                <!-- <div class="meetings">
                     <h4> Friday, 28th Janaury </h4>
                     <span>Next Meeting</span>
-                </div>
+                </div> -->
             </div>
             <div class="col-md-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">

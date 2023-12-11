@@ -28,8 +28,14 @@ body {
     background-color: var(--purple);
 }
 
-.nav-item:hover a {
+.dropdown-item:hover {
+    background-color: var(--purple);
+    color: rgb(188, 195, 229);
+}
+
+.nav-item:hover>a {
     color: orange;
+    color: rgb(188, 195, 229);
 }
 
 
@@ -348,4 +354,9 @@ body {
 
 .fc .fc-bg-event {
     opacity: 1 !important;
+}
+
+.close-calendar-modal {
+    font-size: 24px;
+    cursor: pointer;
 }

@@ -12,9 +12,9 @@
                     <div class="col-md-5" >
                         <div class="form-group">
                             <div class="col-md-10">
-                                <div class="profile-photo-preview mb-3">
+                                <div class="profile-photo-preview mb-3" id="profile-photo-preview">
                                     {% if user.profile_photo is not None %}
-                                        <img src="{{ user.profile_photo.url }}" alt="Profile Photo" />
+                                        <img src="{{ user.profile_photo.url }}" alt="Profile Photo" id="profile-photo-preview-img"/>
                                     {% else %}                                        
                                         <img src="http://placehold.it/180" alt="Profile Photo" />
                                     {% endif %}

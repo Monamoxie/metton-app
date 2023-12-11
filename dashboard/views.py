@@ -147,6 +147,88 @@ def manageSchedule(request):
 
 
 @login_required
+def manageAppointments(request):
+    choices = Event().get_frequency_choices
+    if request.method == "POST":
+        form = UnavailableDatesForm(request.POST or None)
+        if form.is_valid():
+            type_input_value = (
+                form.cleaned_data["type"] if "type" in form.cleaned_data else 2
+            )
+
+            user_time_zone = extract_user_timezone(form.data)
+
+            start_date = form.cleaned_data["start_date"]
+
+            start_time = EventService().timezone_conversion(
+                date_str=str(start_date),
+                time_str=str(form.cleaned_data["start_time"]),
+                from_timezone=user_time_zone,
+                to_timezone="UTC",
+            )
+
+            end_date = form.cleaned_data["end_date"]
+            end_time = EventService().timezone_conversion(
+                date_str=str(end_date),
+                time_str=str(form.cleaned_data["end_time"]),
+                from_timezone=user_time_zone,
+                to_timezone="UTC",
+            )
+
+            frequency = get_frequency(form.cleaned_data["frequency"])
+
+            if start_time == None or end_time == None:
+                messages.error(
+                    request,
+                    "Start time/End time could not be processed. Please ensure the correct slots were selected",
+                )
+                return redirect("manage.schedule")
+
+            if frequency == "" and (start_date == end_date and start_time > end_time):
+                messages.error(
+                    request,
+                    "Start time cannot be greater than End time, when start date and end date are the same",
+                )
+                return redirect("manage.schedule")
+
+            title = EventService.get_event_title(type_input_value)
+            event = Event(
+                frequency=get_frequency(form.cleaned_data["frequency"]),
+                user=User.objects.get(id=request.user.id),
+                title=title,
+                type=type_input_value,
+                start_date=start_date,
+                start_time=start_time,
+                end_date=end_date,
+                end_time=end_time,
+                timezone=user_time_zone,
+            )
+            event.save()
+            messages.success(request, "Your schedule has been updated!")
+            return redirect("manage.schedule")
+
+        else:
+            messages.error(request, form.errors)
+    else:
+        form = UnavailableDatesForm(None)
+
+    business_hours = EventService().get_business_hours(request=request)
+
+    return render(
+        request,
+        "dashboard/appointments.html",
+        {
+            "form": form,
+            "choices": choices,
+            "weekday_num": datetime.now().isoweekday(),
+            "business_hours": business_hours,
+            "display_name": request.user.name,
+            "position": request.user.position,
+        },
+    )
+
+
+@login_required
 def getEvents(request):
     params = request.GET
 
