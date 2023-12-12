@@ -5,7 +5,7 @@
         <div class="card-header">
             <h3 class="card-title">Edit Profile</h3>
         </div>
-        <div class="card-body profile-form">
+        <div class="card-body text-left">
             <form method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">

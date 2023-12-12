@@ -247,19 +247,15 @@ body {
 
 .profile-img {
     text-align: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden
 }
 
 .profile-img img {
-    width: 70%;
+    max-width: 1000%;
     height: 100%;
-}
-
-.profile-header-section {
-    text-align: left;
-}
-
-.profile-header-section h2 {
-    text-align: left;
 }
 
 .profile-header-section h6 {
@@ -323,10 +319,6 @@ body {
     color: #0062cc;
 }
 
-.profile-form {
-    text-align: left;
-}
-
 .profile-photo-preview {
     max-width: 200px;
     max-height: 200px;
@@ -359,4 +351,12 @@ body {
 .close-calendar-modal {
     font-size: 24px;
     cursor: pointer;
+}
+
+
+.appointments .fc-header-toolbar {
+    margin-top: -4px;
+    margin-bottom: -4px !important;
+    padding: 1.5em 1em;
+
 }
