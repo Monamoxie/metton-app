@@ -25,16 +25,15 @@
            </div>
            <div class="col-md-6 col-lg-6 col-sm-12">
                 <div class="d-flex flex-row-reverse">
-                    <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title text-left" id="oka"> <i class="fa fa-calendar-days text-success"></i> Friday, 28th Janaury  </h5>
+                    <div class="px-3">
+                        <h1 class="text-primary"> 8:15 p.m </h1>
                     </div>
-                    <div class="card-body">
-                        <div class="meetings">
+                    <div>
+                        <h3 class="card-title text-left " id="oka"> <i class="fa fa-clock px-1 theme-color-gray"></i> Friday, 28th Janaury  </h3>
+                        <div class="meetings text-center">
                             <span>Next Meeting</span>
                         </div>
                     </div>
-                </div>
                 </div>
            </div>
         </div>
@@ -47,64 +46,44 @@
             <div id='manage-schedules'></div>
         </div>
     </div>
-    <div class="modal" tabindex="-1" id="manage-schedule-modal">
-        <form method="POST" action="{% url 'manage.schedule' %}">
-            {% csrf_token %}
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Please confirm your changes</h5>
-                            <span aria-hidden="true" class="close-calendar-modal" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="fa fa-times-circle text-danger"></i>
-                            </span>
-                    </div>
-                    <div class="modal-body pl-3 pr-3">
-                        <div class="row">
-                            <div class="mb-2 pl-3 pr-3">
-                                {% for field in form %}
-                                    {% if field.name != 'frequency' %}
-                                        <div class="form-group row mb-2">
-                                            <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                                            <div class="col-sm-7">
-                                                {{ field }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
+    <div class="modal" tabindex="-1" id="appointment-modal"> 
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Event Details</h5>
+                </div>
+                <div class="modal-body pl-3 pr-3">
+                    <div class="row">
+                        <div class="mb-2 pl-3 pr-3">
+                            <div class="form-group row mb-2">
+                                <label class="col-sm-5 col-form-label">Title</label>
+                                <div class="col-sm-7" id="eventTitle"></div>
                             </div>
-                            <hr/>
-                            <div class="form-group row">
-                                <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
-                                <div class="col-md-12">
-                                    <div class="list-group">
-                                        {% for key, choice in choices.items %}
-                                            <label class="list-group-item">
-                                                <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
-                                                {{ choice }}
-                                            </label>
-                                        {% endfor %}
-                                        <input type="hidden" id="utz" name="utz"/>
-                                        <input type="hidden" id="f_day" value="{{ weekday_num }}" />
-                                    </div>
-                                </div>
-                            </div> 
-                            
+                            <div class="form-group row mb-2">
+                                <label class="col-sm-5 col-form-label">Start Date</label>
+                                <div class="col-sm-7" id="eventStart"></div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <label class="col-sm-5 col-form-label">End Date</label>
+                                <div class="col-sm-7" id="eventEnd"></div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <label class="col-sm-5 col-form-label">Frequency</label>
+                                <div class="col-sm-7" id="eventFreq"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <hr/>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}
 
 {% block dashboard-side-content %}
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title text-left" id="oka"> <i class="fa fa-calendar-days text-success"></i> Next 7 Days  </h5>
+            <h5 class="card-title text-left"> <i class="fa fa-calendar-days text-success"></i> Next 7 Days </h5>
         </div>
         <div class="card-body">
             <div class="meetings">
@@ -115,5 +94,5 @@
 {% endblock %}
 {% block footer_script %}
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
-<script src="{% static 'js/calendar.js' %}"></script>
+<script src="{% static 'js/appointment.js' %}"></script>
 {% endblock %}

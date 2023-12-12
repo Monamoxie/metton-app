@@ -6,6 +6,7 @@
     --purple: #4c0bce;
     --purple: #460eb5;
     --white: #fff;
+    --gray: #2c3e50;
 }
 
 body {
@@ -38,6 +39,9 @@ body {
     color: rgb(188, 195, 229);
 }
 
+.theme-color-gray {
+    color: var(--gray)
+}
 
 /* Authentication */
 .auth-wrapper {

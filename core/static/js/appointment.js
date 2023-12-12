@@ -12,20 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
             initialView: 'timeGridWeek',
             timeZone: getTz(),
             fixedWeekCount: false,
-            // showNonCurrentDates: true,
-            firstDay: document.getElementById("f_day").value,
-            headerToolbar: { center: 'timeGridWeek,timeGridDay', },
+            headerToolbar: { center: 'timeGridWeek,dayGridMonth', },
             views: {
-                dayGridMonth: { // name of view
+                dayGridMonth: {
                     titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
                 },
                 timeGridWeek: {
                     titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
-                }
-            },
-            validRange: function(nowDate) {
-                return {
-                    start: nowDate, //grey out areas
                 }
             },
             events: {
@@ -39,57 +32,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             },
             eventClick: function(arg) {
-                const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
-                if (confirm('Do you wish to delete this event?')) {
-                    (async () => {
-                        arg.event.remove()
-                        const rawResponse = await fetch('/dashboard/events/detach', {
-                            method: 'post',
-                            credentials: 'same-origin',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': token
-                            },
-                            body: JSON.stringify({id: arg.event.id})
-                        });
-                        const content = await rawResponse.json();
-                    })();
-                }
-            },
-            eventColor: '#008000',
-            navLinks: true,
-            selectable: true,
-            selectMirror: true,
-            select: function(info) {
+                
+                const info = arg.event
+               
+                
                 const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
                 const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
                 
-                document.getElementById('id_start_date').value = start_date
-                document.getElementById('id_start_time').value = start_time
-                document.getElementById('id_end_date').value = end_date
-                document.getElementById('id_end_time').value = end_time
-                document.getElementById('utz').value = getTz()
+                document.getElementById('eventTitle').innerHTML = info.title
+                document.getElementById('eventStart').innerHTML = start_date + ' ' + start_time
+                document.getElementById('eventEnd').innerHTML = end_date + ' ' + end_time
+                // document.getElementById('id_end_time').value = end_time
 
-                const e = info.jsEvent
+                // const e = info.jsEvent
 
                 setTimeout(() => {
-                    const myModalEl = document.getElementById('manage-schedule-modal')
+                    const myModalEl = document.getElementById('appointment-modal')
                     const myModal = new bootstrap.Modal(myModalEl)
                     myModal.show()
           
                     myModalEl.addEventListener('hidden.bs.modal', event => {
-                        calendar.unselect()
                         myModal.hide()
                     })
                 }, 500);
             },
-            selectOverlap: function(event) {
-                return false
-            },
+            eventColor: '#008000',
+            navLinks: true,
+            selectable: false,
+            selectMirror: false,
             unselectAuto: false,
             nowIndicator: true,
             businessHours: hasBusinessHours ? businessHours : false,
+            selectConstraint:  hasBusinessHours ? "businessHours" : null,
         });
         calendar.render(); 
     }
@@ -124,8 +98,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
             const id = btn.dataset.id;
             const p = document.getElementById("bh-" + id)
+            p.style.display = "none"
             if (confirm('Do you wish to delete this business hour?')) {
-                p.style.display = "none";
                 (async () => {
                     const rawResponse = await fetch('/dashboard/business-hours/detach', {
                         method: 'post',
@@ -137,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         body: JSON.stringify({id: id})
                     });
+                    const content = await rawResponse.json();
                 })();
             }
         });

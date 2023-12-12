@@ -242,19 +242,45 @@ def getEvents(request):
         event_data = {}
         event_data["id"] = str(event.id)
         event_data["title"] = str(event.title)
-        event_data["start"] = EventService().timezone_conversion(
+
+        start = EventService().timezone_conversion(
             date_str=str(event.start_date),
             time_str=str(event.start_time),
             from_timezone="UTC",
             to_timezone=event.timezone,
             time_only=False,
         )
-        event_data["end"] = EventService().timezone_conversion(
+
+        event_data["start"] = start
+
+        end = EventService().timezone_conversion(
             date_str=str(event.end_date),
             time_str=str(event.end_time),
             from_timezone="UTC",
             to_timezone=event.timezone,
             time_only=False,
+        )
+
+        event_data["end"] = end
+        # todo ::: not sending the expected data
+        event_data["timetable"] = EventService().get_timetable_from_frequency(
+            event.frequency.split(","),
+            event.start_date,
+            EventService().timezone_conversion(
+                date_str=str(event.start_date),
+                time_str=str(event.start_time),
+                from_timezone="UTC",
+                to_timezone=event.timezone,
+                time_only=True,
+            ),
+            EventService().timezone_conversion(
+                date_str=str(event.end_date),
+                time_str=str(event.end_time),
+                from_timezone="UTC",
+                to_timezone=event.timezone,
+                time_only=True,
+            ),
+            True,
         )
 
         if event.type == Event.EventTypes.UNAVAILABLE:

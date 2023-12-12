@@ -27,16 +27,6 @@ class EventService(Event):
             frequencies = event.frequency.split(",")
 
             event_data["id"] = event.id
-            event_data["daysOfWeek"] = frequencies
-            days = [
-                "Sunday",
-                "Monday",
-                "Tuesday",
-                "Wednessday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-            ]
 
             start_time = self.timezone_conversion(
                 date_str=str(event.start_date),
@@ -55,28 +45,13 @@ class EventService(Event):
             event_data["startTime"] = start_time
             event_data["endTime"] = end_time
 
-            timetable = []
-            if len(frequencies) > 0:
-                for week_no in frequencies:
-                    entry = []
-                    if week_no:
-                        entry.append(days[int(week_no)])
-                        entry.append(start_time)
-                        entry.append(end_time)
+            event_data["daysOfWeek"] = self.prep_frequency(
+                frequencies, event.start_date, start_time
+            )
 
-                        timetable.append(entry)
-                    else:
-                        week_day = datetime.combine(
-                            event.start_date, event.start_time
-                        ).strftime("%A")
-
-                        event_data["daysOfWeek"] = [str(days.index(week_day))]
-
-                        entry.append(f"{week_day + ', ' + str(event.start_date)}")
-                        entry.append(start_time)
-                        entry.append(end_time)
-
-                        timetable.append(entry)
+            timetable = self.get_timetable_from_frequency(
+                frequencies, event.start_date, start_time, end_time
+            )
 
             event_data["timetable"] = timetable
 
@@ -116,3 +91,54 @@ class EventService(Event):
             return user_timezone_aware.astimezone(to_timezone)
 
         return None
+
+    def get_timetable_from_frequency(
+        self, frequencies, start_date, start_time, end_time, just_days=False
+    ):
+        days = self.get_days_of_week()
+
+        timetable = []
+        if len(frequencies) > 0:
+            for week_no in frequencies:
+                entry = []
+                if week_no:
+                    entry.append(days[int(week_no)])
+
+                    if just_days == False:
+                        entry.append(start_time)
+                        entry.append(end_time)
+
+                    timetable.append(entry)
+                else:
+                    week_day = datetime.combine(start_date, start_time).strftime("%A")
+
+                    entry.append(f"{week_day + ', ' + str(start_date)}")
+                    if just_days == False:
+                        entry.append(start_time)
+                        entry.append(end_time)
+
+                    timetable.append(entry)
+
+        return timetable
+
+    def get_days_of_week(self):
+        return [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednessday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+        ]
+
+    def prep_frequency(self, frequencies, start_date, start_time):
+        """
+        - check for non recurring events
+        """
+        if len(frequencies) == 1 and frequencies[0] == "":
+            week_day = datetime.combine(start_date, start_time).strftime("%A")
+
+            return [str(self.get_days_of_week().index(week_day))]
+
+        return frequencies
