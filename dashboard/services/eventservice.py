@@ -112,11 +112,12 @@ class EventService(Event):
                 else:
                     week_day = datetime.combine(start_date, start_time).strftime("%A")
 
-                    entry.append(f"{week_day + ', ' + str(start_date)}")
                     if just_days == False:
+                        entry.append(f"{week_day + ', ' + str(start_date)}")
                         entry.append(start_time)
                         entry.append(end_time)
-
+                    else:
+                        entry.append(week_day)
                     timetable.append(entry)
 
         return timetable

@@ -2,17 +2,6 @@
 
 {% block body %}
     <div class="dashboard-wrapper container-fluid">
-        <div class="row">
-            <div class="col-lg-9">
-                <div class="dashboard-container">
-                    {% block dashboard-main-content %} {% endblock %}  
-                </div>
-            </div>
-             <div class="col-lg-3">
-                <div class="sidebar-content">
-                    {% block dashboard-side-content %} {% endblock %}  
-                </div>
-            </div>
-        </div>
+        {% block dashboard-main-content %} {% endblock %}
     </div>
 {% endblock %}

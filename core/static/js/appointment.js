@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('eventTitle').innerHTML = info.title
                 document.getElementById('eventStart').innerHTML = start_date + ' ' + start_time
                 document.getElementById('eventEnd').innerHTML = end_date + ' ' + end_time
+                if (info.extendedProps) {
+                    const timetable = info.extendedProps.timetable
+                    document.getElementById('eventFreq').innerHTML = 'Every:  ' + timetable
+                }
                 // document.getElementById('id_end_time').value = end_time
 
                 // const e = info.jsEvent

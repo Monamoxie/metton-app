@@ -1,47 +1,55 @@
 {% extends "Base/dashboard.html" %}
 
 {% block dashboard-main-content %}
-    <div class="card text-center">
-        <div class="card-header">
-            <h3 class="card-title">Edit Profile</h3>
-        </div>
-        <div class="card-body text-left">
-            <form method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-5" >
-                        <div class="form-group">
-                            <div class="col-md-10">
-                                <div class="profile-photo-preview mb-3" id="profile-photo-preview">
-                                    {% if user.profile_photo is not None %}
-                                        <img src="{{ user.profile_photo.url }}" alt="Profile Photo" id="profile-photo-preview-img"/>
-                                    {% else %}                                        
-                                        <img src="http://placehold.it/180" alt="Profile Photo" />
-                                    {% endif %}
-                                </div>
-                                <input type="file" class="form-control" name="profile_photo" id="id_profile_photo" accept="image/*" onchange="previewProfilePhoto(this);">
-                            </div>
-                        </div>
+    <div class="row">
+        <div class="col-lg-12">
+           <div class="container">
+             <div class="dashboard-container">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h3 class="card-title">Edit Profile</h3>
                     </div>
-                    <div class="col-md-7">
-                        {% for field in form %}
-                            {% if field.name != 'profile_photo' %}
-                                <div class="form-group row">
-                                    <label for="" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                                    <div class="col-sm-7">
-                                        {{ field }}
+                    <div class="card-body text-left">
+                        <form method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-5" >
+                                    <div class="form-group">
+                                        <div class="col-md-10">
+                                            <div class="profile-photo-preview mb-3" id="profile-photo-preview">
+                                                {% if user.profile_photo is not None %}
+                                                    <img src="{{ user.profile_photo.url }}" alt="Profile Photo" id="profile-photo-preview-img"/>
+                                                {% else %}                                        
+                                                    <img src="http://placehold.it/180" alt="Profile Photo" />
+                                                {% endif %}
+                                            </div>
+                                            <input type="file" class="form-control" name="profile_photo" id="id_profile_photo" accept="image/*" onchange="previewProfilePhoto(this);">
+                                        </div>
                                     </div>
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group m-auto">
-                            <button type="submit" class="btn btn-primary btn-block">Update</button>
-                        </div>
+                                <div class="col-md-7">
+                                    {% for field in form %}
+                                        {% if field.name != 'profile_photo' %}
+                                            <div class="form-group row mb-3">
+                                                <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                                                <div class="col-sm-7">
+                                                    {{ field }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group m-auto">
+                                        <button type="submit" class="btn btn-primary btn-block">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
+           </div>
         </div>
     </div>
 {% endblock %}

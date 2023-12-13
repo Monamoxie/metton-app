@@ -8,6 +8,50 @@ from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 
 class EditProfileForm(forms.ModelForm):
+    name = forms.IntegerField(
+        required=True,
+        label="Name",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "type": "text",
+            },
+        ),
+    )
+
+    company = forms.IntegerField(
+        required=True,
+        label="Company",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "type": "text",
+            },
+        ),
+    )
+
+    position = forms.IntegerField(
+        required=True,
+        label="Position",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "type": "text",
+            },
+        ),
+    )
+
+    profile_summary = forms.IntegerField(
+        required=True,
+        label="Profile Summary",
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "type": "text",
+            },
+        ),
+    )
+
     class Meta:
         model = get_user_model()
         exclude = ("user",)

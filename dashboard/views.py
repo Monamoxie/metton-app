@@ -263,7 +263,8 @@ def getEvents(request):
 
         event_data["end"] = end
         # todo ::: not sending the expected data
-        event_data["timetable"] = EventService().get_timetable_from_frequency(
+
+        tables = EventService().get_timetable_from_frequency(
             event.frequency.split(","),
             event.start_date,
             EventService().timezone_conversion(
@@ -282,6 +283,14 @@ def getEvents(request):
             ),
             True,
         )
+
+        timetable = []
+        for table in tables:
+            timetable.append(f"{table[0] + 's'}")
+
+        timetable = "".join(timetable)
+
+        event_data["timetable"] = timetable
 
         if event.type == Event.EventTypes.UNAVAILABLE:
             event_data["display"] = "background"

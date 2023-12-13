@@ -1,102 +1,112 @@
 {% extends "Base/dashboard.html" %}
 {% load static %}
 {% block dashboard-main-content %}
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title text-left">Manage Schedule/Availability </h3>
-            <p><small><i class="fa fa-briefcase text-success"></i> Business Hours: If set, anyone can book an appointment within these slots </small></p>
-            <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going on holiday, an event or just need time off? That's fine. You can select those dates and set them as Unavailable</small></p>
-        </div>
-        <div class="card-body">
-            <div id='manage-schedules'></div>
-        </div>
-    </div>
-    <div class="modal" tabindex="-1" id="manage-schedule-modal">
-        <form method="POST" action="{% url 'manage.schedule' %}">
-            {% csrf_token %}
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Please confirm your changes</h5>
-                            <span aria-hidden="true" class="close-calendar-modal" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="fa fa-times-circle text-danger"></i>
-                            </span>
+ <div class="row">
+    <div class="col-lg-9">
+        <div class="container min-vh-100">
+            <div class="dashboard-container ">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-left">Manage Schedule/Availability </h3>
+                        <p><small><i class="fa fa-briefcase text-success"></i> Business Hours: If set, anyone can book an appointment within these slots </small></p>
+                        <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going on holiday, an event or just need time off? That's fine. You can select those dates and set them as Unavailable</small></p>
                     </div>
-                    <div class="modal-body pl-3 pr-3">
-                        <div class="row">
-                            <div class="mb-2 pl-3 pr-3">
-                                {% for field in form %}
-                                    {% if field.name != 'frequency' %}
-                                        <div class="form-group row mb-2">
-                                            <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
-                                            <div class="col-sm-7">
-                                                {{ field }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                            <hr/>
-                            <div class="form-group row">
-                                <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
-                                <div class="col-md-12">
-                                    <div class="list-group">
-                                        {% for key, choice in choices.items %}
-                                            <label class="list-group-item">
-                                                <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
-                                                {{ choice }}
-                                            </label>
-                                        {% endfor %}
-                                        <input type="hidden" id="utz" name="utz"/>
-                                        <input type="hidden" id="f_day" value="{{ weekday_num }}" />
-                                    </div>
-                                </div>
-                            </div> 
-                            
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <div class="card-body">
+                        <div id='manage-schedules'></div>
                     </div>
                 </div>
+                <div class="modal" tabindex="-1" id="manage-schedule-modal">
+                    <form method="POST" action="{% url 'manage.schedule' %}">
+                        {% csrf_token %}
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Please confirm your changes</h5>
+                                        <span aria-hidden="true" class="close-calendar-modal" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa fa-times-circle text-danger"></i>
+                                        </span>
+                                </div>
+                                <div class="modal-body pl-3 pr-3">
+                                    <div class="row">
+                                        <div class="mb-2 pl-3 pr-3">
+                                            {% for field in form %}
+                                                {% if field.name != 'frequency' %}
+                                                    <div class="form-group row mb-2">
+                                                        <label for="{{ field.auto_id }}" class="col-sm-5 col-form-label">{{ field.label }}</label>
+                                                        <div class="col-sm-7">
+                                                            {{ field }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <hr/>
+                                        <div class="form-group row">
+                                            <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
+                                            <div class="col-md-12">
+                                                <div class="list-group">
+                                                    {% for key, choice in choices.items %}
+                                                        <label class="list-group-item">
+                                                            <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
+                                                            {{ choice }}
+                                                        </label>
+                                                    {% endfor %}
+                                                    <input type="hidden" id="utz" name="utz"/>
+                                                    <input type="hidden" id="f_day" value="{{ weekday_num }}" />
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
-    </div>
-{% endblock %}
-
-{% block dashboard-side-content %}
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title text-left" id="oka"> <i class="fa fa-calendar-days text-success"></i>  Business Hours </h5>
-        </div>
-        <div class="card-body">
-            {% if business_hours  %}
-                {% for availability in business_hours %}
-                    <div id="bh-{{ availability.id }}">
-                        {% if availability.timetable %}
-                            {% for entry in availability.timetable %}
-                                <p> {{ entry.0 }} : {{ entry.1 }} - 
-                                    {{ entry.2 }}
-                                </p>
-                            {% endfor %}
-
-                            <p class="d-flex flex-row-reverse">
-                                <button class="btn btn-sm btn-outline-info r-bh" data-id="{{ availability.id }}"><i class="fa fa-trash-arrow-up"></i></button>
-                            </p>
-
-                            {% if forloop.counter != business_hours|length %}
-                                <hr class="clearfix"/>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p><i class="fa fa-briefcase-clock text-danger"></i> You're yet to set your business hours.  </p>
-            {% endif %}
         </div>
     </div>
+    <div class="lg-md-3 col-md-3 col-sm-12">
+        <div class="sidebar-content">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-left" id="oka"> <i class="fa fa-calendar-days text-success"></i>  Business Hours </h5>
+                </div>
+                <div class="card-body">
+                    {% if business_hours  %}
+                        {% for availability in business_hours %}
+                            <div id="bh-{{ availability.id }}">
+                                {% if availability.timetable %}
+                                    {% for entry in availability.timetable %}
+                                        <p> {{ entry.0 }} : {{ entry.1 }} - 
+                                            {{ entry.2 }}
+                                        </p>
+                                    {% endfor %}
+
+                                    <p class="d-flex flex-row-reverse">
+                                        <button class="btn btn-sm btn-outline-info r-bh" data-id="{{ availability.id }}"><i class="fa fa-trash-arrow-up"></i></button>
+                                    </p>
+
+                                    {% if forloop.counter != business_hours|length %}
+                                        <hr class="clearfix"/>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p><i class="fa fa-briefcase-clock text-danger"></i> You're yet to set your business hours.  </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
 {% block footer_script %}
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 <script src="{% static 'js/calendar.js' %}"></script>
