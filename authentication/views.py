@@ -59,6 +59,3 @@ def login(request):
     else:
         return render(request, "authentication/login.html")
 
-
-def meet(request):
-    pass

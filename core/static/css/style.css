@@ -239,7 +239,7 @@ body {
 
 .sidebar-content {
     min-height: 700px;
-    width: 70%;
+    max-width: 100%;
     display: table;
     border-bottom: 100px solid rgb(215, 219, 239) !important;
     position: relative;

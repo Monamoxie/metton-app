@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django_dump_die",
     "dashboard",
     "authentication",
+    "home",
     "django.contrib.admin",
     "django.contrib.auth",
 ]
