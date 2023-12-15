@@ -8,7 +8,7 @@ from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 
 class EditProfileForm(forms.ModelForm):
-    name = forms.IntegerField(
+    name = forms.CharField(
         required=True,
         label="Name",
         widget=forms.TextInput(
@@ -19,7 +19,7 @@ class EditProfileForm(forms.ModelForm):
         ),
     )
 
-    company = forms.IntegerField(
+    company = forms.CharField(
         required=True,
         label="Company",
         widget=forms.TextInput(
@@ -30,7 +30,7 @@ class EditProfileForm(forms.ModelForm):
         ),
     )
 
-    position = forms.IntegerField(
+    position = forms.CharField(
         required=True,
         label="Position",
         widget=forms.TextInput(
@@ -41,7 +41,7 @@ class EditProfileForm(forms.ModelForm):
         ),
     )
 
-    profile_summary = forms.IntegerField(
+    profile_summary = forms.CharField(
         required=True,
         label="Profile Summary",
         widget=forms.Textarea(
@@ -59,7 +59,7 @@ class EditProfileForm(forms.ModelForm):
 
     def clean_profile_photo(self):
         profile_photo = self.cleaned_data.get("profile_photo", None)
-        if profile_photo:
+        if profile_photo and hasattr(profile_photo, "content_type"):
             if profile_photo.content_type not in [
                 "image/jpeg",
                 "image/jpg",

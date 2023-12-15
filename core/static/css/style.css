@@ -357,10 +357,22 @@ body {
     cursor: pointer;
 }
 
-
 .appointments .fc-header-toolbar {
     margin-top: -4px;
     margin-bottom: -4px !important;
     padding: 1.5em 1em;
+}
 
+.meeting-link .input-group-text {
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.meeting-link .input-group-text:hover {
+    background-color: #0d6efd;
+}
+
+.meeting-link .input-group-text:hover i {
+    color: var(--white);
 }

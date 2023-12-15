@@ -1,3 +1,4 @@
+from email.policy import default
 import os
 from time import timezone
 import uuid
@@ -37,6 +38,7 @@ class User(AbstractUser):
         width_field="width_field",
         height_field="height_field",
     )
+    public_id = models.CharField("public_id", max_length=190, blank=True, unique=True)
 
     height_field = models.IntegerField(default=180)
     width_field = models.IntegerField(default=180)
@@ -49,6 +51,17 @@ class User(AbstractUser):
 
     def has_business_hours(self):
         return self.event_set.filter(type=Event.EventTypes.BUSINESS_HOURS).exists()
+
+    def save(self, *args, **kwargs):
+        if self.public_id == "" or self.public_id is None:
+            id_exists = True
+            while id_exists:
+                p_id = uuid.uuid4().hex[:7]
+                if not User.objects.filter(public_id=p_id).exists():
+                    id_exists = False
+            self.public_id = p_id
+
+        super().save(*args, **kwargs)  # Call the "real" save() method.
 
 
 class CustomUserManager(BaseUserManager):

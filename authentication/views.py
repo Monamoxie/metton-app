@@ -58,3 +58,7 @@ def login(request):
             return redirect("login")
     else:
         return render(request, "authentication/login.html")
+
+
+def meet(request):
+    pass
