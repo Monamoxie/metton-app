@@ -1,8 +1,10 @@
 /* Generic */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap');
+@import 'https://fonts.googleapis.com/css?family=Poppins:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i';
 
 :root {
     --dmsans: 'DM Sans', sans-serif;
+    --poppins: 'poppins, Helvetica, sans-serif';
     --purple: #4c0bce;
     --purple: #460eb5;
     --white: #fff;
@@ -375,4 +377,58 @@ body {
 
 .meeting-link .input-group-text:hover i {
     color: var(--white);
+}
+
+/* Meet */
+.meet-wrapper {
+    width: 100%;
+    margin: 0;
+}
+
+.meet-wrapper .container {
+    margin: 90px auto;
+    box-shadow: 0 0 100px -5px rgba(0, 0, 0, .25);
+    border-radius: 32px;
+    overflow: hidden;
+}
+
+.meet-wrapper .profile-section {
+    padding: 70px 30px 45px;
+    background: linear-gradient(#0b7080, #0ba376);
+    background: linear-gradient(#052952, #046447);
+    /* background: -webkit-linear-gradient(left, #0b7080, #140f61); */
+}
+
+.meet-wrapper .profile-section .profile-photo {
+    max-width: 180px;
+    max-height: 180px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.meet-wrapper .profile-section .profile-photo img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.meet-wrapper .profile-section .profile-data {
+    text-align: center;
+    color: #fff;
+    margin: 15px auto;
+    font-family: var(--poppins);
+    font-family: var(--dmsans);
+}
+
+.meet-wrapper .profile-section .profile-data h4 {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.meet-wrapper .booking-section {
+    min-height: 700px;
+}
+
+.meet-wrapper .booking-section .fc {
+    margin: 40px 30px;
 }

@@ -10,21 +10,25 @@ function previewProfilePhoto(input) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById("clicky").addEventListener('click', event => {
-        const copyText = document.getElementById("copyText");
-        const clipboardAlert = document.getElementById("clipboardAlert")
-        
-        // copyText.select();
-        // copyText.setSelectionRange(0, 99999); // For mobile devices
-        
-        navigator.clipboard.writeText(copyText.value);
+    const clicky = document.getElementById("clicky")
+    if (clicky) {
+        clicky.addEventListener('click', event => {
+            const copyText = document.getElementById("copyText");
+            const clipboardAlert = document.getElementById("clipboardAlert")
+            
+            // copyText.select();
+            // copyText.setSelectionRange(0, 99999); // For mobile devices
+            
+            navigator.clipboard.writeText(copyText.value);
 
-        clipboardAlert.classList.remove('invisible')
+            clipboardAlert.classList.remove('invisible')
 
-        setTimeout(() => {
-            clipboardAlert.classList.add('invisible')
-        }, 1500);
-        // Alert the copied text
-        console.log("Copied the text: " + copyText.value);
-    })
+            setTimeout(() => {
+                clipboardAlert.classList.add('invisible')
+            }, 1500);
+            // Alert the copied text
+            console.log("Copied the text: " + copyText.value);
+        })
+    }
+    
 })
