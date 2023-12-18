@@ -133,7 +133,7 @@ class Event(models.Model):
 
     def get_frequency_choices(self):
         choices = {
-            "no": "Once",
+            "no": "No repeat",
             "0": "Every Sunday",
             "1": "Every Monday",
             "2": "Every Tuesday",

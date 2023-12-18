@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
             themeSystem: 'bootstrap5',
             initialView: 'timeGridWeek',
             timeZone: getTz(),
+            longPressDelay: 200,
+            selectLongPressDelay: 200,
             fixedWeekCount: false,
             headerToolbar: { center: 'timeGridWeek,dayGridMonth', },
             views: {

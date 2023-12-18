@@ -432,3 +432,29 @@ body {
 .meet-wrapper .booking-section .fc {
     margin: 40px 30px;
 }
+
+.meet-wrapper .booking-section .fc .fc-toolbar-chunk button.fc-dayGridMonth-button {
+    display: none;
+}
+
+.meet-wrapper .booking-section .meet-modal .modal-header {
+    background: linear-gradient(#052952, #046447);
+    color: #fff;
+}
+
+.meet-wrapper .booking-section .meet-modal .modal-header .modal-title {
+    font-weight: 500;
+}
+
+.meet-wrapper .booking-section .meet-modal .modal-body {
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.meet-wrapper .booking-section .meet-modal .modal-body i {
+    color: grey !important;
+}
+
+.meet-wrapper .booking-section .meet-modal .modal-body textarea {
+    resize: none;
+}

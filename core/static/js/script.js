@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 clipboardAlert.classList.add('invisible')
             }, 1500);
-            // Alert the copied text
-            console.log("Copied the text: " + copyText.value);
         })
     }
     

@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var calendar = new FullCalendar.Calendar(calendarEl, {
             themeSystem: 'bootstrap5',
             initialView: 'timeGridWeek',
+            longPressDelay: 200,
+            selectLongPressDelay: 200,
             timeZone: getTz(),
             fixedWeekCount: false,
             // showNonCurrentDates: true,
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         calendar.unselect()
                         myModal.hide()
                     })
-                }, 500);
+                }, 900);
             },
             selectOverlap: function(event) {
                 return false
