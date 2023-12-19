@@ -371,6 +371,10 @@ body {
     cursor: pointer;
 }
 
+.frequency {
+    padding: 4px 20px;
+}
+
 .meeting-link .input-group-text:hover {
     background-color: #0d6efd;
 }
@@ -378,6 +382,8 @@ body {
 .meeting-link .input-group-text:hover i {
     color: var(--white);
 }
+
+
 
 /* Meet */
 .meet-wrapper {
@@ -433,10 +439,6 @@ body {
     margin: 40px 30px;
 }
 
-.meet-wrapper .booking-section .fc .fc-toolbar-chunk button.fc-dayGridMonth-button {
-    display: none;
-}
-
 .meet-wrapper .booking-section .meet-modal .modal-header {
     background: linear-gradient(#052952, #046447);
     color: #fff;
@@ -451,7 +453,7 @@ body {
     padding-right: 35px;
 }
 
-.meet-wrapper .booking-section .meet-modal .modal-body i {
+.meet-wrapper .booking-section .meet-modal .modal-body .event-extra-data i {
     color: grey !important;
 }
 

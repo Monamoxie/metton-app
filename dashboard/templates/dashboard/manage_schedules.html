@@ -44,9 +44,9 @@
                                         <div class="form-group row">
                                             <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
                                             <div class="col-md-12">
-                                                <div class="list-group">
+                                                <div class="list-group  d-flex flex-row justify-content-start flex-wrap">
                                                     {% for key, choice in choices.items %}
-                                                        <label class="list-group-item">
+                                                        <label class="list-group-item m-1">
                                                             <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
                                                             {{ choice }}
                                                         </label>

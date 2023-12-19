@@ -42,13 +42,35 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Confirm Appointment</h5>
+                           <div>
+                             <h5 class="modal-title">Confirm Appointment</h5>
+                           </div>
                             <span aria-hidden="true" class="close-calendar-modal" data-bs-dismiss="modal" aria-label="Close">
                               <i class="fa fa-times-circle text-danger"></i>
                             </span>
                         </div>
                         <div class="modal-body">
-                          <div class="row g-3 align-items-center">
+
+                          <div class="row d-flex flex-column">
+                            <div class="d-flex flex-row">
+                                <div class="px-3">
+                                    <h3 class="text-primary">  <i class="fa fa-clock px-1 text-success"></i> <span id="evtStartTime"></span> </h3>
+                                </div>
+                                <div>
+                                    <h6 class="card-title text-left " id="oka"> <span id="evtStartDate"></span> </h6>
+                                </div>
+                            </div>
+                             <div class="d-flex flex-row">
+                                <div class="px-3">
+                                    <h3 class="text-primary"> <i class="fa fa-clock px-1 text-danger"></i>  <span id="evtEndTime"></span>  </h3>
+                                </div>
+                                <div>
+                                    <h6 class="card-title text-left"><span id="evtEndDate"></span> </h6>
+                                </div>
+                            </div>
+                          </div>
+
+                          <!-- <div class="row g-3 align-items-center">
                             <div class="col-auto">
                               <label for="title" class="col-form-label"> <i class="fa fa-briefcase-clock"></i> </label>
                             </div>
@@ -56,6 +78,7 @@
                               <input type="text" id="title" class="form-control p-2" placeholder="Add Title">
                             </div>
                           </div>
+
                           <div class="row g-3 mt-1 align-items-center">
                             <div class="col-auto">
                               <h6><i class="fa fa-clock"></i> </h6>
@@ -69,33 +92,35 @@
                              <div class="col-md-4">
                               <input type="text" id="title" class="form-control p-2" placeholder="End time">
                             </div>
-                          </div>
-                          <div class="col-md-12 mt-3">
-                            <div class="list-group">
-                                {% for key, choice in choices.items %}
-                                    <label class="list-group-item">
-                                        <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
-                                        {{ choice }}
-                                    </label>
-                                {% endfor %}
-                                <input type="hidden" id="utz" name="utz"/>
-                                <input type="hidden" id="f_day" value="{{ weekday_num }}" />
+                          </div> -->
+                          <div class="event-extra-data">
+                            <div class="col-md-12 mt-3 frequency">
+                              <div class="list-group d-flex flex-row justify-content-between flex-wrap">
+                                  {% for key, choice in choices.items %}
+                                      <label class="list-group-item m-1">
+                                          <input name="frequency" class="form-check-input me-1" value="{{ key }}" type="checkbox"{% if key == 'no' %} checked{% endif %}>
+                                          {{ choice }}
+                                      </label>
+                                  {% endfor %}
+                                  <input type="hidden" id="utz" name="utz"/>
+                                  <input type="hidden" id="f_day" value="{{ weekday_num }}" />
+                              </div>
                             </div>
-                          </div>
-                          <div class="row g-3 mt-1 align-items-center">
-                            <div class="col-auto">
-                              <label for="emal" class="col-form-label"><i class="fa fa-envelope-circle-check"></i></label>
+                            <div class="row g-3 mt-1 align-items-center">
+                              <div class="col-auto">
+                                <label for="emal" class="col-form-label"><i class="fa fa-envelope-circle-check"></i></label>
+                              </div>
+                              <div class="col-md-11">
+                                <input type="text" id="emal" class="form-control p-2" placeholder="Email address">
+                              </div>
                             </div>
-                            <div class="col-md-11">
-                              <input type="text" id="emal" class="form-control p-2" placeholder="Email address">
-                            </div>
-                          </div>
-                          <div class="row g-3 mt-1 align-items-center">
-                            <div class="col-auto">
-                              <label for="emal" class="col-form-label"><i class="fa fa-clipboard-check"></i></label>
-                            </div>
-                            <div class="col-md-11">
-                              <textarea type="text" id="emal" class="form-control p-2" placeholder="Add any note"></textarea>
+                            <div class="row g-3 mt-1 align-items-center">
+                              <div class="col-auto">
+                                <label for="emal" class="col-form-label"><i class="fa fa-clipboard-check"></i></label>
+                              </div>
+                              <div class="col-md-11">
+                                <textarea type="text" id="emal" class="form-control p-2" placeholder="Add any note"></textarea>
+                              </div>
                             </div>
                           </div>
                         </div>
