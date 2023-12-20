@@ -51,24 +51,27 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             select: function(info) {
                   
-                const [start_date, start_time, today] = [
+                const [start_date, start_time, today, end_date, end_time] = [
                     info.start.toISOString().slice(0, 10), 
                     info.start.toISOString().slice(11, 16), 
-                    new Date().toISOString().slice(0,10)
+                    new Date().toISOString().slice(0,10),
+                    info.end.toISOString().slice(0, 10), 
+                    info.end.toISOString().slice(11, 16)
                 ]
-                const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
 
                 if (start_date < today) {
                     return false
-                } 
-                
-                const [start_date_str, end_date_str] = [info.start.toDateString(), info.end.toDateString()]
-                
-                const currentData = calendar.currentData
-
-                if (currentData.currentViewType == "dayGridMonth") {
+                }
+ 
+                if (calendar.currentData.currentViewType == "dayGridMonth") {
                     calendar.changeView('timeGridDay', start_date);
                 } else {
+
+                    document.getElementById('evtStartTime').innerHTML = setAmPm(start_time)
+                    document.getElementById('evtStartDate').innerHTML = info.start.toDateString()
+                    document.getElementById('evtEndTime').innerHTML = setAmPm(end_time)
+                    document.getElementById('evtEndDate').innerHTML = info.end.toDateString()
+
                     setTimeout(() => {
                         const myModalEl = document.getElementById('meet-modal')
                         const myModal = new bootstrap.Modal(myModalEl)
@@ -79,17 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 calendar.unselect()
                             })
                     }, 500);
-
-                    document.getElementById('evtStartTime').innerHTML = start_time
-                    document.getElementById('evtStartDate').innerHTML = start_date_str
-                    document.getElementById('evtEndTime').innerHTML = end_time
-                    document.getElementById('evtEndDate').innerHTML = end_date_str
-
-                    // document.getElementById('eventEnd').innerHTML = end_date + ' ' + end_time
-                    // if (info.extendedProps) {
-                    //     const timetable = info.extendedProps.timetable
-                    //     document.getElementById('eventFreq').innerHTML = 'Every:  ' + timetable
-                    // }
                 }      
             },
             slotLabelInterval: "00:30",

@@ -28,5 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1500);
         })
     }
+
+    setAmPm = function (t) {
+        const h = t.slice(0,2), m = t.slice(3,5)
+        const ampm = h >= 12 ? 'pm' : 'am';
+        let h_s = h % 12;
+        h_s = h_s ? h_s : 12; 
+        
+        return h_s + ':' + m + ' ' + ampm;
+    }
     
 })

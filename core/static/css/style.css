@@ -453,6 +453,14 @@ body {
     padding-right: 35px;
 }
 
+.meet-wrapper .booking-section .meet-modal .modal-body .time-supercript {
+    font-size: 10px;
+    color: slategray;
+    width: 40px;
+    display: inline-block;
+    text-align: right;
+}
+
 .meet-wrapper .booking-section .meet-modal .modal-body .event-extra-data i {
     color: grey !important;
 }
