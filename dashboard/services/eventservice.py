@@ -1,11 +1,13 @@
+import string
 import time
 from typing import Any
 from django.db import models
 import dashboard
 import pytz
 from datetime import datetime
+import dateutil.parser
 
-from dashboard.models import Event
+from dashboard.models import Event, User
 
 
 class EventService(Event):
@@ -15,9 +17,17 @@ class EventService(Event):
         else:
             return Event.EventTypes.UNAVAILABLE.name
 
-    def get_business_hours(self, request):
+    def get_business_hours(self, user, public_id=None):
+        if public_id is not None:
+            user = User.objects.filter(public_id=public_id).first()
+        else:
+            user = user
+
+        if not user:
+            return []
+
         events = Event.objects.filter(
-            user=request.user, type=Event.EventTypes.BUSINESS_HOURS
+            user=user, type=Event.EventTypes.BUSINESS_HOURS
         ).order_by("created_at")
 
         data = []
@@ -143,3 +153,90 @@ class EventService(Event):
             return [str(self.get_days_of_week().index(week_day))]
 
         return frequencies
+
+    def get_events(self, inputs, public_id=None):
+        start_date = self.get_start_date(inputs)
+
+        if public_id is not None:
+            user = User.objects.filter(public_id=public_id).first()
+        else:
+            user = user
+
+        if not user:
+            return []
+
+        events = Event.objects.filter(user=user, start_date__gte=start_date).exclude(
+            type=Event.EventTypes.BUSINESS_HOURS
+        )
+        data = []
+        for event in events:
+            event_data = {}
+            event_data["id"] = str(event.id)
+            event_data["title"] = str(event.title)
+
+            start = self.timezone_conversion(
+                date_str=str(event.start_date),
+                time_str=str(event.start_time),
+                from_timezone="UTC",
+                to_timezone=event.timezone,
+                time_only=False,
+            )
+
+            event_data["start"] = start
+
+            end = self.timezone_conversion(
+                date_str=str(event.end_date),
+                time_str=str(event.end_time),
+                from_timezone="UTC",
+                to_timezone=event.timezone,
+                time_only=False,
+            )
+
+            event_data["end"] = end
+
+            tables = self.get_timetable_from_frequency(
+                event.frequency.split(","),
+                event.start_date,
+                self.timezone_conversion(
+                    date_str=str(event.start_date),
+                    time_str=str(event.start_time),
+                    from_timezone="UTC",
+                    to_timezone=event.timezone,
+                    time_only=True,
+                ),
+                self.timezone_conversion(
+                    date_str=str(event.end_date),
+                    time_str=str(event.end_time),
+                    from_timezone="UTC",
+                    to_timezone=event.timezone,
+                    time_only=True,
+                ),
+                True,
+            )
+
+            timetable = []
+            for table in tables:
+                timetable.append(f"{table[0] + 's'}")
+
+            timetable = "".join(timetable)
+
+            event_data["timetable"] = timetable
+
+            if event.type == Event.EventTypes.UNAVAILABLE:
+                event_data["display"] = "background"
+                event_data["backgroundColor"] = "#502c3c"
+                event_data["color"] = "#c0c0c0"
+                event_data["classNames"] = "fc-unavailable"
+
+            event_data = dict(event_data)
+            data.append(event_data)
+
+        return data
+
+    def get_start_date(self, params):
+        if "start" in params:
+            start_date = str(params["start"])
+        else:
+            start_date = str(datetime.now())
+
+        return str(dateutil.parser.parse(start_date).date())

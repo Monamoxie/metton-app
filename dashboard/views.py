@@ -130,7 +130,7 @@ def manageSchedule(request):
     else:
         form = UnavailableDatesForm(None)
 
-    business_hours = EventService().get_business_hours(request=request)
+    business_hours = EventService().get_business_hours(user=request.user)
 
     return render(
         request,
@@ -212,7 +212,7 @@ def manageAppointments(request):
     else:
         form = UnavailableDatesForm(None)
 
-    business_hours = EventService().get_business_hours(request=request)
+    business_hours = EventService().get_business_hours(user=request.user)
 
     return render(
         request,
@@ -230,9 +230,7 @@ def manageAppointments(request):
 
 @login_required
 def getEvents(request):
-    params = request.GET
-
-    start_date = get_start_date(params)
+    start_date = EventService().get_start_date(request.GET)
 
     events = Event.objects.filter(
         user=request.user, start_date__gte=start_date
@@ -262,7 +260,6 @@ def getEvents(request):
         )
 
         event_data["end"] = end
-        # todo ::: not sending the expected data
 
         tables = EventService().get_timetable_from_frequency(
             event.frequency.split(","),
@@ -325,7 +322,7 @@ def detachEvent(request):
 
 @login_required
 def getBusinessHours(request):
-    data = EventService().get_business_hours(request)
+    data = EventService().get_business_hours(request.user)
 
     return JsonResponse(
         data=data,
@@ -365,15 +362,6 @@ def get_frequency(form_frequencies):
                 frequency += str(f) + prepender
 
     return frequency
-
-
-def get_start_date(params):
-    if "start" in params:
-        start_date = str(params["start"])
-    else:
-        start_date = str(datetime.now())
-
-    return str(dateutil.parser.parse(start_date).date())
 
 
 def get_end_date(params):

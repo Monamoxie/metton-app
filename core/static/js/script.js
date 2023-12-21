@@ -10,19 +10,15 @@ function previewProfilePhoto(input) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    let hasBusinessHours = false, businessHours = false
+
     const clicky = document.getElementById("clicky")
     if (clicky) {
         clicky.addEventListener('click', event => {
             const copyText = document.getElementById("copyText");
             const clipboardAlert = document.getElementById("clipboardAlert")
-            
-            // copyText.select();
-            // copyText.setSelectionRange(0, 99999); // For mobile devices
-            
             navigator.clipboard.writeText(copyText.value);
-
             clipboardAlert.classList.remove('invisible')
-
             setTimeout(() => {
                 clipboardAlert.classList.add('invisible')
             }, 1500);
@@ -37,5 +33,34 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return h_s + ':' + m + ' ' + ampm;
     }
+
+    getTz = function () {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        return tz ? tz : "UTC"
+    }
+
+    getNbh = (async function () {
+        pid = JSON.parse(document.getElementById('pid').textContent)
+        await fetch("/business-hours/" + pid, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            return response.json()
+        }).then((data) => {
+            if (data.length > 0) {
+                this.hasBusinessHours = true
+                this.businessHours = data
+            }
+        }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            renderCalender(pid)
+        })
+    });
+    
+    getNbh()
     
 })
