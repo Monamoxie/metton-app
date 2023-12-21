@@ -23,6 +23,7 @@
                   <img src="http://placehold.it/180" alt="Profile Photo" />
               {% endif %}
               {{ public_id|json_script:"pid" }}
+              {% csrf_token %}
             </div>
             <div class="profile-data">
               <h4>{{ user.name }}</h4>
@@ -36,7 +37,7 @@
               <p>{{ user.profile_summary }}</p>
             </div>
           </div>
-          <div class="col-md-8 booking-section">
+          <div class="col-md-8 booking-section" id="booking-section">
             <div id='meet'></div>
             <input type="hidden" id="f_day_month" value="{{ first_day_of_month }}" />
               <div class="modal meet-modal " tabindex="-1" id="meet-modal"> 
@@ -51,7 +52,7 @@
                             </span>
                         </div>
                         <div class="modal-body">
-
+                          <div id="response" class="alert"></div>
                           <div class="row d-flex flex-column">
                             <div class="d-flex flex-row">
                                 <div class="px-3">
@@ -88,18 +89,26 @@
                                   <input type="hidden" id="f_day" value="{{ weekday_num }}" />
                               </div>
                             </div>
-
+                            
                             <div class="row g-3 mt-1 align-items-center">
                               <div class="col-md-1">
-                                <label for="emal" class="col-form-label"><i class="fa fa-at"></i></label>
+                                <label for="title" class="col-form-label"><i class="fa fa-header"></i></label>
                               </div>
                               <div class="col-md-11">
-                                <input type="text" id="emal" class="form-control p-2" placeholder="Email address">
+                                <input type="text" id="title" class="form-control p-2" placeholder="Add a title">
                               </div>
                             </div>
                             <div class="row g-3 mt-1 align-items-center">
                               <div class="col-md-1">
-                                <label for="emal" class="col-form-label"><i class="fa fa-envelope"></i></label>
+                                <label for="email" class="col-form-label"><i class="fa fa-at"></i></label>
+                              </div>
+                              <div class="col-md-11">
+                                <input type="email" id="email" class="form-control p-2" placeholder="Email address">
+                              </div>
+                            </div>
+                            <div class="row g-3 mt-1 align-items-center">
+                              <div class="col-md-1">
+                                <label for="note" class="col-form-label"><i class="fa fa-envelope"></i></label>
                               </div>
                               <div class="col-md-11">
                                 <textarea type="text" id="note" class="form-control p-2" placeholder="Add any note"></textarea>

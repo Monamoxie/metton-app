@@ -240,3 +240,27 @@ class EventService(Event):
             start_date = str(datetime.now())
 
         return str(dateutil.parser.parse(start_date).date())
+
+    def extract_user_timezone(self, data):
+        if "utz" in data and data["utz"]:
+            return data["utz"]
+        return "UTC"
+
+    def get_frequency(self, form_frequencies):
+        frequency = ""
+        if form_frequencies is not None:
+            form_frequencies = (
+                eval(form_frequencies)
+                if isinstance(form_frequencies, str)
+                else form_frequencies
+            )
+            for f in form_frequencies:
+                if f != "no":
+                    prepender = (
+                        ","
+                        if len(form_frequencies) != (form_frequencies.index(f) + 1)
+                        else ""
+                    )
+                    frequency += str(f) + prepender
+
+        return frequency

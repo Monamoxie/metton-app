@@ -1,9 +1,11 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from datetime import datetime
 
 from dashboard.models import Event, User
 from dashboard.services.eventservice import EventService
+from django.utils.html import escape
 
 
 # Create your views here.
@@ -46,3 +48,75 @@ def getUserEvents(request, public_id):
         data=data,
         safe=False,
     )
+
+
+def book(request, public_id):
+    user = None
+    errors = []
+
+    def cleanup(type, value):
+        if type == "public_id":
+            user = User.objects.filter(public_id=public_id).first()
+            if user is None:
+                errors.append("No user found")
+            return user
+        else:
+            mst = ["start_date", "start_time", "end_date", "end_time"]
+            t_splt = type.split("_")
+            f_type = " ".join(t_splt)
+
+            if type in mst and not value:
+                errors.append("Please provide the missing value: " + f_type)
+
+        return value
+
+    if request.method == "POST":
+        body = request.body.decode("utf-8")
+        data = json.loads(body)
+
+        user = cleanup("public_id", public_id)
+        start_date = cleanup("start_date", data.get("start_date"))
+        start_time = cleanup("start_time", data.get("start_time"))
+        end_date = cleanup("end_date", data.get("end_date"))
+        end_time = cleanup("end_time", data.get("end_time"))
+        frequencies = cleanup("frequencies", data.get("frequencies"))
+        title = cleanup("title", data.get("title"))
+        email = cleanup("email", data.get("email"))
+        note = cleanup("note", data.get("note"))
+
+        if frequencies == "" and (start_date == end_date and start_time > end_time):
+            errors.append(
+                "Start time cannot be greater than End time, when start date and end date are the same"
+            )
+
+        if len(errors) > 0:
+            return JsonResponse(
+                {"message": "Please fix the following errors", "errors": errors},
+                status=404,
+            )
+        else:
+            type_input_value = Event.EventTypes.PUBLIC
+            user_time_zone = EventService().extract_user_timezone(data=data)
+            frequencies = EventService().get_frequency(data.get("frequencies"))
+
+            event = Event(
+                frequency=frequencies,
+                user=user,
+                title=title,
+                type=type_input_value,
+                start_date=start_date,
+                start_time=start_time,
+                end_date=end_date,
+                end_time=end_time,
+                timezone=user_time_zone,
+                note=note,
+                attendees=email,
+            )
+            event.save()
+            return JsonResponse(
+                {
+                    "message": "Booking completed",
+                    "errors": [],
+                },
+                status=200,
+            )

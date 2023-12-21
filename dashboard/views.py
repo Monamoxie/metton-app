@@ -74,7 +74,7 @@ def manageSchedule(request):
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
             )
 
-            user_time_zone = extract_user_timezone(form.data)
+            user_time_zone = EventService().extract_user_timezone(form.data)
 
             start_date = form.cleaned_data["start_date"]
 
@@ -93,7 +93,7 @@ def manageSchedule(request):
                 to_timezone="UTC",
             )
 
-            frequency = get_frequency(form.cleaned_data["frequency"])
+            frequency = EventService().get_frequency(form.cleaned_data["frequency"])
 
             if start_time == None or end_time == None:
                 messages.error(
@@ -111,7 +111,7 @@ def manageSchedule(request):
 
             title = EventService.get_event_title(type_input_value)
             event = Event(
-                frequency=get_frequency(form.cleaned_data["frequency"]),
+                frequency=EventService().get_frequency(form.cleaned_data["frequency"]),
                 user=User.objects.get(id=request.user.id),
                 title=title,
                 type=type_input_value,
@@ -156,7 +156,7 @@ def manageAppointments(request):
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
             )
 
-            user_time_zone = extract_user_timezone(form.data)
+            user_time_zone = EventService().extract_user_timezone(form.data)
 
             start_date = form.cleaned_data["start_date"]
 
@@ -175,7 +175,7 @@ def manageAppointments(request):
                 to_timezone="UTC",
             )
 
-            frequency = get_frequency(form.cleaned_data["frequency"])
+            frequency = EventService().get_frequency(form.cleaned_data["frequency"])
 
             if start_time == None or end_time == None:
                 messages.error(
@@ -193,7 +193,7 @@ def manageAppointments(request):
 
             title = EventService.get_event_title(type_input_value)
             event = Event(
-                frequency=get_frequency(form.cleaned_data["frequency"]),
+                frequency=EventService().get_frequency(form.cleaned_data["frequency"]),
                 user=User.objects.get(id=request.user.id),
                 title=title,
                 type=type_input_value,
@@ -348,22 +348,6 @@ def detachBusinessHours(request):
     )
 
 
-def get_frequency(form_frequencies):
-    frequency = ""
-    if form_frequencies is not None:
-        form_frequencies = eval(form_frequencies)
-        for f in form_frequencies:
-            if f != "no":
-                prepender = (
-                    ","
-                    if len(form_frequencies) != (form_frequencies.index(f) + 1)
-                    else ""
-                )
-                frequency += str(f) + prepender
-
-    return frequency
-
-
 def get_end_date(params):
     if "end" in params:
         end_date = params["start"]
@@ -371,9 +355,3 @@ def get_end_date(params):
         end_date = None
 
     return str(dateutil.parser.parse(end_date).date())
-
-
-def extract_user_timezone(data):
-    if "utz" in data and data["utz"]:
-        return data["utz"]
-    return "UTC"

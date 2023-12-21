@@ -68,8 +68,6 @@ const renderCalender = function (pid) {
                 setTimeout(() => {
                     const myModalEl = document.getElementById('meet-modal')
                     const bookEl = document.getElementById('booking')
-                    const emailEl = document.getElementById('booking')
-                    const noteEl = document.getElementById('booking')
                     const myModal = new bootstrap.Modal(myModalEl)
                     myModal.show()
         
@@ -79,31 +77,60 @@ const renderCalender = function (pid) {
                     })
 
                     bookEl.addEventListener('click', event => {
-                        bookEl.setAttribute('disabled', true)
-                        bookEl.innerHTML = 'Please wait...'
-
-                        console.log(start_date, start_time)
+                        // bookEl.setAttribute('disabled', true)
+                        // bookEl.innerHTML = 'Please wait...'
                         const frequencyChecks = document.getElementsByName('frequency');
+                        const res = document.getElementById('response')
+                        const email = document.getElementById('email').value
+                        const note = document.getElementById('note').value
+                        const title = document.getElementById('title').value
                         let frequencies = [];
                         for (let i = 0; i < frequencyChecks.length; i++) {
                             if (frequencyChecks[i].checked) {
                                 frequencies.push(frequencyChecks[i].value)
                             }
                         }
-
-                        (async () => {
-                        arg.event.remove()
-                            const rawResponse = await fetch('/meet/events/detach', {
+                        
+                        const req = (async () => {
+                            const rawResponse = await fetch('/meet/' + JSON.parse(document.getElementById('pid').textContent) + '/book', {
                                 method: 'post',
                                 credentials: 'same-origin',
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
-                                    'X-CSRFToken': token
+                                    'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value
                                 },
-                                body: JSON.stringify({id: arg.event.id})
+                                body: JSON.stringify({
+                                    start_date: start_date,
+                                    start_time: start_time,
+                                    end_date: end_date,
+                                    end_time: end_time,
+                                    frequencies: frequencies,
+                                    utz: getTz(),
+                                    title: title,
+                                    email: email,
+                                    note: note
+                                })
+                            }).then((response) => {
+                                return response.json()
+                            }).then((data) => {
+                                if (data.errors.length > 0) {
+                                    res.classList.add('alert-danger')
+                                    res.innerHTML = '<h6>' + data.message + '</h6> <hr/>'
+                                    data.errors.forEach(error => {
+                                        res.innerHTML += '<p> <i class="fa fa-warning"></i> ' + error + '</p>'
+                                    });
+                                } else {
+                                    const bookingSection = document.getElementById('booking-section')
+                                    bookingSection.classList.add('booking-completed')
+
+                                    bookingSection.innerHTML = '<i class="fa fa-check"></i><p>'+data.message+'</p>'
+                                    
+                                    myModal.hide()
+                                }
+                            }).catch((error) => {
+                                console.log(error)
                             });
-                            const content = await rawResponse.json();
                         })();
                         
                     })
