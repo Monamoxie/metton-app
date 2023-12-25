@@ -472,3 +472,20 @@ body {
 .meet-wrapper .fc .fc-timegrid-slot {
     height: 2.5em;
 }
+
+.booking-completed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    text-align: center;
+}
+
+.booking-completed i {
+    font-size: 70px;
+}
+
+.booking-completed p {
+    font-size: 25px;
+    margin-top: 10px;
+}

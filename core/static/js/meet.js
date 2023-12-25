@@ -123,8 +123,7 @@ const renderCalender = function (pid) {
                                 } else {
                                     const bookingSection = document.getElementById('booking-section')
                                     bookingSection.classList.add('booking-completed')
-
-                                    bookingSection.innerHTML = '<i class="fa fa-check"></i><p>'+data.message+'</p>'
+                                    bookingSection.innerHTML = '<i class="fa fa-check-circle text-success"></i><p>Booking completed</p>'
                                     
                                     myModal.hide()
                                 }

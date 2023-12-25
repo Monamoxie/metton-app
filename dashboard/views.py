@@ -1,29 +1,14 @@
-from ast import dump
-from audioop import reverse
-from dbm import dumb
-from email import message
 from datetime import datetime
 import json
-import time
-from tracemalloc import start
 import dateutil.parser
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import JsonResponse
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from dashboard.models import User
 from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
-from django.core.files import File
-import os
 from .services.eventservice import EventService
-import pytz
-
-
-# Create your views here.
-@login_required
-def dashboard(request):
-    return render(request, "dashboard/home.html")
 
 
 @login_required
@@ -147,7 +132,7 @@ def manageSchedule(request):
 
 
 @login_required
-def manageAppointments(request):
+def dashboard(request):
     choices = Event().get_frequency_choices
     if request.method == "POST":
         form = UnavailableDatesForm(request.POST or None)

@@ -5,7 +5,6 @@ from datetime import datetime
 
 from dashboard.models import Event, User
 from dashboard.services.eventservice import EventService
-from django.utils.html import escape
 
 
 # Create your views here.
