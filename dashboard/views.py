@@ -196,12 +196,26 @@ def dashboard(request):
             messages.error(request, form.errors)
     else:
         form = UnavailableDatesForm(None)
+        # get the next meetings
+        appointments = Event.objects.filter(
+            start_date__gte=datetime.now().date(),
+            type=Event.EventTypes.PUBLIC,
+        ).order_by("start_date", "start_time")[:7]
+
+        upcoming_appointments = EventService().prep_event_data(
+            appointments, format_date_time=True
+        )
+
+        next_appointment = {}
+
+        if len(upcoming_appointments) > 0:
+            next_appointment = upcoming_appointments.pop(0)
 
     business_hours = EventService().get_business_hours(user=request.user)
 
     return render(
         request,
-        "dashboard/appointments.html",
+        "dashboard/index.html",
         {
             "form": form,
             "choices": choices,
@@ -209,6 +223,8 @@ def dashboard(request):
             "business_hours": business_hours,
             "display_name": request.user.name,
             "position": request.user.position,
+            "next_appointment": next_appointment,
+            "upcoming_appointments": upcoming_appointments,
         },
     )
 

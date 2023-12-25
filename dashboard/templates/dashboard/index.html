@@ -28,17 +28,19 @@
                             </div>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12">
-                            <div class="d-flex flex-row-reverse">
-                                <div class="px-3">
-                                    <h1 class="text-primary"> 8:15 p.m </h1>
-                                </div>
-                                <div>
-                                    <h3 class="card-title text-left " id="oka"> <i class="fa fa-clock px-1 theme-color-gray"></i> Friday, 28th Janaury  </h3>
-                                    <div class="meetings text-center">
-                                        <span>Next Meeting</span>
+                            {% if next_appointment %}
+                                <div class="d-flex flex-row-reverse">
+                                    <div class="px-3">
+                                        <h1 class="text-primary"> {{ next_appointment.start_time }} </h1>
+                                    </div>
+                                    <div>
+                                        <h3 class="card-title text-left " id="oka"> <i class="fa fa-clock px-1 theme-color-gray"></i> {{ next_appointment.start }} </h3>
+                                        <div class="meetings text-center">
+                                            <span>Next Meeting</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
                     </div>
                     </div>
                     <div class="card-body">
@@ -94,12 +96,29 @@
         <div class="sidebar-content">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title text-left"> <i class="fa fa-calendar-days text-success"></i> Next 7 Days </h5>
+                    <h5 class="card-title text-left"> <i class="fa fa-calendar-days text-success"></i> Upcoming </h5>
                 </div>
                 <div class="card-body">
                     <div class="meetings">
-                        <span>Next 7 days </span>
+                        {% if upcoming_appointments  %}
+                            {% for appointment in upcoming_appointments %}
+                                <div>
+                                    <h6> <i class="fa fa-briefcase"></i> {{ appointment.title  }}</h6>
+                                    <p> <i class="fa fa-clock text-success"></i> {{ appointment.start }} : {{ appointment.start_time }}
+                                    </p>
+                                    <p> <i class="fa fa-clock text-danger"></i> {{ appointment.end }} : {{ appointment.end_time }}
+                                    </p>
+
+                                    {% if forloop.counter != upcoming_appointments|length %}
+                                        <hr class="clearfix"/>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p><i class="fa fa-briefcase-clock text-danger"></i> Nothing here yet  </p>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
         </div>

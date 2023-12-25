@@ -168,6 +168,42 @@ class EventService(Event):
         events = Event.objects.filter(user=user, start_date__gte=start_date).exclude(
             type=Event.EventTypes.BUSINESS_HOURS
         )
+
+        return self.prep_event_data(events)
+
+    def get_start_date(self, params):
+        if "start" in params:
+            start_date = str(params["start"])
+        else:
+            start_date = str(datetime.now())
+
+        return str(dateutil.parser.parse(start_date).date())
+
+    def extract_user_timezone(self, data):
+        if "utz" in data and data["utz"]:
+            return data["utz"]
+        return "UTC"
+
+    def get_frequency(self, form_frequencies):
+        frequency = ""
+        if form_frequencies is not None:
+            form_frequencies = (
+                eval(form_frequencies)
+                if isinstance(form_frequencies, str)
+                else form_frequencies
+            )
+            for f in form_frequencies:
+                if f != "no":
+                    prepender = (
+                        ","
+                        if len(form_frequencies) != (form_frequencies.index(f) + 1)
+                        else ""
+                    )
+                    frequency += str(f) + prepender
+
+        return frequency
+
+    def prep_event_data(self, events, format_date_time=False):
         data = []
         for event in events:
             event_data = {}
@@ -184,6 +220,10 @@ class EventService(Event):
 
             event_data["start"] = start
 
+            if format_date_time:
+                event_data["start_time"] = start.strftime("%I:%M %p")
+                event_data["start"] = start.strftime("%A, %d %B")
+
             end = self.timezone_conversion(
                 date_str=str(event.end_date),
                 time_str=str(event.end_time),
@@ -193,6 +233,10 @@ class EventService(Event):
             )
 
             event_data["end"] = end
+
+            if format_date_time:
+                event_data["end_time"] = end.strftime("%I:%M %p")
+                event_data["end"] = end.strftime("%A, %d %B")
 
             tables = self.get_timetable_from_frequency(
                 event.frequency.split(","),
@@ -232,35 +276,3 @@ class EventService(Event):
             data.append(event_data)
 
         return data
-
-    def get_start_date(self, params):
-        if "start" in params:
-            start_date = str(params["start"])
-        else:
-            start_date = str(datetime.now())
-
-        return str(dateutil.parser.parse(start_date).date())
-
-    def extract_user_timezone(self, data):
-        if "utz" in data and data["utz"]:
-            return data["utz"]
-        return "UTC"
-
-    def get_frequency(self, form_frequencies):
-        frequency = ""
-        if form_frequencies is not None:
-            form_frequencies = (
-                eval(form_frequencies)
-                if isinstance(form_frequencies, str)
-                else form_frequencies
-            )
-            for f in form_frequencies:
-                if f != "no":
-                    prepender = (
-                        ","
-                        if len(form_frequencies) != (form_frequencies.index(f) + 1)
-                        else ""
-                    )
-                    frequency += str(f) + prepender
-
-        return frequency
