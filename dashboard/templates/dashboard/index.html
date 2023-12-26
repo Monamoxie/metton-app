@@ -108,6 +108,15 @@
                                     </p>
                                     <p> <i class="fa fa-clock text-danger"></i> {{ appointment.end }} : {{ appointment.end_time }}
                                     </p>
+                                    
+                                    <p>
+                                    {% if appointment.timetable %}
+                                        <span>Repeated</span> {{  appointment.timetable }}
+                                    {% else %}
+                                        No repeat
+                                    {% endif %}
+                                    </p>
+
 
                                     {% if forloop.counter != upcoming_appointments|length %}
                                         <hr class="clearfix"/>

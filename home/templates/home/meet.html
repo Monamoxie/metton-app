@@ -23,6 +23,7 @@
                   <img src="http://placehold.it/180" alt="Profile Photo" />
               {% endif %}
               {{ public_id|json_script:"pid" }}
+              <input type="hidden" id="f_day_month" value="{{ first_day_of_month }}" />
               {% csrf_token %}
             </div>
             <div class="profile-data">
@@ -39,7 +40,6 @@
           </div>
           <div class="col-md-8 booking-section" id="booking-section">
             <div id='meet'></div>
-            <input type="hidden" id="f_day_month" value="{{ first_day_of_month }}" />
               <div class="modal meet-modal " tabindex="-1" id="meet-modal"> 
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -87,6 +87,12 @@
                                   {% endfor %}
                                   <input type="hidden" id="utz" name="utz"/>
                                   <input type="hidden" id="f_day" value="{{ weekday_num }}" />
+                              </div>
+                            </div>
+                            
+                            <div class="col-md-12 mt-3">
+                              <div class="list-group d-flex flex-row justify-content-between flex-wrap">
+                                  <input class="form-control p-2" type="date" id="endFreq" pattern="d{4}-d{2}-d{2}"/>
                               </div>
                             </div>
                             

@@ -1,3 +1,5 @@
+let hasBusinessHours = false
+let businessHours = false
 const renderCalender = function (pid) {
     var calendarEl = document.getElementById('meet');
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -63,27 +65,36 @@ const renderCalender = function (pid) {
                 document.getElementById('evtStartDate').innerHTML = info.start.toDateString()
                 document.getElementById('evtEndTime').innerHTML = setAmPm(end_time)
                 document.getElementById('evtEndDate').innerHTML = info.end.toDateString()
-                
 
                 setTimeout(() => {
                     const myModalEl = document.getElementById('meet-modal')
                     const bookEl = document.getElementById('booking')
+                    
+                    const endFreq = document.getElementById('endFreq')
                     const myModal = new bootstrap.Modal(myModalEl)
+
                     myModal.show()
-        
+
+                    console.log(start_date)
+
+                    endFreq.setAttribute('min', start_date)
+                    
                     myModalEl.addEventListener('hidden.bs.modal', event => {
                         myModal.hide()
                         calendar.unselect()
                     })
 
+
                     bookEl.addEventListener('click', event => {
                         // bookEl.setAttribute('disabled', true)
                         // bookEl.innerHTML = 'Please wait...'
-                        const frequencyChecks = document.getElementsByName('frequency');
+                        
                         const res = document.getElementById('response')
                         const email = document.getElementById('email').value
                         const note = document.getElementById('note').value
                         const title = document.getElementById('title').value
+                        const frequencyChecks = document.getElementsByName('frequency');
+
                         let frequencies = [];
                         for (let i = 0; i < frequencyChecks.length; i++) {
                             if (frequencyChecks[i].checked) {
@@ -150,3 +161,28 @@ const renderCalender = function (pid) {
     });
     calendar.render();
 }
+document.addEventListener('DOMContentLoaded', function () {
+    getNbh = (async function () {
+        pid = JSON.parse(document.getElementById('pid').textContent)
+
+        await fetch("/business-hours/" + pid, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            return response.json()
+        }).then((data) => {
+            if (data.length > 0) {
+                hasBusinessHours = true
+                businessHours = data
+            }
+        }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            renderCalender(pid)
+        })
+    });
+    getNbh();
+})

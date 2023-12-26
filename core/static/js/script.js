@@ -10,8 +10,6 @@ function previewProfilePhoto(input) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    let hasBusinessHours = false, businessHours = false
-
     const clicky = document.getElementById("clicky")
     if (clicky) {
         clicky.addEventListener('click', event => {
@@ -37,30 +35,5 @@ document.addEventListener('DOMContentLoaded', function() {
     getTz = function () {
         const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         return tz ? tz : "UTC"
-    }
-
-    getNbh = (async function () {
-        pid = JSON.parse(document.getElementById('pid').textContent)
-        await fetch("/business-hours/" + pid, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
-            if (data.length > 0) {
-                this.hasBusinessHours = true
-                this.businessHours = data
-            }
-        }).catch((error) => {
-            console.log(error)
-        }).finally(() => {
-            renderCalender(pid)
-        })
-    });
-    
-    getNbh()
-    
+    } 
 })

@@ -5,7 +5,9 @@ from django.db import models
 import dashboard
 import pytz
 from datetime import datetime
+from datetime import timedelta
 import dateutil.parser
+from django.db.models import Q
 
 from dashboard.models import Event, User
 
@@ -34,7 +36,7 @@ class EventService(Event):
         for event in events:
             event_data = {}
 
-            frequencies = event.frequency.split(",")
+            frequencies = event.frequency.split(",") if event.frequency != "" else ""
 
             event_data["id"] = event.id
 
@@ -147,15 +149,16 @@ class EventService(Event):
         """
         - check for non recurring events
         """
+
         if len(frequencies) == 1 and frequencies[0] == "":
             week_day = datetime.combine(start_date, start_time).strftime("%A")
 
             return [str(self.get_days_of_week().index(week_day))]
-
         return frequencies
 
     def get_events(self, inputs, public_id=None):
         start_date = self.get_start_date(inputs)
+        end_date = self.get_end_date(inputs)
 
         if public_id is not None:
             user = User.objects.filter(public_id=public_id).first()
@@ -165,8 +168,16 @@ class EventService(Event):
         if not user:
             return []
 
-        events = Event.objects.filter(user=user, start_date__gte=start_date).exclude(
-            type=Event.EventTypes.BUSINESS_HOURS
+        events = (
+            Event.objects.filter(
+                user=user,
+                # id="cca5222f-b1bf-4589-bcd6-8e132a4d9f8d",
+            )
+            .filter(
+                (Q(start_date__gte=start_date) & Q(end_date__lte=end_date)) | 
+                (Q(end_date__gte=start_date) )
+            )
+            .exclude(type=Event.EventTypes.BUSINESS_HOURS)
         )
 
         return self.prep_event_data(events)
@@ -178,6 +189,15 @@ class EventService(Event):
             start_date = str(datetime.now())
 
         return str(dateutil.parser.parse(start_date).date())
+
+    def get_end_date(self, params):
+        if "end" in params:
+            end_date = str(params["end"])
+        else:
+            pass
+            # end_date = str(datetime.now() + timedelta(days=30))
+
+        return str(dateutil.parser.parse(end_date).date())
 
     def extract_user_timezone(self, data):
         if "utz" in data and data["utz"]:
@@ -220,10 +240,6 @@ class EventService(Event):
 
             event_data["start"] = start
 
-            if format_date_time:
-                event_data["start_time"] = start.strftime("%I:%M %p")
-                event_data["start"] = start.strftime("%A, %d %B")
-
             end = self.timezone_conversion(
                 date_str=str(event.end_date),
                 time_str=str(event.end_time),
@@ -234,12 +250,23 @@ class EventService(Event):
 
             event_data["end"] = end
 
+            frequencies = event.frequency.split(",") if event.frequency != "" else ""
+
+            if len(frequencies) > 0:
+                event_data["daysOfWeek"] = frequencies
+                event_data["startRecur"] = start
+                event_data["endRecur"] = end
+
+            if format_date_time:
+                event_data["start_time"] = start.strftime("%I:%M %p")
+                event_data["start"] = start.strftime("%A, %d %B")
+
             if format_date_time:
                 event_data["end_time"] = end.strftime("%I:%M %p")
                 event_data["end"] = end.strftime("%A, %d %B")
 
             tables = self.get_timetable_from_frequency(
-                event.frequency.split(","),
+                frequencies,
                 event.start_date,
                 self.timezone_conversion(
                     date_str=str(event.start_date),
