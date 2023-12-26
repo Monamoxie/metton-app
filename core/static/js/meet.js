@@ -70,14 +70,12 @@ const renderCalender = function (pid) {
                     const myModalEl = document.getElementById('meet-modal')
                     const bookEl = document.getElementById('booking')
                     
-                    const endFreq = document.getElementById('endFreq')
+                    const endRecur = document.getElementById('endRecur')
                     const myModal = new bootstrap.Modal(myModalEl)
 
                     myModal.show()
 
-                    console.log(start_date)
-
-                    endFreq.setAttribute('min', start_date)
+                    endRecur.setAttribute('min', start_date)
                     
                     myModalEl.addEventListener('hidden.bs.modal', event => {
                         myModal.hide()
@@ -120,7 +118,8 @@ const renderCalender = function (pid) {
                                     utz: getTz(),
                                     title: title,
                                     email: email,
-                                    note: note
+                                    note: note,
+                                    endRecur: endRecur.value
                                 })
                             }).then((response) => {
                                 return response.json()
@@ -139,7 +138,6 @@ const renderCalender = function (pid) {
                                     myModal.hide()
                                 }
                             }).catch((error) => {
-                                console.log(error)
                             });
                         })();
                         

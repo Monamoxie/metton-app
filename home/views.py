@@ -65,7 +65,7 @@ def book(request, public_id):
             f_type = " ".join(t_splt)
 
             if type in mst and not value:
-                errors.append("Please provide the missing value: " + f_type)
+                errors.append(f_type + " cannot be empty")
 
         return value
 
@@ -82,11 +82,28 @@ def book(request, public_id):
         title = cleanup("title", data.get("title"))
         email = cleanup("email", data.get("email"))
         note = cleanup("note", data.get("note"))
+        endRecur = cleanup("endRecur", data.get("endRecur"))
+
+        frequencies = EventService().get_frequency(data.get("frequencies"))
 
         if frequencies == "" and (start_date == end_date and start_time > end_time):
             errors.append(
                 "Start time cannot be greater than End time, when start date and end date are the same"
             )
+
+        if len(frequencies) > 0:
+            if not endRecur:
+                errors.append(
+                    "Please provide an end date for the reccuring appointment"
+                )
+
+        try:
+            endRecur = datetime.strptime(endRecur, "%Y-%m-%d")
+        except:
+            errors.append("Invalid date format for Recurring End Date")
+
+        if endRecur < datetime.strptime(start_date, "%Y-%m-%d"):
+            errors.append("Recurring end date cannot be less than start date")
 
         if len(errors) > 0:
             return JsonResponse(
@@ -96,7 +113,6 @@ def book(request, public_id):
         else:
             type_input_value = Event.EventTypes.PUBLIC
             user_time_zone = EventService().extract_user_timezone(data=data)
-            frequencies = EventService().get_frequency(data.get("frequencies"))
 
             event = Event(
                 frequency=frequencies,
@@ -110,6 +126,7 @@ def book(request, public_id):
                 timezone=user_time_zone,
                 note=note,
                 attendees=email,
+                end_recur=endRecur,
             )
             event.save()
             return JsonResponse(

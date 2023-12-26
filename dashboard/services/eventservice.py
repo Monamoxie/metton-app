@@ -174,8 +174,8 @@ class EventService(Event):
                 # id="cca5222f-b1bf-4589-bcd6-8e132a4d9f8d",
             )
             .filter(
-                (Q(start_date__gte=start_date) & Q(end_date__lte=end_date)) | 
-                (Q(end_date__gte=start_date) )
+                (Q(start_date__gte=start_date) & Q(end_date__lte=end_date))
+                | (Q(end_recur__gte=start_date))
             )
             .exclude(type=Event.EventTypes.BUSINESS_HOURS)
         )
@@ -252,10 +252,10 @@ class EventService(Event):
 
             frequencies = event.frequency.split(",") if event.frequency != "" else ""
 
-            if len(frequencies) > 0:
+            if len(frequencies) > 0 and event.end_recur is not None:
                 event_data["daysOfWeek"] = frequencies
                 event_data["startRecur"] = start
-                event_data["endRecur"] = end
+                event_data["endRecur"] = event.end_recur
 
             if format_date_time:
                 event_data["start_time"] = start.strftime("%I:%M %p")

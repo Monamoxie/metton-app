@@ -127,6 +127,7 @@ class Event(models.Model):
     timezone = models.CharField("timezone", blank=True, max_length=100)
     attendees = models.TextField("attendee_emails", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    end_recur = models.DateField("end_recur", blank=True)
 
     def __str__(self):
         return f"{self.user.name} - {self.title} - {str(self.start_date)} : {str(self.start_time)} - {str(self.end_date)} : {str(self.end_time)} "
