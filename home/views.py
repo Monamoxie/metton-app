@@ -96,6 +96,9 @@ def book(request, public_id):
                 errors.append(
                     "Please provide an end date for the reccuring appointment"
                 )
+        else:
+            if endRecur:
+                errors.append("Please select the repeated days for this appointment")
 
         try:
             endRecur = datetime.strptime(endRecur, "%Y-%m-%d")

@@ -171,7 +171,6 @@ class EventService(Event):
         events = (
             Event.objects.filter(
                 user=user,
-                # id="cca5222f-b1bf-4589-bcd6-8e132a4d9f8d",
             )
             .filter(
                 (Q(start_date__gte=start_date) & Q(end_date__lte=end_date))
