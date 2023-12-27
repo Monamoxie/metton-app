@@ -1,5 +1,5 @@
 import json
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
 
@@ -11,8 +11,7 @@ from dashboard.services.eventservice import EventService
 def meet(request, public_id):
     user = User.objects.filter(public_id=public_id).first()
     if not user:
-        # return a 404
-        pass
+        raise Http404("User not found")
 
     today = datetime.today()
     first_day_of_month = d1 = today.strftime("%Y-%m-01")
