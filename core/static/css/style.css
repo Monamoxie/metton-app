@@ -402,7 +402,6 @@ body {
     padding: 70px 30px 45px;
     background: linear-gradient(#0b7080, #0ba376);
     background: linear-gradient(#052952, #046447);
-    /* background: -webkit-linear-gradient(left, #0b7080, #140f61); */
 }
 
 .meet-wrapper .profile-section .profile-photo {
@@ -488,4 +487,311 @@ body {
 .booking-completed p {
     font-size: 25px;
     margin-top: 10px;
+}
+
+/* Homepage */
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 70px 60px 100px;
+    position: relative;
+    z-index: 1;
+}
+
+.banner-box {
+    border-radius: 150px;
+    background: #eae6dc;
+    margin-bottom: 158px;
+    max-width: 640px;
+    overflow: hidden;
+    padding: 20px;
+    position: relative;
+    z-index: 101;
+}
+
+.left-top-box {
+    margin-right: -45px;
+}
+
+.right-box {
+    margin-left: -45px;
+}
+
+.banner-highlight {
+    align-items: center;
+    background: #fff;
+    border-radius: 65px;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .15);
+    display: flex;
+    margin-left: -150px;
+    max-width: 320px;
+    padding: 20px;
+    position: relative;
+    text-align: left;
+    z-index: 11;
+}
+
+@media (max-width: 1199px) {
+    .banner-box .title {
+        padding: 20px 25px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .banner-box .title {
+        padding: 20px 40px;
+    }
+}
+
+@media (max-width: 1500px) {
+    .banner-box .title {
+        padding: 30px 50px;
+    }
+}
+
+.banner-box .title {
+    border: 1px solid #aca79a;
+    border-radius: 130px;
+    padding: 50px 70px;
+}
+
+
+
+/* banner centr */
+.banner-center {
+    margin-bottom: 100px;
+}
+
+@media (min-width: 1000px) {
+    .banner-center {
+        margin-bottom: 100px;
+    }
+}
+
+.banner-main-container {
+    border: 1px solid #aba596;
+    border-radius: 300px;
+    border-radius: 320px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.banner-main-container img {
+    vertical-align: middle;
+    border-radius: 300px;
+    width: 100%;
+}
+
+
+
+.about {
+    padding: 80px 120px;
+    border: 2px solid red;
+    background: #fff;
+}
+
+.about-title {
+    margin: 0 auto 70px;
+    max-width: 555px;
+    position: relative;
+    text-align: center;
+}
+
+.about-title h2 {
+    color: #000;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 15px;
+}
+
+.about-content {
+    margin: auto;
+}
+
+.about-center {
+    border: 1px solid #bbb7af;
+    border-radius: 350px;
+    border-radius: 370px;
+    margin-left: auto;
+    padding: 20px;
+    position: relative;
+    text-align: right;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.about-center img {
+    border-radius: 350px;
+    width: 100%;
+}
+
+.about-features {
+    padding-left: 25px;
+}
+
+.about-features .feature {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #a8a8a8;
+    border-radius: 10px;
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.about-features .feature .feature-desc h4 {
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 50px;
+    margin-bottom: 0;
+}
+
+.showcase {
+    border: 2px solid green;
+    background: #f8f5f3;
+    position: relative;
+    z-index: 1;
+}
+
+.showcase .caption {
+    margin: 0 auto 70px;
+    max-width: 555px;
+    position: relative;
+    text-align: center;
+}
+
+.showcase .caption h3 {
+    color: #000;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 15px;
+}
+
+.showcase .caption p {
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 35px;
+}
+
+.showcase .showcase-cover {
+    background: #fff;
+    border: 1px solid #a8a8a8;
+    border-radius: 265px;
+    cursor: pointer;
+    margin-right: -140px;
+    overflow: hidden;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.showcase .showcase-cover img {
+    border-radius: 250px;
+    width: 100%;
+}
+
+.showcase .showcase-text {
+    background: #fff;
+    border: 1px solid #a8a8a8;
+    border-radius: 265px;
+    margin-left: -200px;
+    padding: 20px;
+    z-index: -1;
+}
+
+.showcase .showcase-text .content {
+    border: 1px solid #ccc;
+    border-radius: 250px;
+    padding: 80px 50px 80px 350px;
+}
+
+.showcase .showcase-text .content span {
+    background: #000;
+    color: #fff;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 35px;
+    padding: 8px 32px;
+}
+
+.showcase .showcase-text .content h3 {
+    cursor: pointer;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 50px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.showcase .showcase-text .content p {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 35px;
+    margin-bottom: 0;
+}
+
+/* footer */
+.footer {
+    background: #dad2bd;
+    background-size: cover;
+    font-size: 15px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    padding: 100px 0;
+}
+
+.footer .cta {
+    color: #000;
+    margin: 0 auto;
+    max-width: 850px;
+    text-align: center;
+}
+
+.footer .cta span {
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 35px;
+}
+
+.footer .cta h3 {
+    color: #000;
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 65px;
+    margin: 6px auto 30px;
+    max-width: 510px;
+    text-align: center;
+}
+
+.footer .cta button {
+    background: #000;
+    border: 0;
+    color: #fff;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    height: 60px;
+    line-height: 30px;
+    right: 10px;
+    top: 10px;
+    width: 211px;
+}
+
+.footer .copyright {
+    margin-top: 55px;
 }
