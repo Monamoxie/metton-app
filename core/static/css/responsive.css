@@ -1,0 +1,50 @@
+/* about */
+@media (max-width: 767px) {
+    .about {
+        padding: 70px 10px;
+    }
+
+    .about-title h2 {
+        font-size: 25px;
+    }
+
+    .about-content {
+        margin-top: -40px;
+    }
+
+    .about-banner {
+        margin-bottom: 40px;
+    }
+
+    .about-features {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .about-features .features-wrapper {
+        margin-top: 25px;
+    }
+
+    .about-features .feature .feature-img {
+        padding: 10px;
+    }
+
+    .about-features .feature .feature-desc {
+        padding: 20px 15px;
+    }
+
+    .about-features .feature .feature-desc h4 {
+        font-weight: bolder;
+        font-weight: 700;
+        line-height: 24px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .about-features {
+        padding-left: 3px;
+        padding-right: 3px;
+        text-align: justify;
+    }
+}
