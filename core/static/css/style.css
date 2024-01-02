@@ -505,7 +505,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 70px 0 100px;
+    padding: 70px 0 0;
     position: relative;
     z-index: 1;
     width: 100%;
@@ -652,7 +652,6 @@ body {
 
 .showcase .caption {
     margin: 0 auto 70px;
-    max-width: 555px;
     position: relative;
     text-align: center;
 }
@@ -675,9 +674,6 @@ body {
 }
 
 .showcase .showcase-cover {
-    background: #fff;
-    border: 1px solid #a8a8a8;
-    border-radius: 265px;
     cursor: pointer;
     margin-right: -140px;
     overflow: hidden;
@@ -687,14 +683,13 @@ body {
 }
 
 .showcase .showcase-cover img {
-    border-radius: 250px;
     width: 100%;
 }
 
 .showcase .showcase-text {
+    margin-top: 150px;
     background: #fff;
     border: 1px solid #a8a8a8;
-    border-radius: 265px;
     margin-left: -200px;
     padding: 20px;
     z-index: -1;
@@ -702,8 +697,7 @@ body {
 
 .showcase .showcase-text .content {
     border: 1px solid #ccc;
-    border-radius: 250px;
-    padding: 80px 50px 80px 350px;
+    padding: 80px 50px 80px 400px;
 }
 
 .showcase .showcase-text .content span {
@@ -714,6 +708,7 @@ body {
     font-weight: 700;
     line-height: 35px;
     padding: 8px 32px;
+    margin-bottom: 30px;
 }
 
 .showcase .showcase-text .content h3 {
