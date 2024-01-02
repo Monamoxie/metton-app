@@ -702,13 +702,23 @@ body {
 
 .showcase .showcase-text .content span {
     background: #000;
-    color: #fff;
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
     line-height: 35px;
-    padding: 8px 32px;
+    padding: 8px 32px 8px 16px;
     margin-bottom: 30px;
+}
+
+.showcase .showcase-text .content span a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.showcase .showcase-text .content span a:hover,
+.showcase .showcase-text .content span a:visited {
+    text-decoration: none;
+    color: #fff;
 }
 
 .showcase .showcase-text .content h3 {

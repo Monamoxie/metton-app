@@ -49,9 +49,14 @@
     }
 }
 
+@media (max-width: 768px) and (max-width: 999px) {
+    .about-title h2 {
+        font-size: 45px;
+    }
+}
 
 /* showcase */
-@media(max-width: 767px) {
+@media(max-width: 999px) {
     .showcase {
         padding: 80px 10px;
     }
@@ -118,5 +123,66 @@
         font-size: 14px;
         font-weight: 200;
         line-height: 24px;
+    }
+}
+
+@media(min-width: 768px) and (max-width: 1299px) {
+
+    .showcase {
+        padding: 90px 20px;
+    }
+
+    .showcase .caption h3 {
+        font-size: 45px;
+    }
+
+    .showcase .caption {
+        margin: 0 auto 30px;
+    }
+
+    .showcase .caption p {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+    }
+
+    .showcase .showcase-cover {
+        margin-right: 0px;
+        padding: 0px;
+    }
+
+}
+
+@media(min-width: 1000px) and (max-width: 1299px) {
+    .showcase .showcase-cover {
+        margin-right: 0px;
+        overflow: hidden;
+        padding: 0px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .showcase .showcase-cover img {
+        width: 100%;
+    }
+
+    .showcase .showcase-text {
+        margin-top: 0px;
+        background: inherit;
+        border: 1px solid inherit;
+        margin-left: 0px;
+        padding: 0px;
+    }
+
+    .showcase .showcase-text .content {
+        padding: 50px 10px 50px 15px;
+    }
+
+    .showcase .showcase-text .content p {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 25px;
+        margin-bottom: 0;
     }
 }
