@@ -8,10 +8,7 @@ from dashboard.services.eventservice import EventService
 
 
 def index(request):
-    return render(
-        request,
-        "home/index.html",
-    )
+    return render(request, "home/index.html", {"curr_year": datetime.today().year})
 
 
 # Create your views here.

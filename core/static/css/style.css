@@ -35,6 +35,10 @@ body {
 /* Navigation */
 .main-nav {
     background-color: var(--purple);
+    background-color: #140f61;
+    background-color: #bcac83;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .main-nav a {
@@ -687,7 +691,7 @@ body {
 }
 
 .showcase .showcase-text {
-    margin-top: 150px;
+    margin-top: 120px;
     background: #fff;
     border: 1px solid #a8a8a8;
     margin-left: -200px;
@@ -697,7 +701,7 @@ body {
 
 .showcase .showcase-text .content {
     border: 1px solid #ccc;
-    padding: 80px 50px 80px 400px;
+    padding: 80px 50px 80px 300px;
 }
 
 .showcase .showcase-text .content span {
@@ -742,26 +746,18 @@ body {
 /* footer */
 .footer {
     background: #dad2bd;
-    background-size: cover;
     font-size: 15px;
     overflow: hidden;
     position: relative;
-    z-index: 1;
-    padding: 100px 0;
+    padding-top: 100px;
 }
 
 .footer .cta {
     color: #000;
     margin: 0 auto;
-    max-width: 850px;
     text-align: center;
-}
-
-.footer .cta span {
-    font-size: 25px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 35px;
+    border: 1px solid #a8a8a8;
+    padding: 50px 100px;
 }
 
 .footer .cta h3 {
@@ -770,9 +766,14 @@ body {
     font-style: normal;
     font-weight: 700;
     line-height: 65px;
-    margin: 6px auto 30px;
-    max-width: 510px;
     text-align: center;
+}
+
+.footer .cta p {
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 35px;
 }
 
 .footer .cta button {
@@ -784,11 +785,14 @@ body {
     font-weight: 700;
     height: 60px;
     line-height: 30px;
-    right: 10px;
-    top: 10px;
     width: 211px;
+    margin-top: 30px;
 }
 
 .footer .copyright {
+    border-top: 1px solid #f8f5f3;
     margin-top: 55px;
+    background: #dad2bd;
+    background: #f8f5f3;
+    padding: 50px 0;
 }
