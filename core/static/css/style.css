@@ -50,7 +50,8 @@ body {
 .main-nav a {
     color: var(--white);
     font-weight: 400;
-    font-size: 20px;
+    letter-spacing: 200;
+    font-size: 21px;
 }
 
 .dropdown-menu {
