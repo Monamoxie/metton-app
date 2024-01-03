@@ -15,6 +15,13 @@
 
 }
 
+@media (min-width: 2500px) {
+    .metton-container {
+        padding-left: 200px;
+        padding-right: 200px;
+    }
+}
+
 @media(max-width: 999px) {
     .main-nav a {
         font-size: 18px;
@@ -25,8 +32,149 @@
     .main-nav a {
         font-weight: 500;
         font-size: 20px;
+
     }
 }
+
+/* banner boxes */
+@media(max-width: 767px) {
+
+    .banner-left,
+    .banner-right {
+        position: relative;
+        top: 0px;
+    }
+
+    .banner-left .left-bottom-box {
+        display: none;
+    }
+
+    .banner-box {
+        margin-bottom: 0px;
+        padding: 20px;
+        max-width: 550px;
+        width: 90%;
+        border-radius: 0px;
+        margin-top: 10px;
+    }
+
+    .banner-box .title {
+        border-radius: 0px;
+        padding: 50px 10px;
+    }
+
+    .banner-left .left-bottom-box,
+    .banner-left .left-top-box,
+    .banner-right .right-top-box {
+        display: none;
+    }
+
+    .banner-center {
+        margin: 10px auto 20px;
+        width: 90%;
+        max-width: 350px;
+    }
+
+    .banner-right .right-bottom-box {
+        margin: auto;
+    }
+
+    .banner-right {
+        left: 0px;
+    }
+}
+
+@media(min-width: 1000px) and (max-width: 1900px) {
+    .home {
+        padding: 40px 0 0;
+    }
+
+    .banner-left,
+    .banner-right {
+        top: 50px;
+    }
+
+    .banner-box {
+        width: 470px;
+        margin-bottom: 80px;
+    }
+
+    .banner-box .title h2 {
+        font-size: 23px;
+    }
+
+    .banner-box .title p {
+        font-size: 14px;
+    }
+}
+
+@media(min-width: 1200px) and (max-width: 1400px) {
+    .banner-box {
+        max-width: 390px;
+    }
+
+    .banner-box .title h2 {
+        font-size: 21px;
+    }
+}
+
+@media(min-width: 768px) and (max-width: 1199px) {
+    .banner-box {
+        max-width: 300px;
+        border-radius: 0px;
+        margin-bottom: 18px;
+    }
+
+    .banner-box .title h2 {
+        font-size: 21px;
+    }
+
+    .col-left {
+        display: none;
+    }
+
+
+
+    .banner-left {
+        position: static;
+    }
+
+    .banner-center {
+        margin-left: 40px;
+    }
+
+    .banner-right {
+        position: relative;
+        left: unset;
+        right: 0px;
+        top: 0;
+        max-width: 100%;
+    }
+
+    .banner-row {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        flex-basis: content;
+        align-content: center;
+        max-width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin: auto;
+        border: 2px solid red;
+    }
+
+    .banner-row>div {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+
+    .banner-box .title {
+        border-radius: 0px;
+        padding: 50px 10px;
+    }
+
+}
+
 
 /* about */
 @media (max-width: 767px) {
