@@ -1,9 +1,9 @@
+{% load static %}
 {% block nav %}
     <header>
-        <nav class="navbar navbar-expand-lg static-top main-nav">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg main-nav">
                 <a class="navbar-brand" href="#">
-                    <!-- <img src="#" alt="logo image" height="36"> -->
+                    <img src="{% static 'images/logo.png' %}" alt="logo image">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -23,11 +23,10 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{% url 'edit-profile' %}">Edit Profile</a></li>
+                                <li> <hr class="dropdown-divider"> </li>
                                 <li><a class="dropdown-item" href="{% url 'password.update' %}">Change Password</a></li>
-                                <li>
-                                <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                                <li> <hr class="dropdown-divider"> </li>
+                                <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
                             </ul>
                         </li>
                     {% else %}
@@ -43,7 +42,6 @@
                     {% endif %}
                 </ul>
                 </div>
-            </div>
         </nav>
     </header>
 {% endblock %}

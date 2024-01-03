@@ -1,3 +1,26 @@
+/* generic */
+@media(max-width: 767px) {
+    .main-nav {
+        padding: 5px 10px 5px 0px;
+    }
+
+    .main-nav .navbar-toggler {
+        margin-top: 20px;
+        margin-right: 5px;
+    }
+
+    .navbar-collapse {
+        padding-left: 45px;
+    }
+
+}
+
+@media(min-width: 1000px) and (max-width: 1700px) {
+    .main-nav a {
+        font-weight: 500;
+    }
+}
+
 /* about */
 @media (max-width: 767px) {
     .about {

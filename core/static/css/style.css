@@ -8,6 +8,7 @@
     --purple: #460eb5;
     --white: #fff;
     --gray: #2c3e50;
+    --skin: #eae6dc;
 }
 
 body {
@@ -23,11 +24,6 @@ body {
     overflow-x: hidden;
 }
 
-.navbar-toggler {
-    background-color: #fff;
-    border: none;
-}
-
 .navbar-toggler:focus {
     box-shadow: none;
 }
@@ -37,28 +33,45 @@ body {
     background-color: var(--purple);
     background-color: #140f61;
     background-color: #bcac83;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    background-color: #9f7e48;
+    background-color: #967643;
+    padding: 5px 95px;
+}
+
+.main-nav .navbar-brand img {
+    width: 200px;
+}
+
+.navbar-toggler {
+    background-color: var(--skin);
+    border: none;
 }
 
 .main-nav a {
     color: var(--white);
-    font-weight: 500;
-    font-size: 16px;
+    font-weight: 400;
+    font-size: 20px;
 }
 
 .dropdown-menu {
-    background-color: var(--purple);
+    background-color: var(--skin);
 }
 
 .dropdown-item:hover {
-    background-color: var(--purple);
-    color: rgb(188, 195, 229);
+    background-color: var(--skin);
+}
+
+a.dropdown-item {
+    color: #000;
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+    color: var(--white);
 }
 
 .nav-item:hover>a {
-    color: orange;
-    color: rgb(188, 195, 229);
+    color: var(--skin);
 }
 
 .theme-color-gray {
@@ -518,7 +531,7 @@ body {
 
 .banner-box {
     border-radius: 150px;
-    background: #eae6dc;
+    background: var(--skin);
     margin-bottom: 158px;
     max-width: 640px;
     overflow: hidden;
@@ -637,7 +650,7 @@ body {
 
 .about-features .feature .feature-img {
     padding: 20px 20px;
-    background: #eae6dc;
+    background: var(--skin);
 }
 
 .about-features .feature .feature-desc {
@@ -794,5 +807,7 @@ body {
     margin-top: 55px;
     background: #dad2bd;
     background: #f8f5f3;
+    color: #fff;
+    background-color: #7f6438;
     padding: 50px 0;
 }
