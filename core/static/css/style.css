@@ -9,6 +9,7 @@
     --white: #fff;
     --gray: #2c3e50;
     --skin: #eae6dc;
+    --main-theme: #967643;
 }
 
 body {
@@ -24,17 +25,19 @@ body {
     overflow-x: hidden;
 }
 
+.text-theme {
+    color: var(--main-theme);
+}
+
 .navbar-toggler:focus {
     box-shadow: none;
 }
 
 /* Navigation */
 .main-nav {
-    background-color: var(--purple);
-    background-color: #140f61;
     background-color: #bcac83;
     background-color: #9f7e48;
-    background-color: #967643;
+    background-color: var(--main-theme);
     padding: 5px 95px;
 }
 
@@ -78,6 +81,10 @@ a.dropdown-item {
 .theme-color-gray {
     color: var(--gray)
 }
+
+
+
+
 
 /* Authentication */
 .auth-wrapper {
@@ -246,17 +253,46 @@ a.dropdown-item {
 
 /* Dashboard */
 .dashboard-wrapper {
-    background: -webkit-linear-gradient(left, #140f61, #073b49);
+    /* background: -webkit-linear-gradient(left, #140f61, #140f61); */
+    background: #fffefe;
     margin: 0;
     /* padding-top: 50px;
     padding-bottom: 40px; */
-    padding: 60px;
+    padding-top: 50px;
+}
+
+.dashboard-wrapper .dashboard {
+    padding-left: 75px;
+    padding-right: 75px;
 }
 
 .dashboard-wrapper .dashboard-container {
-    padding: 50px;
-    border-radius: 0.5rem;
-    background: #fff;
+    background: var(--skin);
+    background: var(--skin);
+    background: rgba(33, 37, 41, 0.03);
+}
+
+.dashboard-wrapper .dashboard-container .next-appointent-time h1 {
+    font-weight: bolder;
+}
+
+.appointments-header {
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    padding: 15px 20px;
+}
+
+.appointments-header>.row {
+    border: 1px solid var(--main-theme);
+    padding: 15px 20px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.appointments .fc-header-toolbar {
+    margin-top: -4px;
+    margin-bottom: -4px !important;
+    padding: 1.5em 1em;
 }
 
 .sidebar-content {
@@ -265,10 +301,21 @@ a.dropdown-item {
     display: table;
     border-bottom: 100px solid rgb(215, 219, 239) !important;
     position: relative;
-    padding: 25px;
-    border-radius: 0.5rem;
-    background: #fff;
 }
+
+.sidebar-content .sidebar-header {
+    background: var(--skin);
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    padding: 25px;
+}
+
+.sidebar-content .sidebar-header h5 {
+    font-weight: 600;
+
+}
+
+
 
 
 .profile-img {
@@ -379,11 +426,7 @@ a.dropdown-item {
     cursor: pointer;
 }
 
-.appointments .fc-header-toolbar {
-    margin-top: -4px;
-    margin-bottom: -4px !important;
-    padding: 1.5em 1em;
-}
+
 
 .meeting-link .input-group-text {
     border-radius: 0;

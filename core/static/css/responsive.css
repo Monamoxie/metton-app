@@ -245,7 +245,8 @@
     .about-features {
         padding-left: 3px;
         padding-right: 3px;
-        text-align: justify;
+        text-align: left;
+        line-height: 25px;
     }
 }
 
