@@ -120,7 +120,8 @@
 
 @media(min-width: 768px) and (max-width: 1199px) {
     .banner-box {
-        max-width: 300px;
+        width: 300px;
+        max-width: 100%;
         border-radius: 0px;
         margin-bottom: 18px;
     }
@@ -133,21 +134,37 @@
         display: none;
     }
 
-
-
     .banner-left {
         position: static;
     }
 
+    .banner-row>div {
+        width: 40%;
+        flex-direction: row;
+    }
+
+    .banner-row>div:nth-child(2) {
+        width: 60%;
+        flex-direction: row;
+    }
+
+    .banner-row>div>div {
+        margin: auto;
+    }
+
+    .banner-row>div>div.banner-right {
+        margin: auto;
+    }
+
     .banner-center {
-        margin-left: 40px;
+        margin: auto;
     }
 
     .banner-right {
         position: relative;
         left: unset;
         right: 0px;
-        top: 0;
+        top: 10px;
         max-width: 100%;
     }
 
@@ -156,16 +173,16 @@
         flex-wrap: nowrap;
         flex-basis: content;
         align-content: center;
-        max-width: 100%;
+        width: 100%;
         padding-left: 20px;
         padding-right: 20px;
         margin: auto;
-        border: 2px solid red;
     }
 
-    .banner-row>div {
-        display: flex;
-        flex-direction: row-reverse;
+
+
+    .banner-row>div>div.banner-right .banner-box {
+        margin: auto;
     }
 
     .banner-box .title {
@@ -175,6 +192,11 @@
 
 }
 
+@media(min-width: 900px) and (max-width:1200px) {
+    .banner-right {
+        top: 10%;
+    }
+}
 
 /* about */
 @media (max-width: 767px) {
