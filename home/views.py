@@ -85,7 +85,9 @@ def book(request, public_id):
         title = cleanup("title", data.get("title"))
         email = cleanup("email", data.get("email"))
         note = cleanup("note", data.get("note"))
-        endRecur = cleanup("endRecur", data.get("endRecur"))
+        endRecur = (
+            cleanup("endRecur", data.get("endRecur")) if data.get("endRecur") else None
+        )
 
         frequencies = EventService().get_frequency(data.get("frequencies"))
 
@@ -103,13 +105,14 @@ def book(request, public_id):
             if endRecur:
                 errors.append("Please select the repeated days for this appointment")
 
-        try:
-            endRecur = datetime.strptime(endRecur, "%Y-%m-%d")
-        except:
-            errors.append("Invalid date format for Recurring End Date")
+        if endRecur:
+            try:
+                endRecur = datetime.strptime(endRecur, "%Y-%m-%d")
+            except:
+                errors.append("Invalid date format for Recurring End Date")
 
-        if endRecur < datetime.strptime(start_date, "%Y-%m-%d"):
-            errors.append("Recurring end date cannot be less than start date")
+            if endRecur < datetime.strptime(start_date, "%Y-%m-%d"):
+                errors.append("Recurring end date cannot be less than start date")
 
         if len(errors) > 0:
             return JsonResponse(

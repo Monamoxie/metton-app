@@ -10,6 +10,8 @@
     --gray: #2c3e50;
     --skin: #eae6dc;
     --main-theme: #967643;
+    --theme-greenery: #022315;
+    --theme-greenery: #045a36;
 }
 
 body {
@@ -27,6 +29,10 @@ body {
 
 .text-theme {
     color: var(--main-theme);
+}
+
+.text-green {
+    color: var(--theme-greenery);
 }
 
 .navbar-toggler:focus {
@@ -254,7 +260,7 @@ a.dropdown-item {
 /* Dashboard */
 .dashboard-wrapper {
     /* background: -webkit-linear-gradient(left, #140f61, #140f61); */
-    background: #fffefe;
+    background: #eeeee8;
     margin: 0;
     /* padding-top: 50px;
     padding-bottom: 40px; */
@@ -267,8 +273,8 @@ a.dropdown-item {
 }
 
 .dashboard-wrapper .dashboard-container {
-    background: var(--skin);
-    background: var(--skin);
+    /* background: var(--skin);
+    background: var(--skin); */
     background: rgba(33, 37, 41, 0.03);
 }
 
@@ -280,6 +286,7 @@ a.dropdown-item {
     border-top-right-radius: 25px;
     border-top-left-radius: 25px;
     padding: 15px 20px;
+    background: var(--skin);
 }
 
 .appointments-header>.row {
@@ -298,15 +305,16 @@ a.dropdown-item {
 .sidebar-content {
     min-height: 700px;
     max-width: 100%;
+    min-width: 100%;
     display: table;
-    border-bottom: 100px solid rgb(215, 219, 239) !important;
+    /* border-bottom: 100px solid rgb(215, 219, 239) !important;
+    border-bottom: 100px solid var(--theme-greenery) !important; */
     position: relative;
+    background: var(--white);
 }
 
 .sidebar-content .sidebar-header {
     background: var(--skin);
-    border-top-right-radius: 25px;
-    border-top-left-radius: 25px;
     padding: 25px;
 }
 
@@ -404,22 +412,6 @@ a.dropdown-item {
     height: 100%;
 }
 
-.fc .fc-non-business {
-    background: rgb(215, 219, 239) !important;
-    opacity: 1 !important;
-    color: #2c3e50 !important;
-    border-color: rgb(188, 195, 229) !important;
-}
-
-.fc-unavailable {
-    background: #502c3c !important;
-    opacity: 1 !important;
-    color: #c0c0c0 !important;
-}
-
-.fc .fc-bg-event {
-    opacity: 1 !important;
-}
 
 .close-calendar-modal {
     font-size: 24px;
@@ -497,10 +489,6 @@ a.dropdown-item {
     min-height: 700px;
 }
 
-.meet-wrapper .booking-section .fc {
-    margin: 40px 30px;
-}
-
 .meet-wrapper .booking-section .meet-modal .modal-header {
     background: linear-gradient(#052952, #046447);
     color: #fff;
@@ -529,10 +517,6 @@ a.dropdown-item {
 
 .meet-wrapper .booking-section .meet-modal .modal-body textarea {
     resize: none;
-}
-
-.meet-wrapper .fc .fc-timegrid-slot {
-    height: 2.5em;
 }
 
 .booking-completed {
@@ -849,4 +833,64 @@ a.dropdown-item {
     color: #fff;
     background-color: #7f6438;
     padding: 50px 0;
+}
+
+
+
+/* calendar */
+.fc .fc-bg-event {
+    opacity: 1 !important;
+}
+
+.fc a {
+    color: var(--theme-greenery);
+    text-decoration: underline;
+}
+
+.fc .fc-toolbar-title {
+    color: var(--theme-greenery);
+    font-weight: bold;
+}
+
+.meet-wrapper .booking-section .fc {
+    margin: 40px 30px;
+}
+
+.meet-wrapper .fc .fc-timegrid-slot {
+    height: 2.5em;
+}
+
+.fc .fc-non-business {
+    background: rgb(215, 219, 239) !important;
+    border-color: rgb(188, 195, 229) !important;
+    opacity: 1 !important;
+    color: #2c3e50 !important;
+
+    background: var(--skin) !important;
+    border-color: rgb(188, 195, 229) !important;
+}
+
+.fc-unavailable {
+    background: #502c3c !important;
+    opacity: 1 !important;
+    color: #c0c0c0 !important;
+}
+
+.fc .fc-button-primary,
+.fc .fc-button-primary:hover {
+    background-color: var(--main-theme);
+    border-color: var(--main-theme);
+    color: var(--white);
+}
+
+.fc .fc-button-primary:disabled {
+    background-color: var(--skin);
+    border-color: var(--skin);
+    color: var(--white);
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+    background-color: var(--theme-greenery);
+    border-color: var(--theme-greenery);
 }
