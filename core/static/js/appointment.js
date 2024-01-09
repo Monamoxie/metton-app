@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             timeZone: getTz(),
             longPressDelay: 200,
             selectLongPressDelay: 200,
-            fixedWeekCount: 2,
+            fixedWeekCount: false,
             headerToolbar: { center: 'timeGridWeek,dayGridMonth', },
             views: {
                 dayGridMonth: {
