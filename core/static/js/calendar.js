@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     })();
                 }
             },
-            eventColor: '#008000',
+            eventColor: '#008000', 
             navLinks: true,
             selectable: true,
             selectMirror: true,
