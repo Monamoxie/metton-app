@@ -414,3 +414,92 @@
         font-size: 20px;
     }
 }
+
+
+
+/* Dashboard */
+@media(max-width: 767px) {
+    .dashboard-wrapper {
+        padding-top: 20px;
+    }
+
+    .dashboard-wrapper .dashboard {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .appointments-header {
+        border-top-right-radius: none;
+        border-top-left-radius: none;
+        padding: 0px 0px 20px;
+    }
+
+    .appointments-header>.row {
+        border: none;
+        padding: 1px 2px;
+    }
+
+    .appointments-header>.row>.col-sm-12>.d-flex {
+        display: block !important;
+    }
+
+    .appointments-header .profile-img {
+        margin-bottom: 10px;
+    }
+
+    .appointments-header .profile-header-section h6 {
+        margin-top: 5px;
+    }
+
+    .appointments-header .profile-header-section {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .appointments-header .meetings {
+        font-size: 13px;
+        font-weight: 500;
+        text-align: left !important;
+    }
+
+    .appointments .fc-header-toolbar {
+        padding: 0 10px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .appointments .fc-header-toolbar .fc-toolbar-chunk {
+        margin: 15px 0px 20px 0;
+    }
+
+    .appointments .fc-header-toolbar .fc-toolbar-chunk:nth-child(1) {
+
+        width: 100%;
+    }
+
+    .appointments .fc-header-toolbar .fc-toolbar-chunk .fc-toolbar-title {
+        font-size: 16px;
+    }
+
+    .dashboard-wrapper .dashboard-height {
+        min-height: auto;
+        margin-bottom: 30px;
+    }
+
+    .metton-calendar-card .card-body {
+        display: none !important;
+    }
+
+    .unsupported-device {
+        display: flex;
+        flex-direction: column;
+        padding: 30px 0;
+        text-align: center;
+    }
+
+    .unsupported-device span {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+}

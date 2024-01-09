@@ -260,12 +260,17 @@ a.dropdown-item {
 
 /* Dashboard */
 .dashboard-wrapper {
-    /* background: -webkit-linear-gradient(left, #140f61, #140f61); */
     background: #eeeee8;
     margin: 0;
-    /* padding-top: 50px;
-    padding-bottom: 40px; */
     padding-top: 50px;
+}
+
+.unsupported-device {
+    display: none;
+}
+
+.dashboard-wrapper .dashboard-height {
+    min-height: 100vh;
 }
 
 .dashboard-wrapper .dashboard {

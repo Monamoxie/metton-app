@@ -14,11 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
             selectLongPressDelay: 200,
             timeZone: getTz(),
             fixedWeekCount: false,
-            // showNonCurrentDates: true,
             firstDay: document.getElementById("f_day").value,
             headerToolbar: { center: 'timeGridWeek,timeGridDay', },
             views: {
-                dayGridMonth: { // name of view
+                dayGridMonth: {
                     titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
                 },
                 timeGridWeek: {

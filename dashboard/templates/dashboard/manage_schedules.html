@@ -3,7 +3,7 @@
 {% block dashboard-main-content %}
  <div class="row">
     <div class="col-lg-9">
-        <div class="min-vh-100">
+        <div class="dashboard-height">
             <div class="dashboard-container shadow-lg">
                 <div class="appointments-header">
                     <div class="row">
@@ -12,9 +12,14 @@
                         <p><small><i class="fa fa-ban text-danger"></i> Unavailable: Going on holiday, an event or just need time off? That's fine. You can select those dates and set them as Unavailable</small></p>
                     </div>
                 </div>    
-                <div class="card">
+                <div class="card metton-calendar-card">
                     <div class="card-body">
                         <div id='manage-schedules'></div>
+                    </div>
+                    <div class="unsupported-device">
+                        <span><i class="fa fa-bell-slash"></i> Unsupported Device </span> 
+                        <div>Your calendar is best managed on a desktop device. Please switch to a larger screen to manage your schedules.</div>
+                        <p class="alert alert-success mt-3"> A version compatible with your device is coming soon! </p>
                     </div>
                 </div>
                 <div class="modal" tabindex="-1" id="manage-schedule-modal">
