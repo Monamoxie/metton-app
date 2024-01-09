@@ -280,6 +280,7 @@ a.dropdown-item {
 
 .dashboard-wrapper .dashboard-container {
     background: rgba(33, 37, 41, 0.03);
+    box-shadow: var(--bs-box-shadow-lg);
 }
 
 .dashboard-wrapper .dashboard-container .next-appointent-time h1 {

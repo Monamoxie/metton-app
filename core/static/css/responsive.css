@@ -428,6 +428,10 @@
         padding-right: 0px;
     }
 
+    .dashboard-wrapper .dashboard-container {
+        box-shadow: none;
+    }
+
     .appointments-header {
         border-top-right-radius: none;
         border-top-left-radius: none;
