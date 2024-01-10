@@ -135,7 +135,7 @@ class UnavailableDatesForm(forms.ModelForm):
         label="Choose Type",
         widget=forms.Select(
             attrs={
-                "class": "form-control",
+                "class": "form-control mb-3",
                 "type": "text",
             },
             choices=(

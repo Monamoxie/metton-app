@@ -7,6 +7,7 @@
     --poppins: 'poppins, Helvetica, sans-serif';
     --purple: #460eb5;
     --white: #fff;
+    --off-white: #f7f7f7;
     --gray: #2c3e50;
     --skin: #eae6dc;
     --main-theme: #967643;
@@ -27,12 +28,43 @@ body {
     overflow-x: hidden;
 }
 
+.form-control[readonly="readonly"] {
+    background-color: var(--skin);
+}
+
+.form-check-input:checked {
+    background-color: var(--main-theme);
+    border-color: var(--main-theme);
+}
+
+.btn-theme {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--main-theme);
+    --bs-btn-border-color: var(--main-theme);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--theme-greenery);
+    --bs-btn-hover-border-color: var(--theme-greenery);
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--main-theme);
+    --bs-btn-active-border-color: var(--main-theme);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--skin);
+    --bs-btn-disabled-border-color: var(--skin);
+}
+
 .text-theme {
     color: var(--main-theme);
 }
 
 .text-green {
     color: var(--theme-greenery);
+}
+
+.text-red {
+    color: var(--theme-greenery);
+    color: rgb(103, 16, 25);
 }
 
 .navbar-toggler:focus {
@@ -278,6 +310,31 @@ a.dropdown-item {
     padding-right: 75px;
 }
 
+.dashboard-wrapper .dashboard .card {
+    background-color: var(--off-white);
+}
+
+.modal-content {
+    background-color: var(--off-white);
+}
+
+.modal-content .modal-header,
+.modal-content .modal-body {
+    padding: 20px 35px;
+}
+
+.modal-content .modal-header {
+    background: var(--main-theme);
+    color: var(--white);
+}
+
+.dashboard-wrapper .dashboard .nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    color: var(--white);
+    background-color: var(--main-theme);
+    border-color: var(--skin);
+}
+
 .dashboard-wrapper .dashboard-container {
     background: rgba(33, 37, 41, 0.03);
     box-shadow: var(--bs-box-shadow-lg);
@@ -314,7 +371,7 @@ a.dropdown-item {
     display: table;
     border-bottom: 100px solid var(--skin) !important;
     position: relative;
-    background: var(--white)
+    background: var(--off-white);
 }
 
 .sidebar-content .card {

@@ -30,12 +30,12 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title">Please confirm your changes</h5>
                                         <span aria-hidden="true" class="close-calendar-modal" data-bs-dismiss="modal" aria-label="Close">
-                                            <i class="fa fa-times-circle text-danger"></i>
+                                            <i class="fa fa-times-circle text-red"></i>
                                         </span>
                                 </div>
-                                <div class="modal-body pl-3 pr-3">
+                                <div class="modal-body">
                                     <div class="row">
-                                        <div class="mb-2 pl-3 pr-3">
+                                        <div class="mb-2">
                                             {% for field in form %}
                                                 {% if field.name != 'frequency' %}
                                                     <div class="form-group row mb-2">
@@ -49,7 +49,7 @@
                                         </div>
                                         <hr/>
                                         <div class="form-group row">
-                                            <h5 class="mb-3"> <i class="fa fa-clock-four text-primary"></i> Choose frequency</h5>
+                                            <h5 class="mb-3"> <i class="fa fa-clock-four text-theme"></i> Choose frequency</h5>
                                             <div class="col-md-12">
                                                 <div class="list-group  d-flex flex-row justify-content-start flex-wrap">
                                                     {% for key, choice in choices.items %}
@@ -67,7 +67,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary btn-block">Update Schedule</button>
+                                    <button type="submit" class="btn btn-block btn-theme">Update Schedule</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
@@ -95,8 +95,8 @@
                                     {% endfor %}
 
                                     <p class="d-flex flex-row-reverse">
-                                        <button class="btn btn-sm btn-outline-danger r-bh" data-id="{{ availability.id }}">
-                                            <i class="fa fa-trash-arrow-up"></i></button>
+                                        <button class="btn btn-sm r-bh" data-id="{{ availability.id }}">
+                                            <i class="fa fa-trash-arrow-up text-red"></i></button>
                                     </p>
 
                                     {% if forloop.counter != business_hours|length %}
