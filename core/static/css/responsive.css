@@ -507,3 +507,23 @@
         margin-bottom: 10px;
     }
 }
+
+@media(min-width: 767px) and (max-width:999px) {
+    .dashboard-wrapper {
+        padding-top: 20px;
+    }
+
+    .dashboard-wrapper .dashboard {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .dashboard-wrapper .dashboard-height {
+        min-height: auto;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-wrapper .dashboard-container {
+        box-shadow: none;
+    }
+}
