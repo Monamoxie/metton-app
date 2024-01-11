@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from dashboard.models import User
 from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
 from .services.eventservice import EventService
+from django.contrib.auth import logout as authLogout
 
 
 @login_required
@@ -356,3 +357,9 @@ def get_end_date(params):
         end_date = None
 
     return str(dateutil.parser.parse(end_date).date())
+
+
+def logout(request):
+    # authLogout(request)
+    messages.success(request, "Goodbye! See you soon")
+    return redirect("index")

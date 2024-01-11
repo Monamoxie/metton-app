@@ -37,12 +37,6 @@ def register(request):
         return render(request, "authentication/register.html", {"form": form})
 
 
-def logout(request):
-    authLogout(request)
-    messages.success(request, "Goodbye! See you soon")
-    return redirect("home")
-
-
 def login(request):
     if request.method == "POST":
         # login
@@ -58,4 +52,3 @@ def login(request):
             return redirect("login")
     else:
         return render(request, "authentication/login.html")
-

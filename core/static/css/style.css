@@ -13,6 +13,7 @@
     --main-theme: #967643;
     --theme-greenery: #022315;
     --theme-greenery: #045a36;
+    --shadow-lg: 0 0 100px -5px rgba(0, 0, 0, .25);
 }
 
 body {
@@ -140,14 +141,13 @@ a.dropdown-item {
     min-height: 700px;
 }
 
-.auth-wrapper .auth-form-area .auth-box {
-    padding: 60px 80px;
+.auth-wrapper .auth-form-area {
+    padding: 150px 10px;
 }
 
-
-
-.auth-wrapper .auth-form-area {
-    background: #f6f7fc;
+.auth-wrapper .auth-form-area .auth-box {
+    padding: 60px 80px;
+    box-shadow: var(--shadow-lg);
 }
 
 .auth-wrapper .auth-form-area,
@@ -162,7 +162,8 @@ a.dropdown-item {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     height: 54px;
-    background: #fff;
+    /* background: #fff; */
+    background: #e8F0Fe;
 }
 
 .auth-wrapper .auth-form-area .form-control:active,
@@ -172,6 +173,10 @@ a.dropdown-item {
     outline: none;
     -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.auth-wrapper .auth-form-area label {
+    font-weight: 500;
 }
 
 .auth-wrapper .auth-bg {
@@ -195,97 +200,6 @@ a.dropdown-item {
     top: 2px;
     font-size: 14px;
 }
-
-.control {
-    display: block;
-    position: relative;
-    padding-left: 30px;
-    margin-bottom: 15px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.control .caption {
-    position: relative;
-    top: .2rem;
-    color: #888;
-}
-
-.control input {
-    position: absolute;
-    z-index: -1;
-    opacity: 0;
-}
-
-.control__indicator {
-    position: absolute;
-    top: 2px;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background: #e6e6e6;
-    border-radius: 4px;
-}
-
-.control--radio .control__indicator {
-    border-radius: 50%;
-}
-
-.control:hover input~.control__indicator,
-.control input:focus~.control__indicator {
-    background: #ccc;
-}
-
-.control input:checked~.control__indicator {
-    background: #fb771a;
-}
-
-.control:hover input:not([disabled]):checked~.control__indicator,
-.control input:checked:focus~.control__indicator {
-    background: #fb8633;
-}
-
-.control input:disabled~.control__indicator {
-    background: #e6e6e6;
-    opacity: 0.9;
-    pointer-events: none;
-}
-
-.control__indicator:after {
-    font-family: 'icomoon';
-    content: '\e5ca';
-    position: absolute;
-    display: none;
-    font-size: 16px;
-    -webkit-transition: .3s all ease;
-    -o-transition: .3s all ease;
-    transition: .3s all ease;
-}
-
-.control input:checked~.control__indicator:after {
-    display: block;
-    color: #fff;
-}
-
-.control--checkbox .control__indicator:after {
-    top: 50%;
-    left: 50%;
-    margin-top: -1px;
-    -webkit-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-.control--checkbox input:disabled~.control__indicator:after {
-    border-color: #7b7b7b;
-}
-
-.control--checkbox input:disabled:checked~.control__indicator {
-    background-color: #7e0cf5;
-    opacity: .2;
-}
-
-
 
 
 
@@ -337,7 +251,7 @@ a.dropdown-item {
 
 .dashboard-wrapper .dashboard-container {
     background: rgba(33, 37, 41, 0.03);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--shadow-lg);
 }
 
 .dashboard-wrapper .dashboard-container .next-appointent-time h1 {
@@ -520,7 +434,7 @@ a.dropdown-item {
 
 .meet-wrapper .container {
     margin: 90px auto;
-    box-shadow: 0 0 100px -5px rgba(0, 0, 0, .25);
+    box-shadow: var(--shadow-lg);
     border-radius: 32px;
     overflow: hidden;
 }

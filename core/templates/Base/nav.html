@@ -29,18 +29,15 @@
                                 <li> <hr class="dropdown-divider"> </li>
                                 <li><a class="dropdown-item" href="{% url 'password.update' %}">Change Password</a></li>
                                 <li> <hr class="dropdown-divider"> </li>
-                                <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Home</a>
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Login</a>
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
                         </li>
                     {% endif %}
                 </ul>

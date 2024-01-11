@@ -2,7 +2,7 @@
 
 {% block authForm %}
     <h3>Schedule and <strong>Meet</strong></h3>
-        <p class="mb-4">Begin your journey. It's free</p>
+        <p class="mb-4">Start your journey. It's free</p>
         <form action="{% url 'register' %}" method="post">
             {% csrf_token %}
             {% for field in form %}

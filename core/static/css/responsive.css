@@ -543,3 +543,33 @@
         margin-top: 40px;
     }
 }
+
+
+/* Authentication */
+@media(max-width: 767px) {
+    .auth-wrapper .auth-form-area {
+        width: 100%;
+        padding: 100px 15px;
+    }
+
+    .auth-wrapper .auth-form-area .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .auth-wrapper .auth-form-area .auth-box {
+        padding: 10px 0px;
+        box-shadow: none;
+    }
+
+    .auth-wrapper .auth-form-area .auth-box h3 {
+        font-size: 26px;
+    }
+
+    .auth-wrapper .btn {
+        margin-top: 15px;
+        height: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
