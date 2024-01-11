@@ -53,10 +53,10 @@ AUTH_USER_MODEL = "dashboard.User"
 LOGIN_URL = "/auth/login"
 
 MESSAGE_TAGS = {
-    messages.INFO: "alert-primary",
-    messages.SUCCESS: "alert-success",
-    messages.WARNING: "alert-warning",
-    messages.ERROR: "alert-danger",
+    messages.INFO: "alert alert-primary p-3",
+    messages.SUCCESS: "alert alert-success p-3",
+    messages.WARNING: "alert alert-warning p-3",
+    messages.ERROR: "alert alert-danger p3",
 }
 
 MIDDLEWARE = [

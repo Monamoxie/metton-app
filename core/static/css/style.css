@@ -128,11 +128,7 @@ a.dropdown-item {
 
 /* Authentication */
 .auth-wrapper {
-    margin-top: 0;
-}
-
-.auth-bg {
-    background-image: url("/assets/img/bg.jpeg");
+    margin-top: -20px;
 }
 
 .auth-wrapper,
@@ -143,16 +139,17 @@ a.dropdown-item {
 
 .auth-wrapper .auth-form-area {
     padding: 150px 10px;
+    background: var(--white);
 }
 
 .auth-wrapper .auth-form-area .auth-box {
     padding: 60px 80px;
     box-shadow: var(--shadow-lg);
+    max-width: 650px;
 }
 
-.auth-wrapper .auth-form-area,
-.auth-wrapper .auth-bg {
-    width: 50%;
+.auth-wrapper .auth-form-area {
+    width: 100%;
 }
 
 .auth-wrapper .auth-form-area .form-control,
@@ -162,7 +159,6 @@ a.dropdown-item {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     height: 54px;
-    /* background: #fff; */
     background: #e8F0Fe;
 }
 
@@ -208,7 +204,9 @@ a.dropdown-item {
 .dashboard-wrapper {
     background: #eeeee8;
     margin: 0;
-    padding-top: 50px;
+    margin-top: -20px;
+    padding-top: 80px;
+    padding-bottom: 100px;
 }
 
 .unsupported-device {
@@ -765,16 +763,17 @@ a.dropdown-item {
     margin-bottom: 0;
 }
 
-/* footer */
-.footer {
+/* bottom-flyer */
+.bottom-flyer {
     background: #dad2bd;
     font-size: 15px;
     overflow: hidden;
     position: relative;
-    padding-top: 100px;
+    padding-top: 120px;
+    padding-bottom: 120px;
 }
 
-.footer .cta {
+.bottom-flyer .cta {
     color: #000;
     margin: 0 auto;
     text-align: center;
@@ -782,7 +781,7 @@ a.dropdown-item {
     padding: 50px 100px;
 }
 
-.footer .cta h3 {
+.bottom-flyer .cta h3 {
     color: #000;
     font-size: 50px;
     font-style: normal;
@@ -791,14 +790,14 @@ a.dropdown-item {
     text-align: center;
 }
 
-.footer .cta p {
+.bottom-flyer .cta p {
     font-size: 25px;
     font-style: normal;
     font-weight: 500;
     line-height: 35px;
 }
 
-.footer .cta button {
+.bottom-flyer .cta button {
     background: #000;
     border: 0;
     color: #fff;
@@ -811,11 +810,10 @@ a.dropdown-item {
     margin-top: 30px;
 }
 
+/* footer */
 .footer .copyright {
     border-top: 1px solid #f8f5f3;
-    margin-top: 55px;
-    background: #dad2bd;
-    background: #f8f5f3;
+    margin-top: 0px;
     color: #fff;
     background-color: #7f6438;
     padding: 50px 0;

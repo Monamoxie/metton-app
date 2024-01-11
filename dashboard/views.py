@@ -350,16 +350,8 @@ def detachBusinessHours(request):
     )
 
 
-def get_end_date(params):
-    if "end" in params:
-        end_date = params["start"]
-    else:
-        end_date = None
-
-    return str(dateutil.parser.parse(end_date).date())
-
-
+@login_required
 def logout(request):
-    # authLogout(request)
+    authLogout(request)
     messages.success(request, "Goodbye! See you soon")
     return redirect("index")

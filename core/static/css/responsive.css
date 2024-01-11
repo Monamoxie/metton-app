@@ -395,13 +395,13 @@
 }
 
 
-/* footer */
+/* bottom-flyer */
 @media (max-width: 767px) {
-    .footer .cta {
+    .bottom-flyer .cta {
         padding: 30px 0px;
     }
 
-    .footer .cta h3 {
+    .bottom-flyer .cta h3 {
         color: #000;
         font-size: 50px;
         font-style: normal;
@@ -410,7 +410,7 @@
         text-align: center;
     }
 
-    .footer .cta p {
+    .bottom-flyer .cta p {
         font-size: 20px;
     }
 }
@@ -548,8 +548,13 @@
 /* Authentication */
 @media(max-width: 767px) {
     .auth-wrapper .auth-form-area {
-        width: 100%;
         padding: 100px 15px;
+    }
+
+    .auth-wrapper,
+    .auth-wrapper .container>.row {
+        min-height: auto;
+        height: auto;
     }
 
     .auth-wrapper .auth-form-area .row {
@@ -560,6 +565,7 @@
     .auth-wrapper .auth-form-area .auth-box {
         padding: 10px 0px;
         box-shadow: none;
+        max-width: 400px;
     }
 
     .auth-wrapper .auth-form-area .auth-box h3 {
@@ -571,5 +577,21 @@
         height: auto;
         padding-left: 15px;
         padding-right: 15px;
+    }
+}
+
+@media(min-width:768px) and (max-width: 1199px) {
+    .auth-wrapper .auth-form-area {
+        padding: 100px 15px;
+    }
+
+    .auth-wrapper,
+    .auth-wrapper .container>.row {
+        min-height: auto;
+        height: auto;
+    }
+
+    .auth-wrapper .auth-form-area .auth-box {
+        max-width: 600px;
     }
 }

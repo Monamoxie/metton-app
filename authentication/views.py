@@ -1,16 +1,11 @@
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login as authLogin, logout as authLogout
+from django.contrib.auth import authenticate, login as authLogin
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from dashboard.models import User
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm
 from django.contrib.auth import get_user_model
-
-
-# Create your views here.
-def home(request):
-    return render(request, "index.html")
 
 
 def register(request):
