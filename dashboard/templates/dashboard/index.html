@@ -7,8 +7,8 @@
             <div class="dashboard-container">
                 <div class="appointments-header">
                     <div class="row">
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                                <div class="d-flex">
+                        <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12">
+                                <div class="d-flex profile-dp">
                                     <div class="profile-img">
                                         {% if user.profile_photo is not None %}
                                             <img src="{{ user.profile_photo.url }}" alt="Profile Photo" />
@@ -27,14 +27,14 @@
                                     </div>
                                 </div>
                         </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 next-appointent">
                                 {% if next_appointment %}
                                     <div class="d-flex flex-row-reverse">
                                         <div class="px-3 next-appointent-time">
                                             <h1 class="text-theme"> {{ next_appointment.start_time }} </h1>
                                         </div>
-                                        <div>
-                                            <h3 class="card-title text-left text-green"> <i class="fa fa-clock px-1 text-theme"></i> {{ next_appointment.start }} </h3>
+                                        <div class="next-appointent-date">
+                                            <h6 class="card-title text-left text-green"> <i class="fa fa-clock px-1 text-theme"></i> {{ next_appointment.start }} </h6>
                                             <div class="meetings text-center">
                                                 <span>Next Meeting</span>
                                             </div>

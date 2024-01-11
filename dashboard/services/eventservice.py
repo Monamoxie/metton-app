@@ -258,7 +258,7 @@ class EventService(Event):
 
             if format_date_time:
                 event_data["start_time"] = start.strftime("%I:%M %p")
-                event_data["start"] = start.strftime("%A, %d %B")
+                event_data["start"] = start.strftime("%a, %d %b")
 
             if format_date_time:
                 event_data["end_time"] = end.strftime("%I:%M %p")

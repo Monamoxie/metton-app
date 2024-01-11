@@ -344,6 +344,10 @@ a.dropdown-item {
     font-weight: bolder;
 }
 
+.dashboard-wrapper .dashboard-container .next-appointent-date h6 {
+    font-size: 24px;
+}
+
 .appointments-header {
     border-top-right-radius: 25px;
     border-top-left-radius: 25px;
@@ -409,7 +413,7 @@ a.dropdown-item {
 
 .profile-header-section h6 {
     color: #454444;
-    line-height: 1px;
+    line-height: 25px;
 }
 
 .profile-edit-btn {

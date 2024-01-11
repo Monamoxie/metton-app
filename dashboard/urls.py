@@ -10,4 +10,5 @@ urlpatterns = [
     path("events/detach", views.detachEvent, name="delete-event"),
     path("business-hours", views.getBusinessHours, name="business-hours"),
     path("business-hours/detach", views.detachBusinessHours, name="business-hours"),
+    path("logout", views.logout, name="logout"),
 ]

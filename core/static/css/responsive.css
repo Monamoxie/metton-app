@@ -526,4 +526,20 @@
     .dashboard-wrapper .dashboard-container {
         box-shadow: none;
     }
+
+    .dashboard-wrapper .dashboard-container .next-appointent {
+        margin-top: -30px;
+    }
+}
+
+@media (min-width: 1000px) and (max-width: 1899px) {
+    .dashboard-wrapper .dashboard-container .next-appointent {
+        margin-top: 20px;
+    }
+}
+
+@media(min-width: 1900px) {
+    .dashboard-wrapper .dashboard-container .next-appointent {
+        margin-top: 40px;
+    }
 }
