@@ -425,9 +425,14 @@ a.dropdown-item {
 
 
 /* Meet */
+.meet-body {
+    background: var(--skin);
+}
+
 .meet-wrapper {
     width: 100%;
     margin: 0;
+
 }
 
 .meet-wrapper .container {
@@ -438,9 +443,10 @@ a.dropdown-item {
 }
 
 .meet-wrapper .profile-section {
-    padding: 70px 30px 45px;
-    background: linear-gradient(#0b7080, #0ba376);
-    background: linear-gradient(#052952, #046447);
+    padding: 150px 30px 45px;
+    background: linear-gradient(#052952, var(--theme-greenery));
+    background: var(--theme-greenery);
+    position: relative;
 }
 
 .meet-wrapper .profile-section .profile-photo {
@@ -458,23 +464,37 @@ a.dropdown-item {
 
 .meet-wrapper .profile-section .profile-data {
     text-align: center;
-    color: #fff;
+    color: var(--skin);
     margin: 15px auto;
-    font-family: var(--poppins);
     font-family: var(--dmsans);
 }
 
 .meet-wrapper .profile-section .profile-data h4 {
     font-weight: bold;
     font-size: 40px;
+
+}
+
+.meet-wrapper .profile-section .meet-footnote {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.meet-wrapper .profile-section .meet-footnote span {
+    color: var(--skin);
+    opacity: .7;
 }
 
 .meet-wrapper .booking-section {
     min-height: 700px;
+    background: var(--skin);
 }
 
 .meet-wrapper .booking-section .meet-modal .modal-header {
-    background: linear-gradient(#052952, #046447);
+    background: var(--main-theme);
     color: #fff;
 }
 

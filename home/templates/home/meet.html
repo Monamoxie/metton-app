@@ -11,11 +11,11 @@
     <title>Metton - Online Scheduler</title>
     {% block head_content %}{% endblock %}
   </head>
-  <body>
+  <body class="meet-body">
     <div class="meet-wrapper min-vh-100">
       <div class="container" >
         <div class="row">
-          <div class="col-md-4 profile-section">
+          <div class="col-lg-4 col-md-12 col-sm-12 profile-section">
             <div class="profile-photo">
                {% if user.profile_photo is not None %}
                   <img src="{{ user.profile_photo.url }}" alt="Profile Photo"/>
@@ -37,8 +37,9 @@
               <hr/>
               <p>{{ user.profile_summary }}</p>
             </div>
+            <div class="meet-footnote"> <span> &copy; {{ curr_year }}. Metton</span> </div>
           </div>
-          <div class="col-md-8 booking-section" id="booking-section">
+          <div class="col-lg-8 col-md-12 col-sm-12 booking-section" id="booking-section">
             <div id='meet'></div>
               <div class="modal meet-modal " tabindex="-1" id="meet-modal"> 
                 <div class="modal-dialog" role="document">
@@ -48,7 +49,7 @@
                              <h5 class="modal-title">Confirm Appointment</h5>
                            </div>
                             <span aria-hidden="true" class="close-calendar-modal" data-bs-dismiss="modal" aria-label="Close">
-                              <i class="fa fa-times-circle text-danger"></i>
+                              <i class="fa fa-times-circle text-red"></i>
                             </span>
                         </div>
                         <div class="modal-body">
@@ -56,9 +57,9 @@
                           <div class="row d-flex flex-column">
                             <div class="d-flex flex-row">
                                 <div class="px-3">
-                                    <h3 class="text-primary">  
+                                    <h3 class="text-green fw-bolder">  
                                       <sup class="time-supercript">from</sup>
-                                      <i class="fa fa-clock px-1 text-success"></i> <span id="evtStartTime"></span> </h3>
+                                      <i class="fa fa-clock px-1 text-green"></i> <span id="evtStartTime"></span> </h3>
                                 </div>
                                 <div>
                                     <h6 class="card-title text-left " id="oka"> <span id="evtStartDate"></span> </h6>
@@ -66,9 +67,9 @@
                             </div>
                              <div class="d-flex flex-row">
                                 <div class="px-3">
-                                    <h3 class="text-primary"> 
+                                    <h3 class="text-red"> 
                                        <sup class="time-supercript">to</sup>
-                                      <i class="fa fa-clock px-1 text-danger"></i>  <span id="evtEndTime"></span>  </h3>
+                                      <i class="fa fa-clock px-1 text-red"></i>  <span id="evtEndTime"></span>  </h3>
                                 </div>
                                 <div>
                                     <h6 class="card-title text-left"><span id="evtEndDate"></span> </h6>
