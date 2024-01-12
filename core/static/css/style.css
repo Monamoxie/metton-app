@@ -496,6 +496,9 @@ a.dropdown-item {
 .meet-wrapper .booking-section .meet-modal .modal-header {
     background: var(--main-theme);
     color: #fff;
+    border-bottom: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .meet-wrapper .booking-section .meet-modal .modal-header .modal-title {

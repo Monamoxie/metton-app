@@ -84,8 +84,8 @@ const renderCalender = function (pid) {
 
 
                     bookEl.addEventListener('click', event => {
-                        // bookEl.setAttribute('disabled', true)
-                        // bookEl.innerHTML = 'Please wait...'
+                        bookEl.setAttribute('disabled', true)
+                        bookEl.innerHTML = 'Please wait...'
                         
                         const res = document.getElementById('response')
                         const email = document.getElementById('email').value
@@ -130,6 +130,8 @@ const renderCalender = function (pid) {
                                     data.errors.forEach(error => {
                                         res.innerHTML += '<p> <i class="fa fa-warning"></i> ' + error + '</p>'
                                     });
+                                    bookEl.setAttribute('disabled', false)
+                                     bookEl.innerHTML = 'Book Now'
                                 } else {
                                     const bookingSection = document.getElementById('booking-section')
                                     bookingSection.classList.add('booking-completed')
