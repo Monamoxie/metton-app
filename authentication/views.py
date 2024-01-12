@@ -6,8 +6,20 @@ from django.shortcuts import redirect, render
 from dashboard.models import User
 from .forms import RegisterForm
 from django.contrib.auth import get_user_model
+from functools import wraps
 
 
+def guest_only(view_func):
+    def _decorator(request, *args, **kwargs):
+        if not request.user.is_anonymous:
+            return redirect("dashboard")
+
+        return view_func(request, *args, **kwargs)
+
+    return wraps(view_func)(_decorator)
+
+
+@guest_only
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)

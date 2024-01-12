@@ -8,7 +8,10 @@ from dashboard.services.eventservice import EventService
 
 
 def index(request):
-    return render(request, "home/index.html", {"curr_year": datetime.today().year})
+    return render(request, "home/index.html", {})
+
+
+# "curr_year": datetime.today().year}
 
 
 # Create your views here.
@@ -18,7 +21,7 @@ def meet(request, public_id):
         raise Http404("User not found")
 
     today = datetime.today()
-    first_day_of_month = d1 = today.strftime("%Y-%m-01")
+    first_day_of_month = today.strftime("%Y-%m-01")
 
     choices = Event().get_frequency_choices
 
