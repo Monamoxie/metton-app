@@ -632,9 +632,37 @@
         display: none;
     }
 
-    /* .meet-wrapper .booking-section {
-        display: none;
-    } */
+    .meet-wrapper .booking-section .fc {
+        margin: 20px 3px;
+    }
+
+    .meet-wrapper .booking-section .fc-media-screen {
+        min-height: 700px;
+    }
+
+    .fc .fc-toolbar {
+        flex-direction: row;
+        justify-content: space-evenly;
+        position: relative;
+        flex-wrap: wrap;
+    }
+
+    .meet-wrapper .booking-section .fc .fc-toolbar .fc-toolbar-chunk {
+        margin: 10px auto;
+    }
+
+    .meet-wrapper .booking-section .fc .fc-toolbar .fc-toolbar-chunk:nth-child(1) {
+        width: 100%;
+        padding-left: 30px;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 17px;
+    }
+
+    .meet-wrapper .booking-section {
+        min-height: auto;
+    }
 }
 
 @media(min-width: 768px) and (max-width: 991px) {
