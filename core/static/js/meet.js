@@ -6,8 +6,8 @@ const renderCalender = function (pid) {
         themeSystem: 'bootstrap5',
         initialView: 'dayGridMonth',
         dayHeaders: true,
-        longPressDelay: 200,
-        selectLongPressDelay: 200,
+        longPressDelay: 100,
+        selectLongPressDelay: 100,
         timeZone: getTz(),
         headerToolbar: { center: 'dayGridMonth,timeGridDay', end: 'prev,next'},
         views: {
@@ -160,6 +160,10 @@ const renderCalender = function (pid) {
         businessHours: hasBusinessHours ? businessHours : false,
     });
     calendar.render();
+    
+    if (window.outerWidth < 768) {
+        calendar.changeView('timeGridDay');
+    }
 }
 document.addEventListener('DOMContentLoaded', function () {
     getNbh = (async function () {

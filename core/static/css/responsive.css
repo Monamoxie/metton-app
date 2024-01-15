@@ -595,3 +595,64 @@
         max-width: 600px;
     }
 }
+
+
+/* Meet */
+@media (max-width: 767px) {
+    .meet-wrapper {
+        margin-top: -70px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .meet-wrapper .container {
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    .meet-wrapper .profile-section {
+        padding: 50px 20px 35px;
+    }
+
+    .meet-wrapper .profile-section .profile-photo {
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+    .meet-wrapper .profile-section .profile-data {
+        font-weight: 200 !important;
+    }
+
+    .meet-wrapper .profile-section .profile-data h4 {
+        font-weight: 500;
+        font-size: 20px;
+    }
+
+    .meet-wrapper .profile-section .meet-footnote {
+        display: none;
+    }
+
+    /* .meet-wrapper .booking-section {
+        display: none;
+    } */
+}
+
+@media(min-width: 768px) and (max-width: 991px) {
+    .meet-wrapper {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    .meet-wrapper .container {
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    .meet-wrapper .profile-section {
+        padding: 70px 20px 35px;
+    }
+
+    .meet-wrapper .profile-section .meet-footnote {
+        display: none;
+    }
+}
