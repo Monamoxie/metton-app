@@ -2,9 +2,10 @@
 
 A Python based utility app for receiving, booking and managing calendar schedules. 
 
-## Technology Stack and Tools
+## Technology Stack
  
  - Python
+ - MySQL
  - Django
  - JavaScript
  - Full Calendar
