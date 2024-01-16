@@ -29,6 +29,10 @@ body {
     overflow-x: hidden;
 }
 
+a {
+    text-decoration: none;
+}
+
 .form-control[readonly="readonly"] {
     background-color: var(--skin);
 }
