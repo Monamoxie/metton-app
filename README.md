@@ -38,5 +38,4 @@ A Python based utility app for receiving, booking and managing calendar schedule
 
 
 ## License
-
 Open-sourced and licensed under the [MIT license](https://opensource.org/licenses/MIT).
