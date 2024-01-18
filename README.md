@@ -18,6 +18,12 @@ A Python based utility app for receiving, booking and managing calendar schedule
   - Run test server with `python manage.py runserver`
 
 
+### Architecture - High Level Design 
+<p align="center"><img src="core/static/images/snapshots/metton-high-level-design.svg"></p>
+
+
+
+
 ## And it comes with a beautiful User Interface you can customize or use straight out the box
 
  #### Landing page
@@ -34,7 +40,6 @@ A Python based utility app for receiving, booking and managing calendar schedule
 
  #### Manage Appointments
 <p align="center"><img src="core/static/images/snapshots/upcoming-appointments.png"></p>
-
 
 
 ## License
