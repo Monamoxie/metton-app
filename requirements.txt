@@ -1,5 +1,5 @@
 asgiref==3.7.2
-Django==4.2.4
+Django==4.2.7
 django-dump-die==0.1.5
 django-tempus-dominus==5.1.2.17
 mysqlclient==2.2.0
