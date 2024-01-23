@@ -1,0 +1,35 @@
+version: "3"
+
+networks:
+  Metton_network:
+
+services:
+  python:
+    build: .
+    container_name: ${APP_NAME}_python_container
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    networks:
+      - ${APP_NAME}_network
+
+  mysql:
+    image: mysql:8.0.33
+    container_name: ${APP_NAME}_mysql_container
+    restart: unless-stopped
+    ports:
+      - ${DB_HOST_PORT}:3306
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+    networks:
+      - ${APP_NAME}_network
