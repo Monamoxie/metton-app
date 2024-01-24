@@ -14,6 +14,7 @@ A Python based utility app for receiving, booking and managing calendar schedule
 
 ## Set up Instructions
   - Clone repo
+  - Run `cp env.example .env` and fill up details as desired
   - Run  `docker-compose up --build -d --wait`
   - Visit localhost:8000
 
