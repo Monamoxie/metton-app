@@ -3,6 +3,7 @@ function previewProfilePhoto(input) {
         var reader = new FileReader();
         reader.onload = function (e) {
             const elem = document.getElementById("profile-photo-preview-img")
+            console.log(elem)
             elem.setAttribute("src", e.target.result)
         };
         reader.readAsDataURL(input.files[0]);

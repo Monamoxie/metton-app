@@ -17,12 +17,13 @@
                                     <div class="form-group">
                                         <div class="col-md-10">
                                             <div class="profile-photo-preview mb-3" id="profile-photo-preview">
-                                                {% if user.profile_photo is not None %}
+                                                {% if user.profile_photo is not None and user.profile_photo != '' %}
                                                     <img src="{{ user.profile_photo.url }}" alt="Profile Photo" id="profile-photo-preview-img"/>
                                                 {% else %}                                        
-                                                    <img src="http://placehold.it/180" alt="Profile Photo" />
+                                                    <img src="http://placehold.it/180" alt="Profile Photo" id="profile-photo-preview-img" />
                                                 {% endif %}
                                             </div>
+                                             
                                             <input type="file" class="form-control" name="profile_photo" id="id_profile_photo" accept="image/*" onchange="previewProfilePhoto(this);">
 
                                             {% if user.public_id %}

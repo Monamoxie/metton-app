@@ -15,6 +15,7 @@ from django.contrib.auth import logout as authLogout
 @login_required
 def editProfile(request):
     user = User.objects.get(id=request.user.id)
+
     if request.method == "POST":
         form = EditProfileForm(
             request.POST or None, request.FILES or None, instance=user

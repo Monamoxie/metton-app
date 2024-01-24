@@ -4,64 +4,11 @@ from time import timezone
 import uuid
 from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager,
     AbstractUser,
     UserManager as PackageUserManager,
 )
 from django.utils.translation import gettext_lazy as _
-
-
-def rename_file(instance, filename):
-    directory = "profile_photos/"
-    file_ext = filename.split(".")[-1]
-
-    file_name = "profile_photo_" + str(instance.id) + "." + file_ext
-    return directory + file_name
-
-
-# Create your models here.
-class User(AbstractUser):
-    username = None
-    first_name = None
-    last_name = None
-
-    email = models.EmailField("email_address", unique=True)
-    name = models.CharField("name", max_length=190, blank=True)
-    company = models.CharField("company", max_length=190, blank=True)
-    position = models.CharField("position", max_length=190, blank=True)
-    profile_summary = models.TextField("profile_summary", blank=True)
-    profile_photo = models.ImageField(
-        name="profile_photo",
-        upload_to=rename_file,
-        blank=True,
-        null=True,
-        width_field="width_field",
-        height_field="height_field",
-    )
-    public_id = models.CharField("public_id", max_length=190, blank=True, unique=True)
-
-    height_field = models.IntegerField(default=180)
-    width_field = models.IntegerField(default=180)
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-    def __str__(self):
-        return str(self.id)
-
-    def has_business_hours(self):
-        return self.event_set.filter(type=Event.EventTypes.BUSINESS_HOURS).exists()
-
-    def save(self, *args, **kwargs):
-        if self.public_id == "" or self.public_id is None:
-            id_exists = True
-            while id_exists:
-                p_id = uuid.uuid4().hex[:7]
-                if not User.objects.filter(public_id=p_id).exists():
-                    id_exists = False
-            self.public_id = p_id
-
-        super().save(*args, **kwargs)  # Call the "real" save() method.
+from django.contrib.auth.base_user import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
@@ -95,14 +42,60 @@ class CustomUserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-    # def with_perm(
-    #     self, perm, is_active=True, include_superusers=True, backend=None, obj=None
-    # ):
-    #     package_user_manager = PackageUserManager
 
-    #     return package_user_manager.with_perm(
-    #         perm, is_active=True, include_superusers=True, backend=None, obj=None
-    #     )
+def rename_file(instance, filename):
+    directory = "profile_photos/"
+    file_ext = filename.split(".")[-1]
+
+    file_name = "profile_photo_" + str(instance.id) + "." + file_ext
+    return directory + file_name
+
+
+# Create your models here.
+class User(AbstractUser):
+    username = None
+    first_name = None
+    last_name = None
+
+    objects = CustomUserManager()
+
+    email = models.EmailField("email_address", unique=True)
+    name = models.CharField("name", max_length=190, blank=True)
+    company = models.CharField("company", max_length=190, blank=True)
+    position = models.CharField("position", max_length=190, blank=True)
+    profile_summary = models.TextField("profile_summary", blank=True)
+    profile_photo = models.ImageField(
+        name="profile_photo",
+        upload_to=rename_file,
+        blank=True,
+        null=True,
+        width_field="width_field",
+        height_field="height_field",
+    )
+    public_id = models.CharField("public_id", max_length=190, blank=True, unique=True)
+
+    height_field = models.IntegerField(default=180)
+    width_field = models.IntegerField(default=180)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return str(self.email)
+
+    def has_business_hours(self):
+        return self.event_set.filter(type=Event.EventTypes.BUSINESS_HOURS).exists()
+
+    def save(self, *args, **kwargs):
+        if self.public_id == "" or self.public_id is None:
+            id_exists = True
+            while id_exists:
+                p_id = uuid.uuid4().hex[:7]
+                if not User.objects.filter(public_id=p_id).exists():
+                    id_exists = False
+            self.public_id = p_id
+
+        super().save(*args, **kwargs)  # Call the "real" save() method.
 
 
 class Event(models.Model):
@@ -119,7 +112,6 @@ class Event(models.Model):
     end_date = models.DateField("end_date", blank=True)
     end_time = models.TimeField("end_time", blank=True)
     frequency = models.CharField("frequency", blank=True, max_length=100)
-    # closed_dates = models.BooleanField("closed_dates", blank=False, default=False)
     type = models.CharField(
         choices=EventTypes.choices, default=EventTypes.PUBLIC, max_length=2
     )

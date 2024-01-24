@@ -6,6 +6,7 @@ A Python based utility app for receiving, booking and managing calendar schedule
  
  - Python
  - MySQL
+ - Docker
  - Django
  - JavaScript
  - Full Calendar
@@ -13,9 +14,8 @@ A Python based utility app for receiving, booking and managing calendar schedule
 
 ## Set up Instructions
   - Clone repo
-  - Create Database and update credentials 
-  - Run migrations
-  - Run test server with `python manage.py runserver`
+  - Run  `docker-compose up --build -d --wait`
+  - Visit localhost:8000
 
 
 ### Architecture - High Level Design 

@@ -10,7 +10,7 @@
                         <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12">
                                 <div class="d-flex profile-dp">
                                     <div class="profile-img">
-                                        {% if user.profile_photo is not None %}
+                                        {% if user.profile_photo is not None and user.profile_photo != '' %}
                                             <img src="{{ user.profile_photo.url }}" alt="Profile Photo" />
                                         {% else %}                                        
                                             <img src="http://placehold.it/180" alt="Profile Photo" />
@@ -47,10 +47,10 @@
                 <div class="card metton-calendar-card">
                     <div class="card-body appointments">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Schedule</a>
-                                    </li>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="javascript:void(0)" role="tab" aria-controls="home" aria-selected="true">Schedule</a>
+                            </li>
+                        </ul>
                         <div id='manage-schedules'></div>
                     </div>
                     <div class="unsupported-device">
