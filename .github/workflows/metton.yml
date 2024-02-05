@@ -1,0 +1,48 @@
+name: Metton Workflow
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  app-deployment:
+    name: Metton Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Start containers
+        run: docker-compose up --build -d
+
+      - name: Check All Container status
+        run: docker ps -a
+
+      - name: Stop containers
+        run: docker-compose down -v
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Deploy to ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: mettonapp
+          IMAGE_TAG: latest
+        run: |
+          docker-compose build -d
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
