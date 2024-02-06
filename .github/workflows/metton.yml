@@ -49,10 +49,8 @@ jobs:
           ECR_REPOSITORY: mettonapp
           IMAGE_TAG: latest
         run: |
-          docker-compose build -d -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           services=$(docker-compose config --services)
           for service in $services; do
-            docker-compose build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG $service
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG $service
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
           done
