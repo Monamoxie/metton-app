@@ -5,7 +5,8 @@ networks:
 
 services:
   python:
-    build: .
+    build:
+      context: .
     container_name: ${APP_NAME}_python_container
     volumes:
       - .:/app
