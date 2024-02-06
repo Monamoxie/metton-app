@@ -48,7 +48,7 @@ jobs:
       - name: Deploy to ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ::add-mask::${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: mettonapp
           IMAGE_TAG: latest
         run: |
