@@ -1,9 +1,10 @@
 <p align="left"><img src="core/static/images/logo.png"></p>
 
 A Python based utility app for receiving, booking and managing calendar schedules. 
+[![Metton Workflow](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml/badge.svg)](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml)
 
 ## Technology Stack
- 
+
  - Python
  - MySQL
  - Docker
@@ -11,6 +12,11 @@ A Python based utility app for receiving, booking and managing calendar schedule
  - JavaScript
  - Full Calendar
  - Bootstrap
+
+## Devops and Cloud
+  - Github Actions
+  - AWS ECR
+  - AWS ECS 
 
 ## Set up Instructions
   - Clone repo

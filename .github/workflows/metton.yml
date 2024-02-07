@@ -29,8 +29,8 @@ jobs:
       - name: Stop containers
         run: docker-compose down -v
 
-      - name: Mask AWS ID
-        run: echo "::add-mask::${{ secrets.AWS_ACCESS_KEY_ID }}"
+      # - name: Mask AWS ID
+      #   run: echo "::add-mask::${{ secrets.AWS_ACCESS_KEY_ID }}"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -46,10 +46,6 @@ jobs:
           mask-password: "true"
         env:
           AWS_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
-
-      - name: Mask Registry
-        run: |
-          echo "::add-mask::${AWS_REGISTRY}"
 
       - name: Deploy to ECR
         id: build-image
