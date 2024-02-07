@@ -44,14 +44,17 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
         with:
           mask-password: "true"
+        env:
+          AWS_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
 
-      - name: Mask ECR REGISTRY
-        run: echo "::add-mask::${{ steps.login-ecr.outputs.registry }}"
+      - name: Mask Registry
+        run: |
+          echo "::add-mask::${AWS_REGISTRY}"
 
       - name: Deploy to ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
           ECR_REPOSITORY: mettonapp
           IMAGE_TAG: latest
         run: |
