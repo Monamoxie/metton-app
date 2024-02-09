@@ -1,6 +1,6 @@
 <p align="left"><img src="core/static/images/logo.png"></p>
 
-A Python based utility app for receiving, booking and managing calendar schedules. <br>
+A Python based utility app for receiving, booking and managing calendar schedules. <br><br>
 [![Metton Workflow](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml/badge.svg)](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml)
 
 ## Technology Stack
@@ -31,7 +31,7 @@ A Python based utility app for receiving, booking and managing calendar schedule
 - `Nginx` acts as a reverse proxy; through port 8000 on the Host machine & port 81 within the container
 - `Nginx` serves static contents & transfers incoming requests to `Gunicorn`
 - `Gunicorn` serves the main app on port 8000. 
-- `Python` service EXPOSES port 80000 for this purpose. 
+- `Python` service EXPOSES port 8000 for this purpose. 
 - `collectstatic` uses /var/www/static as static volume
 - `Python` and `Nginx` both share the same static volume
 <br>
