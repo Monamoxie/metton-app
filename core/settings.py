@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get("APP_SECURITY_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -144,8 +144,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "assets/"
+STATIC_URL = "/assets/"
 
+# from the docker container
+STATIC_ROOT = "/var/www/static/"
+
+# Extra directories where static files may be located
+# Centralized directory for all static assets within the project
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "core", "static"),
 ]

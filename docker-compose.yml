@@ -2,6 +2,7 @@ version: "3"
 
 networks:
   Metton_network:
+    driver: bridge
 
 services:
   python:
@@ -10,8 +11,9 @@ services:
     container_name: ${APP_NAME}_python_container
     volumes:
       - .:/app
-    ports:
-      - "8000:8000"
+      - static_volume:/var/www/static
+    expose:
+      - 8000
     env_file:
       - .env
     depends_on:
@@ -34,3 +36,20 @@ services:
       MYSQL_USER: ${DB_USER}
     networks:
       - ${APP_NAME}_network
+
+  nginx:
+    image: nginx:latest
+    container_name: ${APP_NAME}_nginx_container
+    volumes:
+      - static_volume:/var/www/static
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8000:80"
+    command: ["nginx", "-g", "daemon off;"]
+    depends_on:
+      - python
+    networks:
+      - ${APP_NAME}_network
+
+volumes:
+  static_volume:

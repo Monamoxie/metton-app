@@ -9,9 +9,11 @@ A Python based utility app for receiving, booking and managing calendar schedule
  - MySQL
  - Docker
  - Django
+ - Gunicorn
+ - Nginx
  - JavaScript
  - Full Calendar
- - Bootstrap
+ - Bootstrap 5
 
 ## Devops and Cloud
   - Github Actions
@@ -24,6 +26,15 @@ A Python based utility app for receiving, booking and managing calendar schedule
   - Run  `docker-compose up --build -d --wait`
   - Visit localhost:8000
 
+
+## Network flow
+- `Nginx` acts as a reverse proxy; through port 8000 on the Host machine & port 81 within the container
+- `Nginx` serves static contents & transfers incoming requests to `Gunicorn`
+- `Gunicorn` serves the main app on port 8000. 
+- `Python` service EXPOSES port 80000 for this purpose. 
+- `collectstatic` uses /var/www/static as static volume
+- `Python` and `Nginx` both share the same static volume
+<br>
 
 ### Architecture - High Level Design 
 <p align="center"><img src="core/static/images/snapshots/metton-high-level-design.svg"></p>
