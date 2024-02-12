@@ -29,9 +29,6 @@ jobs:
       - name: Stop containers
         run: docker-compose down -v
 
-      # - name: Mask AWS ID
-      #   run: echo "::add-mask::${{ secrets.AWS_ACCESS_KEY_ID }}"
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
