@@ -71,6 +71,13 @@ jobs:
       - name: Replace Execution Role ARN
         run: sed "s|EXECUTION_ROLE_ARN_PLACEHOLDER|${{ secrets.EXECUTION_ROLE_ARN }}|g" ${{ env.ECS_TASK_DEFINITION }} > ${{ env.ECS_TEMP_TASK_DEFINITION }} && mv ${{ env.ECS_TEMP_TASK_DEFINITION }} ${{ env.ECS_TASK_DEFINITION }}
 
+      - name: Log ECS Task Definition Contents
+        run: |
+          echo "Contents of ECS Task Definition:"
+          cat ${{ env.ECS_TASK_DEFINITION }}
+          echo "Contents of Temporary ECS Task Definition:"
+          cat ${{ env.ECS_TEMP_TASK_DEFINITION }}
+
       - name: Python ECS task definition
         id: python-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
