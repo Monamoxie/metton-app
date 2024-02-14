@@ -67,9 +67,7 @@
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
   "cpu": "256",
-  "memory": "512", // todo ::: check
-  // "executionRoleArn": "ecsTaskExecutionRole",
-//   "taskRoleArn": "ecsTaskRole",
+  "memory": "512",
   "tags": [
     {
       "key": "Name",
