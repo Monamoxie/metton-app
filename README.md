@@ -17,6 +17,7 @@ A Python based utility app for receiving, booking and managing calendar schedule
 
 ## Devops and Cloud
   - Github Actions
+  - Serverless, via AWS fargate
   - AWS ECR
   - AWS ECS 
 
