@@ -89,7 +89,7 @@ jobs:
         with:
           task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
           container-name: ${{ env.APP_NAME }}_mysql_container
-          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:mysql-${{ IMAGE_TAG }}
+          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:mysql-${{ env.IMAGE_TAG }}
 
       - name: Deploy ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
