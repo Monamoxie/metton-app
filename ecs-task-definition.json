@@ -1,0 +1,79 @@
+{
+  "family": "mettonapp-fargate-task",
+  "containerDefinitions": [
+    {
+      "name": "Metton_python_container",
+      "image": "PYTHON_1",
+      "memoryReservation": 256,
+      "cpu": 256,
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-fargate-task",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "python"
+        }
+      },
+      "portMappings": [{
+                "containerPort": 8000,
+                "hostPort": 8000
+            }
+        ]
+    },
+    {
+      "name": "Metton_nginx_container",
+      "image": "NGINX_2",
+      "memoryReservation": 128,
+      "cpu": 128,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-fargate-task",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "nginx"
+        }
+      }
+    },
+    {
+      "name": "Metton_mysql_container",
+      "image": "MYSQL_3",
+      "memoryReservation": 256,
+      "cpu": 256,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3306,
+          "hostPort": 3306
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-fargate-task",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "mysql"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "256",
+  "memory": "512", // todo ::: check
+  // "executionRoleArn": "ecsTaskExecutionRole",
+//   "taskRoleArn": "ecsTaskRole",
+  "tags": [
+    {
+      "key": "Name",
+      "value": "mettonapp-fargate-task"
+    }
+  ]
+}

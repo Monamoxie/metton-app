@@ -5,6 +5,12 @@ on:
     branches: ["master"]
   pull_request:
     branches: ["master"]
+env:
+  ECS_TASK_DEFINITION: ./ecs-task-definition.json
+  IMAGE_TAG: latest
+  APP_NAME: Metton
+  ECS_CLUSTER: mettonapp
+  ECS_SERVICE: mettonapp-ecs-service
 
 jobs:
   app-deployment:
@@ -49,10 +55,47 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
           ECR_REPOSITORY: mettonapp
-          IMAGE_TAG: latest
         run: |
           services=$(docker-compose config --services)
           for service in $services; do
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
           done
+
+      - name: Set ECS Execution Role ARN
+        run: |
+          echo "ECS_EXECUTION_ROLE_ARN=${{ secrets.ECS_EXECUTION_ROLE_ARN }}" >> $GITHUB_ENV
+          echo "::add-mask::${{ secrets.ECS_EXECUTION_ROLE_ARN }}"
+
+      - name: Python ECS task definition
+        id: python-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.APP_NAME }}_python_container
+          image: $ECR_REGISTRY/$ECR_REPOSITORY:python-$IMAGE_TAG
+          executionRoleArn: ${{ env.ECS_EXECUTION_ROLE_ARN }}
+
+      - name: Nginx ECS task definition
+        id: nginx-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
+        with:
+          task-definition: ${{ steps.python-task-def.outputs.task-definition }}
+          container-name: ${{ env.APP_NAME }}_nginx_container
+          image: $ECR_REGISTRY/$ECR_REPOSITORY:nginx-$IMAGE_TAG
+
+      - name: MySQL ECS task definition
+        id: mysql-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
+        with:
+          task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
+          container-name: ${{ env.APP_NAME }}_mysql_container
+          image: $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG
+
+      - name: Deploy ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1.4
+        with:
+          task-definition: ${{ steps.mysql-task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
