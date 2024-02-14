@@ -75,8 +75,6 @@ jobs:
         run: |
           echo "Contents of ECS Task Definition:"
           cat ${{ env.ECS_TASK_DEFINITION }}
-          echo "Contents of Temporary ECS Task Definition:"
-          cat ${{ env.ECS_TEMP_TASK_DEFINITION }}
 
       - name: Python ECS task definition
         id: python-task-def
