@@ -70,5 +70,6 @@
       "key": "Name",
       "value": "mettonapp-fargate-task"
     }
-  ]
+  ],
+  "executionRoleArn": "EXECUTION_ROLE_ARN_PLACEHOLDER"
 }

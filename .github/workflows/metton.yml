@@ -7,6 +7,7 @@ on:
     branches: ["master"]
 env:
   ECS_TASK_DEFINITION: ./ecs-task-definition.json
+  ECS_TEMP_TASK_DEFINITION: ./temp-ecs-task-definition.json
   IMAGE_TAG: latest
   APP_NAME: Metton
   ECS_CLUSTER: mettonapp
@@ -66,6 +67,9 @@ jobs:
         run: |
           echo "ECS_EXECUTION_ROLE_ARN=${{ secrets.ECS_EXECUTION_ROLE_ARN }}" >> $GITHUB_ENV
           echo "::add-mask::${{ secrets.ECS_EXECUTION_ROLE_ARN }}"
+
+      - name: Replace Execution Role ARN
+        run: sed "s|EXECUTION_ROLE_ARN_PLACEHOLDER|${{ secrets.EXECUTION_ROLE_ARN }}|g" ${{ env.ECS_TASK_DEFINITION }} > ${{ env.ECS_TEMP_TASK_DEFINITION }} && mv ${{ env.ECS_TEMP_TASK_DEFINITION }} ${{ env.ECS_TASK_DEFINITION }}
 
       - name: Python ECS task definition
         id: python-task-def
