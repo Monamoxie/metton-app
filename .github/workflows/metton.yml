@@ -93,7 +93,7 @@ jobs:
           image: $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG
 
       - name: Deploy ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1.4
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.mysql-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
