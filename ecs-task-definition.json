@@ -3,7 +3,6 @@
   "containerDefinitions": [
     {
       "name": "Metton_python_container",
-      "image": "PYTHON_1",
       "memoryReservation": 256,
       "cpu": 256,
       "essential": true,
@@ -23,7 +22,6 @@
     },
     {
       "name": "Metton_nginx_container",
-      "image": "NGINX_2",
       "memoryReservation": 128,
       "cpu": 128,
       "essential": true,
@@ -44,7 +42,6 @@
     },
     {
       "name": "Metton_mysql_container",
-      "image": "MYSQL_3",
       "memoryReservation": 256,
       "cpu": 256,
       "essential": true,
