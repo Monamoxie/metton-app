@@ -69,7 +69,7 @@ jobs:
           echo "::add-mask::${{ secrets.ECS_EXECUTION_ROLE_ARN }}"
 
       - name: Replace Execution Role ARN
-        run: sed -i "s|EXECUTION_ROLE_ARN_PLACEHOLDER|HELLO_WORLD|g" ${{ env.ECS_TASK_DEFINITION }}
+        run: sed -i "s|EXECUTION_ROLE_ARN_PLACEHOLDER|${{ secrets.ECS_EXECUTION_ROLE_ARN }}|g" ${{ env.ECS_TASK_DEFINITION }}
 
       - name: Log ECS Task Definition Contents
         run: |
