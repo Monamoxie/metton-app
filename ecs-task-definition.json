@@ -3,8 +3,8 @@
   "containerDefinitions": [
     {
       "name": "Metton_python_container",
-      "memoryReservation": 256,
-      "cpu": 170,
+      "memoryReservation": 1024,
+      "cpu": 682,
       "essential": true,
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -22,8 +22,8 @@
     },
     {
       "name": "Metton_nginx_container",
-      "memoryReservation": 128,
-      "cpu": 170,
+      "memoryReservation": 1024,
+      "cpu": 682,
       "essential": true,
       "portMappings": [
         {
@@ -42,8 +42,8 @@
     },
     {
       "name": "Metton_mysql_container",
-      "memoryReservation": 256,
-      "cpu": 170,
+      "memoryReservation": 1024,
+      "cpu": 682,
       "essential": true,
       "portMappings": [
         {
@@ -63,8 +63,8 @@
   ],
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
-  "cpu": "512",
-  "memory": "1024",
+  "cpu": "2048",
+  "memory": "4096",
   "tags": [
     {
       "key": "Name",
