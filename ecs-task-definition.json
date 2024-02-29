@@ -27,7 +27,7 @@
       "name": "Metton_nginx_container",
       "memoryReservation": 1024,
       "cpu": 682,
-      "essential": true,
+      "essential": false,
       "portMappings": [
         {
           "containerPort": 80,
