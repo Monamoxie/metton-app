@@ -15,10 +15,13 @@
         }
       },
       "portMappings": [{
-                "containerPort": 8000,
-                "hostPort": 8000
-            }
-        ]
+        "containerPort": 8000,
+        "hostPort": 8000
+      }],
+      "dependsOn": [{
+        "containerName": "Metton_mysql_container",
+        "condition": "HEALTHY"
+      }]
     },
     {
       "name": "Metton_nginx_container",
@@ -31,6 +34,10 @@
           "hostPort": 80
         }
       ],
+      "dependsOn": [{
+        "containerName": "Metton_python_container",
+        "condition": "HEALTHY"
+      }],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
