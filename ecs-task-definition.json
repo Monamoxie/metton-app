@@ -9,7 +9,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/mettonapp-fargate-task",
+          "awslogs-group": "/ecs/mettonapp-fargate-task/python",
           "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "python"
         }
@@ -34,7 +34,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/mettonapp-fargate-task",
+          "awslogs-group": "/ecs/mettonapp-fargate-task/nginx",
           "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "nginx"
         }
@@ -54,7 +54,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/mettonapp-fargate-task",
+          "awslogs-group": "/ecs/mettonapp-fargate-task/mysql",
           "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "mysql"
         }
