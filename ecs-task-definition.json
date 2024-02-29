@@ -34,10 +34,6 @@
           "hostPort": 80
         }
       ],
-      "dependsOn": [{
-        "containerName": "Metton_python_container",
-        "condition": "HEALTHY"
-      }],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
