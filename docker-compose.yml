@@ -44,9 +44,7 @@ services:
       - static_volume:/var/www/static
       - ./nginx/conf.d:/etc/nginx/conf.d
     ports:
-      - "80:80"
-    depends_on:
-      - python
+      - "${SERVER_PORT}:80"
     networks:
       - ${APP_NAME}_network
 
