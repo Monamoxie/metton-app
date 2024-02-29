@@ -35,7 +35,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_USER: ${DB_USER}
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysql"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u", "${DB_USER}", "-p${DB_PASSWORD}", "-P", "3306"]
       interval: 30s
       timeout: 10s
       retries: 3
