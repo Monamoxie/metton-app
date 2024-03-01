@@ -6,7 +6,10 @@ networks:
 
 services:
   mysql:
-    image: mysql:8.0.33
+    # image: mysql:8.0.33
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
     container_name: ${APP_NAME}_mysql_container
     restart: unless-stopped
     ports:
@@ -42,6 +45,7 @@ services:
   python:
     build:
       context: .
+      dockerfile: Dockerfile.python
     container_name: ${APP_NAME}_python_container
     volumes:
       - .:/app
@@ -62,7 +66,10 @@ services:
       - metton_network
 
   nginx:
-    image: nginx:latest
+    # image: nginx:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     container_name: ${APP_NAME}_nginx_container
     volumes:
       - static_volume:/var/www/static
