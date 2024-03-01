@@ -5,28 +5,6 @@ networks:
     driver: bridge
 
 services:
-  python:
-    build:
-      context: .
-    container_name: ${APP_NAME}_python_container
-    volumes:
-      - .:/app
-      - static_volume:/var/www/static
-    expose:
-      - 8000
-    env_file:
-      - .env
-    depends_on:
-      - mysql
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://python:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    networks:
-      - ${APP_NAME}_network
-
   mysql:
     image: mysql:8.0.33
     container_name: ${APP_NAME}_mysql_container
@@ -58,6 +36,28 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+    networks:
+      - ${APP_NAME}_network
+
+  python:
+    build:
+      context: .
+    container_name: ${APP_NAME}_python_container
+    volumes:
+      - .:/app
+      - static_volume:/var/www/static
+    expose:
+      - 8000
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://python:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
       - ${APP_NAME}_network
 
