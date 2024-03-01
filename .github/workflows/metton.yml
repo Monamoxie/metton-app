@@ -57,11 +57,14 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
         run: |
-          services=$(docker-compose config --services)
-          for service in $services; do
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG .
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
-          done
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG -f docker-compose.yml .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG
+        # run: |
+        #   # services=$(docker-compose config --services)
+        #   # for service in $services; do
+        #   #   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG .
+        #   #   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
+        #   # done
 
       - name: Set ECS Execution Role ARN
         run: |
