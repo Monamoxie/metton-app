@@ -28,14 +28,14 @@ jobs:
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-      - name: Start containers
-        run: docker-compose up --build -d
+      # - name: Start containers
+      #   run: docker-compose up --build -d
 
-      - name: Check All Container status
-        run: docker ps -a
+      # - name: Check All Container status
+      #   run: docker ps -a
 
-      - name: Stop containers
-        run: docker-compose down -v
+      # - name: Stop containers
+      #   run: docker-compose down -v
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -71,11 +71,6 @@ jobs:
       - name: Replace Execution Role ARN
         run: sed -i "s|EXECUTION_ROLE_ARN_PLACEHOLDER|${{ secrets.ECS_EXECUTION_ROLE_ARN }}|g" ${{ env.ECS_TASK_DEFINITION }}
 
-      - name: Log ECS Task Definition Contents
-        run: |
-          echo "Contents of ECS Task Definition:"
-          cat ${{ env.ECS_TASK_DEFINITION }}
-
       # - name: Python ECS task definition
       #   id: python-task-def
       #   uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
@@ -98,7 +93,12 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.APP_NAME }}_mysql_container
-          image: ${{ secrets.AWS_ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:mysql-${{ env.IMAGE_TAG }}
+          image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:mysql-${{ env.IMAGE_TAG }}
+
+      - name: Log ECS Task Definition Contents
+        run: |
+          echo "Contents of ECS Task Definition:"
+          cat ${{ env.ECS_TASK_DEFINITION }}
 
       - name: Deploy ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
