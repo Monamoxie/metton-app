@@ -59,7 +59,7 @@ jobs:
         run: |
           services=$(docker-compose config --services)
           for service in $services; do
-            docker-compose build $service
+            docker-compose build ${{ env.APP_NAME }}_${service}_container
             docker tag ${{ env.APP_NAME }}_${service}_container $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
           done
