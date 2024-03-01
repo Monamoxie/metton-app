@@ -2,7 +2,7 @@
   "family": "mettonapp-fargate-task",
   "containerDefinitions": [
     {
-      "name": "Metton_mysql_container",
+      "name": "metton_mysql_container",
       "memoryReservation": 4096,
       "cpu": 2048,
       "essential": true,

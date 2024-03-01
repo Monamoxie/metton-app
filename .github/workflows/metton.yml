@@ -9,7 +9,7 @@ env:
   ECS_TASK_DEFINITION: ./ecs-task-definition.json
   ECS_TEMP_TASK_DEFINITION: ./temp-ecs-task-definition.json
   IMAGE_TAG: latest
-  APP_NAME: Metton
+  APP_NAME: metton
   ECS_CLUSTER: mettonapp
   ECS_SERVICE: mettonapp-ecs-service
   ECR_REPOSITORY: mettonapp
