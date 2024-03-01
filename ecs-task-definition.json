@@ -5,7 +5,7 @@
       "name": "Metton_python_container",
       "memoryReservation": 1024,
       "cpu": 682,
-      "essential": true,
+      "essential": false,
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
