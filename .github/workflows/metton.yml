@@ -76,21 +76,21 @@ jobs:
           echo "Contents of ECS Task Definition:"
           cat ${{ env.ECS_TASK_DEFINITION }}
 
-      - name: Python ECS task definition
-        id: python-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.APP_NAME }}_python_container
-          image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:python-${{ env.IMAGE_TAG }}
+      # - name: Python ECS task definition
+      #   id: python-task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
+      #   with:
+      #     task-definition: ${{ env.ECS_TASK_DEFINITION }}
+      #     container-name: ${{ env.APP_NAME }}_python_container
+      #     image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:python-${{ env.IMAGE_TAG }}
 
-      - name: Nginx ECS task definition
-        id: nginx-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
-        with:
-          task-definition: ${{ steps.python-task-def.outputs.task-definition }}
-          container-name: ${{ env.APP_NAME }}_nginx_container
-          image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:nginx-${{ env.IMAGE_TAG }}
+      # - name: Nginx ECS task definition
+      #   id: nginx-task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
+      #   with:
+      #     task-definition: ${{ steps.python-task-def.outputs.task-definition }}
+      #     container-name: ${{ env.APP_NAME }}_nginx_container
+      #     image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:nginx-${{ env.IMAGE_TAG }}
 
       - name: MySQL ECS task definition
         id: mysql-task-def
