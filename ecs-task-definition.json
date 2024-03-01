@@ -67,7 +67,7 @@
         }
       },
       "healthCheck": {
-        "command": ["CMD", "mysql", "ping", "-h", "mysql"],
+        "command": ["CMD-SHELL", "mysql", "ping", "-h", "mysql"],
         "interval": 30,
         "timeout": 5,
         "retries": 3,
@@ -85,5 +85,11 @@
       "value": "mettonapp-fargate-task"
     }
   ],
-  "executionRoleArn": "EXECUTION_ROLE_ARN_PLACEHOLDER"
+  "executionRoleArn": "EXECUTION_ROLE_ARN_PLACEHOLDER",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "securityGroups": ["sg-06fead271f89ea214"],
+      "assignPublicIp": "ENABLED"
+    }
+  }
 }
