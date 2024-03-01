@@ -60,8 +60,8 @@ jobs:
           services=$(docker-compose config --services)
           for service in $services; do
             docker-compose build $service
-            docker tag $service $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
+            docker tag $service ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$service-${{ env.IMAGE_TAG }}
+            docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$service-${{ env.IMAGE_TAG }}
           done
 
       - name: Set ECS Execution Role ARN
