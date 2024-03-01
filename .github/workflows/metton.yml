@@ -57,7 +57,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG -f docker-compose.yml .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG
         # run: |
         #   # services=$(docker-compose config --services)
