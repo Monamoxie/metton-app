@@ -18,6 +18,12 @@ services:
       - .env
     depends_on:
       - mysql
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://python:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
       - ${APP_NAME}_network
 
@@ -35,7 +41,19 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_USER: ${DB_USER}
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u", "${DB_USER}", "-p${DB_PASSWORD}", "-P", "3306"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "mysql",
+          "-u",
+          "${DB_USER}",
+          "-p${DB_PASSWORD}",
+          "-P",
+          "3306",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -51,6 +69,8 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
     ports:
       - "${SERVER_PORT}:80"
+    depends_on:
+      - mysql
     networks:
       - ${APP_NAME}_network
 
