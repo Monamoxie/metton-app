@@ -63,7 +63,7 @@
         }
       },
       "healthCheck": {
-        "test": ["CMD", "mysql", "ping", "-h", "mysql"],
+        "command": ["CMD", "mysql", "ping", "-h", "mysql"],
         "interval": 30,
         "timeout": 5,
         "retries": 3,
