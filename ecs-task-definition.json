@@ -76,7 +76,7 @@
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
-  "networkMode": "bridge",
+  "networkMode": "awsvpc",
   "cpu": "2048",
   "memory": "4096",
   "tags": [
@@ -85,5 +85,9 @@
       "value": "mettonapp-fargate-task"
     }
   ],
-  "executionRoleArn": "EXECUTION_ROLE_ARN_PLACEHOLDER"
+  "executionRoleArn": "EXECUTION_ROLE_ARN_PLACEHOLDER",
+    "awsvpcConfiguration": {
+      "securityGroups": ["sg-06fead271f89ea214"],
+      "assignPublicIp": "ENABLED"
+    }
 }
