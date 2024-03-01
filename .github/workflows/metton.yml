@@ -96,7 +96,7 @@ jobs:
         id: mysql-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
         with:
-          task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.APP_NAME }}_mysql_container
           image: ${{ secrets.AWS_ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:mysql-${{ env.IMAGE_TAG }}
 
