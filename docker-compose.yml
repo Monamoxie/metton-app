@@ -1,7 +1,7 @@
 version: "3"
 
 networks:
-  Metton_network:
+  metton_network:
     driver: bridge
 
 services:
@@ -37,7 +37,7 @@ services:
       retries: 3
       start_period: 30s
     networks:
-      - ${APP_NAME}_network
+      - metton_network
 
   python:
     build:
@@ -59,7 +59,7 @@ services:
       retries: 3
       start_period: 60s
     networks:
-      - ${APP_NAME}_network
+      - metton_network
 
   nginx:
     image: nginx:latest
@@ -72,7 +72,7 @@ services:
     depends_on:
       - mysql
     networks:
-      - ${APP_NAME}_network
+      - metton_network
 
 volumes:
   static_volume:
