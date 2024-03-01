@@ -61,6 +61,13 @@
           "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "mysql"
         }
+      },
+      "healthCheck": {
+        "test": ["CMD", "mysql", "ping", "-h", "mysql"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
       }
     }
   ],
