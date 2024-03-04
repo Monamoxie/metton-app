@@ -1,1 +1,5 @@
 FROM mysql:8.0.33
+
+RUN chown -R mysql:root /var/lib/mysql/
+
+EXPOSE 3306
