@@ -26,7 +26,37 @@
         "timeout": 5,
         "retries": 3,
         "startPeriod": 60
-      }
+      },
+      "secrets": [
+        {
+          "name": "DB_HOST",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST"
+        },
+        {
+          "name": "DB_HOST_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST_PORT"
+        },
+        {
+          "name": "DB_NAME",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_NAME"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_PASSWORD"
+        },
+        {
+          "name": "DB_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_PORT"
+        },
+        {
+          "name": "DB_ROOT_PASSWORD",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_ROOT_PASSWORD"
+        },
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
+        },
+      ]
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
