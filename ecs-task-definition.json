@@ -55,7 +55,7 @@
         {
           "name": "DB_USER",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
-        },
+        }
       ]
     }
   ],
