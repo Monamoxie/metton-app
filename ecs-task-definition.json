@@ -27,11 +27,13 @@
         "retries": 3,
         "startPeriod": 60
       },
-      "secrets": [
+      "environment": [
         {
           "name": "DB_HOST",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST"
-        },
+        }
+      ],
+      "secrets": [
         {
           "name": "DB_HOST_PORT",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST_PORT"
