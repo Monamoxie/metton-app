@@ -30,7 +30,7 @@
       "environment": [
         {
           "name": "DB_HOST",
-          "valueFrom": "mysql"
+          "value": "mysql"
         }
       ],
       "secrets": [
