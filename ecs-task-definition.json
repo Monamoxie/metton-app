@@ -27,13 +27,11 @@
         "retries": 3,
         "startPeriod": 60
       },
-      "environment": [
+      "secrets": [
         {
           "name": "DB_HOST",
-          "value": "mysql"
-        }
-      ],
-      "secrets": [
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST"
+        },
         {
           "name": "DB_HOST_PORT",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST_PORT"
@@ -71,6 +69,6 @@
       "value": "mettonapp-fargate-task"
     }
   ],
-  "executionRoleArn": "EXECUTION_ROLE_ARN_PLACEHOLDER",
+  "executionRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
   "taskRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole"
 }
