@@ -119,7 +119,7 @@
           "awslogs-stream-prefix": "nginx"
         }
       }
-    },
+    }
   ],
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
