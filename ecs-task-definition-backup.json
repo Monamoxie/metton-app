@@ -23,30 +23,30 @@
     //     "condition": "HEALTHY"
     //   }]
     // },
-    // {
-    //   "name": "Metton_nginx_container",
-    //   "memoryReservation": 1024,
-    //   "cpu": 682,
-    //   "essential": false,
-    //   "portMappings": [
-    //     {
-    //       "containerPort": 80,
-    //       "hostPort": 80
-    //     }
-    //   ],
-    //   "dependsOn": [{
-    //     "containerName": "Metton_mysql_container",
-    //     "condition": "HEALTHY"
-    //   }],
-    //   "logConfiguration": {
-    //     "logDriver": "awslogs",
-    //     "options": {
-    //       "awslogs-group": "/ecs/mettonapp-fargate-task/nginx",
-    //       "awslogs-region": "eu-north-1",
-    //       "awslogs-stream-prefix": "nginx"
-    //     }
-    //   }
-    // },
+    {
+      "name": "Metton_nginx_container",
+      "memoryReservation": 1024,
+      "cpu": 682,
+      "essential": false,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ],
+      "dependsOn": [{
+        "containerName": "Metton_mysql_container",
+        "condition": "HEALTHY"
+      }],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-fargate-task/nginx",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "nginx"
+        }
+      }
+    },
     {
       "name": "Metton_mysql_container",
       "memoryReservation": 4096,

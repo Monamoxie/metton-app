@@ -29,6 +29,22 @@
       },
       "secrets": [
         {
+          "name": "MYSQL_DATABASE",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_NAME"
+        },
+        {
+          "name": "MYSQL_PASSWORD",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_PASSWORD"
+        },
+        {
+          "name": "MYSQL_ROOT_PASSWORD",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_ROOT_PASSWORD"
+        },
+        {
+          "name": "MYSQL_USER",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
+        },
+        {
           "name": "DB_HOST",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST"
         },
@@ -57,7 +73,53 @@
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
         }
       ]
-    }
+    },
+    {
+      "name": "Metton_python_container",
+      "memoryReservation": 1024,
+      "cpu": 682,
+      "essential": false,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-fargate-task/python",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "python"
+        }
+      },
+      "portMappings": [{
+        "containerPort": 8000,
+        "hostPort": 8000
+      }],
+      "dependsOn": [{
+        "containerName": "Metton_mysql_container",
+        "condition": "HEALTHY"
+      }]
+    },
+    {
+      "name": "Metton_nginx_container",
+      "memoryReservation": 1024,
+      "cpu": 682,
+      "essential": false,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ],
+      "dependsOn": [{
+        "containerName": "Metton_mysql_container",
+        "condition": "HEALTHY"
+      }],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-fargate-task/nginx",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "nginx"
+        }
+      }
+    },
   ],
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
