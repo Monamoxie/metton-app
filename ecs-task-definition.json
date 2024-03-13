@@ -30,7 +30,7 @@
       "secrets": [
         {
           "name": "DB_HOST",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/db-host"
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST"
         },
         {
           "name": "DB_HOST_PORT",
