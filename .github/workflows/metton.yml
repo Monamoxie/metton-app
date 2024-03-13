@@ -103,7 +103,7 @@ jobs:
       - name: Deploy ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.mysql-task-def.outputs.task-definition }}
+          task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: false
