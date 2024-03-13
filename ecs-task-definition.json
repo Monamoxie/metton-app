@@ -75,7 +75,7 @@
       ]
     },
     {
-      "name": "Metton_python_container",
+      "name": "metton_python_container",
       "memoryReservation": 1024,
       "cpu": 682,
       "essential": false,
@@ -92,12 +92,12 @@
         "hostPort": 8000
       }],
       "dependsOn": [{
-        "containerName": "Metton_mysql_container",
+        "containerName": "metton_mysql_container",
         "condition": "HEALTHY"
       }]
     },
     {
-      "name": "Metton_nginx_container",
+      "name": "metton_nginx_container",
       "memoryReservation": 1024,
       "cpu": 682,
       "essential": false,
@@ -108,7 +108,7 @@
         }
       ],
       "dependsOn": [{
-        "containerName": "Metton_mysql_container",
+        "containerName": "metton_mysql_container",
         "condition": "HEALTHY"
       }],
       "logConfiguration": {
