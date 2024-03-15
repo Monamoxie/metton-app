@@ -21,11 +21,10 @@
         }
       },
       "healthCheck": {
-        "command": ["CMD-SHELL", "mysqladmin ping -h localhost"],
+        "command": ["CMD-SHELL", "mysqladmin ping -h mysql"],
         "interval": 15,
         "timeout": 5,
-        "retries": 3,
-        "startPeriod": 10
+        "retries": 3
       },
       "secrets": [
         {
@@ -94,7 +93,49 @@
       "dependsOn": [{
         "containerName": "metton_mysql_container",
         "condition": "HEALTHY"
-      }]
+      }],
+      "secrets": [
+        {
+          "name": "APP_NAME",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_NAME"
+        },
+        {
+          "name": "APP_SECURITY_KEY",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_SECURITY_KEY"
+        },
+        {
+          "name": "SERVER_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_PORT"
+        },
+        {
+          "name": "DB_ENGINE",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_ENGINE"
+        },
+        {
+          "name": "DB_HOST",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST"
+        },
+        {
+          "name": "DB_HOST_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_HOST_PORT"
+        },
+        {
+          "name": "DB_NAME",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_NAME"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_PASSWORD"
+        },
+        {
+          "name": "DB_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_PORT"
+        },
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
+        }
+      ]
     },
     {
       "name": "metton_nginx_container",
@@ -111,6 +152,12 @@
         "containerName": "metton_mysql_container",
         "condition": "HEALTHY"
       }],
+      "secrets": [
+        {
+          "name": "SERVER_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_PORT"
+        },
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
