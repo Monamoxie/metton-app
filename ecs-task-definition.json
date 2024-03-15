@@ -21,11 +21,11 @@
         }
       },
       "healthCheck": {
-        "command": ["CMD-SHELL", "mysql", "ping", "-h", "mysql"],
-        "interval": 30,
+        "command": ["CMD-SHELL", "mysqladmin ping -h localhost"],
+        "interval": 15,
         "timeout": 5,
         "retries": 3,
-        "startPeriod": 60
+        "startPeriod": 10
       },
       "secrets": [
         {
