@@ -20,12 +20,6 @@
           "awslogs-stream-prefix": "mysql"
         }
       },
-      "healthCheck": {
-        "command": ["CMD-SHELL", "mysqladmin ping -h mysql"],
-        "interval": 15,
-        "timeout": 5,
-        "retries": 3
-      },
       "secrets": [
         {
           "name": "MYSQL_DATABASE",
@@ -90,10 +84,6 @@
         "containerPort": 8000,
         "hostPort": 8000
       }],
-      "dependsOn": [{
-        "containerName": "metton_mysql_container",
-        "condition": "HEALTHY"
-      }],
       "secrets": [
         {
           "name": "APP_NAME",
@@ -148,10 +138,6 @@
           "hostPort": 80
         }
       ],
-      "dependsOn": [{
-        "containerName": "metton_mysql_container",
-        "condition": "HEALTHY"
-      }],
       "secrets": [
         {
           "name": "SERVER_PORT",
