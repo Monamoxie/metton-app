@@ -199,7 +199,7 @@
       "name": "mettonapp_static_root",
       "efsVolumeConfiguration": {
         "fileSystemId": "fs-03f0652479d91631b",
-        "rootDirectory": "/var/www/static/"
+        "rootDirectory": "/var/www/static"
       }
     }
   ]
