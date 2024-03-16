@@ -65,7 +65,17 @@
           "name": "DB_USER",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
         }
-      ]
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost"
+        ],
+        "interval": 15,
+        "timeout": 3,
+        "retries": 10,
+        "startPeriod": 10
+      }
     },
     {
       "name": "metton_python_container",
@@ -124,6 +134,12 @@
         {
           "name": "DB_USER",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
+        }
+      ],
+      "dependsOn": [
+        {
+          "containerName": "metton_mysql_container",
+          "condition": "HEALTHY"
         }
       ]
     },
