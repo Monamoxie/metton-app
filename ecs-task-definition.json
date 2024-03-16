@@ -141,6 +141,12 @@
           "containerName": "metton_mysql_container",
           "condition": "HEALTHY"
         }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "mettonapp_static_root",
+          "containerPath": "/var/www/static"
+        }
       ]
     },
     {
@@ -167,7 +173,13 @@
           "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "nginx"
         }
-      }
+      },
+      "mountPoints": [
+        {
+          "sourceVolume": "mettonapp_static_root",
+          "containerPath": "/var/www/static"
+        }
+      ]
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
@@ -181,5 +193,14 @@
     }
   ],
   "executionRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole"
+  "taskRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
+  "volumes": [
+    {
+      "name": "mettonapp_static_root",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-03f0652479d91631b",
+        "rootDirectory": "/var/www/static/"
+      }
+    }
+  ],
 }
