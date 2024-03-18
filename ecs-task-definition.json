@@ -146,6 +146,10 @@
         {
           "sourceVolume": "mettonapp_static_root",
           "containerPath": "/var/www/static"
+        },
+         {
+          "sourceVolume": "nginx_conf",
+          "containerPath": "/app/nginx/conf.d"
         }
       ]
     },
