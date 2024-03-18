@@ -178,6 +178,10 @@
         {
           "sourceVolume": "mettonapp_static_root",
           "containerPath": "/var/www/static"
+        },
+        {
+          "sourceVolume": "nginx_conf",
+          "containerPath": "/etc/nginx/conf.d"
         }
       ]
     }
@@ -199,6 +203,12 @@
       "name": "mettonapp_static_root",
       "efsVolumeConfiguration": {
         "fileSystemId": "fs-03f0652479d91631b"
+      }
+    },
+    {
+      "name": "nginx_conf",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-09373229f276b7cf3"
       }
     }
   ]
