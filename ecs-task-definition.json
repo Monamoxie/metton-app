@@ -202,6 +202,7 @@
   ],
   "executionRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
   "taskRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
+  "enableExecuteCommand": true,
   "volumes": [
     {
       "name": "mettonapp_static_root",
