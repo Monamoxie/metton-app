@@ -141,16 +141,6 @@
           "containerName": "metton_mysql_container",
           "condition": "HEALTHY"
         }
-      ],
-      "mountPoints": [
-        {
-          "sourceVolume": "mettonapp_static_root",
-          "containerPath": "/var/www/static"
-        },
-         {
-          "sourceVolume": "nginx_conf",
-          "containerPath": "/app/nginx/conf.d"
-        }
       ]
     },
     {
@@ -178,14 +168,10 @@
           "awslogs-stream-prefix": "nginx"
         }
       },
-      "mountPoints": [
+      "volumesFrom": [
         {
-          "sourceVolume": "mettonapp_static_root",
-          "containerPath": "/var/www/static"
-        },
-        {
-          "sourceVolume": "nginx_conf",
-          "containerPath": "/etc/nginx/conf.d"
+          "sourceContainer": "metton_python_container",
+          "readOnly": true
         }
       ]
     }
@@ -202,7 +188,6 @@
   ],
   "executionRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
   "taskRoleArn": "arn:aws:iam::471112666841:role/ecsTaskExecutionRole",
-  "enableExecuteCommand": true,
   "volumes": [
     {
       "name": "mettonapp_static_root",
