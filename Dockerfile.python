@@ -5,13 +5,13 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY requirements.txt ./app/
+COPY . /app/
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r ./app/requirements.txt
 
 
-COPY . /app/
+
 RUN mkdir -p /var/www/static
 
 VOLUME /var/www/static
