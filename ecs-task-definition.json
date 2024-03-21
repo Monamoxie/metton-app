@@ -90,9 +90,7 @@
           "awslogs-stream-prefix": "python"
         }
       },
-      "portMappings": [{
-        "containerPort": 8000
-      }],
+      "portMappings": [],
       "secrets": [
         {
           "name": "APP_NAME",
