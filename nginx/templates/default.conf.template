@@ -1,5 +1,5 @@
 upstream core {
-    server $UPSTREAM_SERVER:8000;
+    server ${UPSTREAM_SERVER}:8000;
 }
 server {
     listen 80;
