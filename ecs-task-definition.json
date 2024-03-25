@@ -133,6 +133,12 @@
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
         }
       ],
+      "environment": [
+        {
+          "name": "UPSTREAM_SERVER",
+          "value": "127.0.0.1"
+        }
+      ],
       "dependsOn": [
         {
           "containerName": "metton_mysql_container",
@@ -149,6 +155,12 @@
         {
           "containerPort": 80,
           "hostPort": 80
+        }
+      ],
+      "environment": [
+        {
+          "name": "UPSTREAM_SERVER",
+          "value": "127.0.0.1"
         }
       ],
       "secrets": [

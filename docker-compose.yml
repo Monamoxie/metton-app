@@ -6,7 +6,6 @@ networks:
 
 services:
   mysql:
-    # image: mysql:8.0.33
     build:
       context: .
       dockerfile: Dockerfile.mysql
@@ -42,7 +41,6 @@ services:
       - metton_network
 
   nginx:
-    # image: nginx:latest
     build:
       context: .
       dockerfile: Dockerfile.nginx
