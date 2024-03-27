@@ -47,6 +47,7 @@ services:
     container_name: ${APP_NAME}_nginx_container
     volumes:
       - static_volume:/var/www/static
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/templates:/etc/nginx/templates
     ports:
       - "${SERVER_PORT}:80"
