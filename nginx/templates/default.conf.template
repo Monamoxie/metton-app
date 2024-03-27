@@ -5,6 +5,12 @@ server {
     listen 80;
     server_name localhost;
 
+    set $env ${APP_ENV};
+
+    if ($env = "production") {
+        return 301 https://$host$request_uri;
+    }
+
     location /assets/ {
         alias /var/www/static/;
     }
