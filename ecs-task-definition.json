@@ -167,6 +167,10 @@
         {
           "name": "SERVER_PORT",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_PORT"
+        },
+        {
+          "name": "APP_ENV",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_ENV"
         }
       ],
       "logConfiguration": {
