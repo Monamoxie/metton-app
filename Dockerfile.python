@@ -11,12 +11,10 @@ COPY requirements.txt ./app/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r ./app/requirements.txt
 
-
-
 RUN mkdir -p /var/www/static
 
 VOLUME /var/www/static
-VOLUME /app/nginx/conf.d
+VOLUME /app/core/media
 
 RUN python manage.py collectstatic --noinput
 
