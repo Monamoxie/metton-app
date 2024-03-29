@@ -150,6 +150,12 @@
           "containerName": "metton_mysql_container",
           "condition": "HEALTHY"
         }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "mettonapp_media_root",
+          "containerPath": "/app/core/media"
+        }
       ]
     },
     {
@@ -218,6 +224,12 @@
       "name": "mysql",
       "efsVolumeConfiguration": {
         "fileSystemId": "fs-0b22dcb2df7f29c36"
+      }
+    },
+    {
+      "name": "mettonapp_media_root",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-093c46f05ac54fe3b"
       }
     }
   ]
