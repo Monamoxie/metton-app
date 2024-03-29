@@ -75,7 +75,13 @@
         "timeout": 3,
         "retries": 10,
         "startPeriod": 10
-      }
+      },
+      "mountPoints": [
+        {
+          "sourceVolume": "mysql",
+          "containerPath": "/var/lib/mysql"
+        }
+      ]
     },
     {
       "name": "metton_python_container",
@@ -206,6 +212,12 @@
       "name": "mettonapp_static_root",
       "efsVolumeConfiguration": {
         "fileSystemId": "fs-03f0652479d91631b"
+      }
+    },
+    {
+      "name": "mysql",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-0b22dcb2df7f29c36"
       }
     }
   ]
