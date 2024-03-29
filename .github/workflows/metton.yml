@@ -62,6 +62,7 @@ jobs:
             if [ "$service" != "mysql" ]; then
               docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG -f Dockerfile.$service .
               docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
+            fi
           done
 
       # - name: Set ECS Execution Role ARN
