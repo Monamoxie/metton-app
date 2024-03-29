@@ -3,8 +3,8 @@
   "containerDefinitions": [
     {
       "name": "metton_python_container",
-      "memoryReservation": 1024,
-      "cpu": 682,
+      "memoryReservation": 2048,
+      "cpu": 1024,
       "essential": true,
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -72,8 +72,8 @@
     },
     {
       "name": "metton_nginx_container",
-      "memoryReservation": 1024,
-      "cpu": 682,
+      "memoryReservation": 2048,
+      "cpu": 1024,
       "essential": true,
       "portMappings": [
         {
