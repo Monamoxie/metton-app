@@ -56,7 +56,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
         run: |
-          services=$(docker-compose config --services)
+          services=$(docker compose config --services)
           for service in $services; do
             if [ "$service" != "mysql" ]; then
               docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG -f Dockerfile.$service .
