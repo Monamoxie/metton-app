@@ -6,9 +6,7 @@ networks:
 
 services:
   mysql:
-    build:
-      context: .
-      dockerfile: Dockerfile.mysql
+    image: mysql:8.0.33
     container_name: ${APP_NAME}_mysql_container
     restart: unless-stopped
     ports:
@@ -31,6 +29,8 @@ services:
     volumes:
       - .:/app
       - static_volume:/var/www/static
+    ports:
+      - "8000:8000"
     expose:
       - 8000
     env_file:
@@ -53,9 +53,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql
+      - python
     networks:
       - metton_network
-
 volumes:
   static_volume:
