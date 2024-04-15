@@ -2,3 +2,5 @@
 venv
 .env
 nginx/conf.d
+*.pyc
+__pycache__
