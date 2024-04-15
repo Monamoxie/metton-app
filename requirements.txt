@@ -2,7 +2,7 @@ asgiref==3.7.2
 boto3==1.34.30
 botocore==1.34.30
 cffi==1.16.0
-cryptography==42.0.1
+cryptography==42.0.4
 Django==5.0.1
 django-dotenv==1.4.2
 django-dump-die==0.1.7
