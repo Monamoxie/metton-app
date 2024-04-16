@@ -29,6 +29,7 @@ services:
     volumes:
       - .:/app
       - static_volume:/var/www/static
+      - media_volume:/app/core/media
     ports:
       - "8000:8000"
     expose:
@@ -47,6 +48,7 @@ services:
     container_name: ${APP_NAME}_nginx_container
     volumes:
       - static_volume:/var/www/static
+      - media_volume:/app/core/media
       - ./nginx/templates:/etc/nginx/templates
     ports:
       - "${SERVER_PORT}:80"
@@ -58,3 +60,4 @@ services:
       - metton_network
 volumes:
   static_volume:
+  media_volume:

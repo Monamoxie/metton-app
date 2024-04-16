@@ -4,3 +4,4 @@ venv
 nginx/conf.d
 *.pyc
 __pycache__
+core/media/*
