@@ -18,8 +18,12 @@ VOLUME /app/core/media
 
 RUN python manage.py collectstatic --noinput
 
-CMD sh -c 'if [ "$APP_ENV" == "production" ]; then \
-                python manage.py migrate && gunicorn --bind 0.0.0.0:8000 core.wsgi:application; \
-            else \
-                python manage.py migrate && python manage.py runserver 0.0.0.0:8000; \
-            fi'
+COPY python_entrypoint.sh /app/python_entrypoint.sh
+RUN chmod +x /app/python_entrypoint.sh
+ENTRYPOINT ["/app/python_entrypoint.sh"]
+
+# CMD sh -c 'if [ "$APP_ENV" == "production" ]; then \
+#                 python manage.py migrate && gunicorn --bind 0.0.0.0:8000 core.wsgi:application; \
+#             else \
+#                 python manage.py migrate && python manage.py runserver 0.0.0.0:8000; \
+#             fi'
