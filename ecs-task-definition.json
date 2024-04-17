@@ -107,7 +107,7 @@
         {
           "name": "SERVER_PORT",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_PORT"
-        },
+        }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
