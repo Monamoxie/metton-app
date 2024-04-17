@@ -107,7 +107,23 @@
         {
           "name": "APP_ENV",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_ENV"
-        }
+        },
+         {
+          "name": "APP_NAME",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_NAME"
+        },
+        {
+          "name": "APP_SECURITY_KEY",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_SECURITY_KEY"
+        },
+        {
+          "name": "APP_DEBUG",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_DEBUG"
+        },
+        {
+          "name": "ALLOWED_HOSTS",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/ALLOWED_HOSTS"
+        },
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
