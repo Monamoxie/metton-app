@@ -24,14 +24,15 @@ A Python based utility app for receiving, booking and managing calendar schedule
 ## Set up Instructions
   - Clone repo
   - Run `cp env.example .env` and fill up details as desired
+  - Run `chmox +x ./python_entrypoint.sh`
   - Run  `docker-compose up --build -d --wait`
   - Visit localhost:8000
 
 
 ## Network flow
-- `Nginx` acts as a reverse proxy; through port 8000 on the Host machine & port 81 within the container
+- `Nginx` acts as a reverse proxy; through port 8080 on the Host machine & port 80 within the container
 - `Nginx` serves static contents & transfers incoming requests to `Gunicorn`
-- `Gunicorn` serves the main app on port 8000. 
+- `Gunicorn` serves the app on port 8000. 
 - `Python` service EXPOSES port 8000 for this purpose. 
 - `collectstatic` uses /var/www/static as static volume
 - `Python` and `Nginx` both share the same static volume
