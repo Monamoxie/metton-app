@@ -29,10 +29,15 @@ SECRET_KEY = os.environ.get("APP_SECURITY_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("APP_ENV") != "production"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_TRUSTED_ORIGINS = ["https://mettonapp.com", "http://mettonapp.com"]
-env_allowed_hosts = os.environ.get("ALLOWED_HOSTS")
 
-ALLOWED_HOSTS = [host.strip() for host in env_allowed_hosts.split(",") if host.strip()]
+ALLOWED_HOSTS = [
+    host.strip() for host in os.environ.get("ALLOWED_HOSTS").split(",") if host.strip()
+]
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS").split(",")
+    if origin.strip()
+]
 
 
 # Application definition
