@@ -13,6 +13,8 @@ services:
       - ${DB_HOST_PORT}:3306
     env_file:
       - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
@@ -61,3 +63,4 @@ services:
 volumes:
   static_volume:
   media_volume:
+  mysql_data:
