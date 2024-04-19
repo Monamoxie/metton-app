@@ -8,7 +8,7 @@ django-dotenv==1.4.2
 django-dump-die==0.1.7
 django-ses==3.5.2
 django-tempus-dominus==5.1.2.17
-gunicorn==21.2.0
+gunicorn==22.0.0
 jmespath==1.0.1
 mysqlclient==2.2.1
 packaging==23.2
