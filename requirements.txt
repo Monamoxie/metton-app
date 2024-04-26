@@ -8,7 +8,7 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1
 click-repl==0.3.0
 cryptography==41.0.7
-Django==4.2.4
+Django==5.0.4
 django-dotenv==1.4.2
 django-dump-die==0.1.5
 django-tempus-dominus==5.1.2.17
@@ -20,9 +20,11 @@ pycparser==2.21
 PyMySQL==1.1.0
 python-dateutil==2.8.2
 pytz==2023.3.post1
+setuptools==69.0.3
 six==1.16.0
 sqlparse==0.4.4
-typing-extensions==4.7.1
+typing_extensions==4.7.1
 tzdata==2024.1
 vine==5.1.0
 wcwidth==0.2.13
+wheel==0.42.0
