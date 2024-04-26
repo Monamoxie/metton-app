@@ -12,8 +12,10 @@ Django==5.0.4
 django-dotenv==1.4.2
 django-dump-die==0.1.5
 django-tempus-dominus==5.1.2.17
+gunicorn==22.0.0
 kombu==5.3.7
 mysqlclient==2.2.0
+packaging==24.0
 Pillow==10.0.1
 prompt-toolkit==3.0.43
 pycparser==2.21
