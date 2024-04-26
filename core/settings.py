@@ -19,6 +19,7 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_URL = os.environ.get("BASE_URL") 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -27,6 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("APP_SECURITY_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+APP_ENV = os.environ.get("APP_ENV")
+
 DEBUG = os.environ.get("APP_ENV") != "production"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -92,6 +95,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "core.helpers.utilities.curr_year",
+                "core.helpers.utilities.base_url",
             ],
         },
     },

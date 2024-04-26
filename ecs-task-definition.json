@@ -17,6 +17,10 @@
       "portMappings": [],
       "secrets": [
         {
+          "name": "APP_ENV",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_ENV"
+        },
+        {
           "name": "APP_NAME",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_NAME"
         },
@@ -33,16 +37,16 @@
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/ALLOWED_HOSTS"
         },
         {
+          "name": "BASE_URL",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/BASE_URL"
+        },
+        {
+          "name": "CELERY_BROKER_URL",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/CELERY_BROKER_URL"
+        },
+        {
           "name": "CSRF_TRUSTED_ORIGINS",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/CSRF_TRUSTED_ORIGINS"
-        },
-        {
-          "name": "APP_ENV",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/APP_ENV"
-        },
-        {
-          "name": "SERVER_PORT",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_PORT"
         },
         {
           "name": "DB_ENGINE",
@@ -71,6 +75,54 @@
         {
           "name": "DB_USER",
           "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DB_USER"
+        },
+        {
+          "name": "DEFAULT_FROM_EMAIL",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/DEFAULT_FROM_EMAIL"
+        },
+        {
+          "name": "EMAIL_BACKEND",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/EMAIL_BACKEND"
+        },
+        {
+          "name": "EMAIL_HOST",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/EMAIL_HOST"
+        },
+        {
+          "name": "EMAIL_HOST_PASSWORD",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/EMAIL_HOST_PASSWORD"
+        },
+        {
+          "name": "EMAIL_HOST_USER",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/EMAIL_HOST_USER"
+        },
+        {
+          "name": "EMAIL_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/EMAIL_PORT"
+        },
+        {
+          "name": "RABBITMQ_DEFAULT_PASS",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_DEFAULT_PASS"
+        },
+        {
+          "name": "RABBITMQ_DEFAULT_USER",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_DEFAULT_USER"
+        },
+        {
+          "name": "RABBITMQ_MGT_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_MGT_PORT"
+        },
+        {
+          "name": "RABBITMQ_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_PORT"
+        },
+        {
+          "name": "SERVER_EMAIL",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_EMAIL"
+        },
+        {
+          "name": "SERVER_PORT",
+          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/SERVER_PORT"
         }
       ],
       "environment": [
