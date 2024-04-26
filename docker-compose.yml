@@ -1,5 +1,3 @@
-version: "3"
-
 networks:
   metton_network:
     driver: bridge
@@ -40,6 +38,7 @@ services:
       - .env
     depends_on:
       - mysql
+      - rabbitmq
     networks:
       - metton_network
 
@@ -75,6 +74,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    networks:
+      - metton_network
 
 volumes:
   static_volume:
