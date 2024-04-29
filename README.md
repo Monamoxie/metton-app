@@ -6,13 +6,13 @@ A Python based utility app for receiving, booking and managing calendar schedule
 ## Technology Stack
 
  - Python
+ - RabbitMQ / Celery
  - MySQL
  - Docker
  - Django
  - Gunicorn
  - Nginx
  - JavaScript
- - Full Calendar
  - Bootstrap 5
 
 ## Devops and Cloud -  Prod Setup
