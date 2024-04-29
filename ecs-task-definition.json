@@ -181,7 +181,6 @@
       "memoryReservation": 256,
       "cpu": 64,
       "essential": true,
-      "hostname": "rabbitmq",
       "portMappings": [
         {
           "containerPort": 5672,
