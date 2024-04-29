@@ -15,18 +15,22 @@ A Python based utility app for receiving, booking and managing calendar schedule
  - Full Calendar
  - Bootstrap 5
 
-## Devops and Cloud
-  - Github Actions
-  - Serverless, via AWS fargate
-  - AWS ECR
-  - AWS ECS 
+## Devops and Cloud -  Prod Setup
+  - Github Actions - CI/CD
+  - AWS fargate - Serverless 
+  - AWS ECR - Container registry
+  - AWS ECS - Container orchestration
+  - AWS MQ - Message Broker
+  - AWS RDS - Database Service
+  - AWS Cloudwatch - Logs and monitoring
+  - AWS Systems Manager Parameter Store - Environment variables and Secrets
 
-## Set up Instructions
+## Set up Instructions for Development
   - Clone repo
   - Run `cp env.example .env` and fill up details as desired
   - Run `chmox +x ./python_entrypoint.sh`
   - Run  `docker-compose up --build -d --wait`
-  - Visit localhost:8000
+  - Visit http://127.0.0.1:8080
 
 
 ## Network flow
