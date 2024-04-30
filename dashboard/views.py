@@ -19,22 +19,6 @@ from dashboard.tasks import email_sender
 
 @login_required
 def editProfile(request):
-
-    # context = {
-    #     "subject": "Mettonapp Email Verification",
-    #     "verification_link": "https://mettonapp.com",
-    #     "logo_url": f"http://mettonapp.com/assets/images/logo.png",
-    #     # "logo_url": "https://mettonapp.com/assets/images/logo.png",
-    #     "age": 27,
-    #     "profession": "Software Developer",
-    #     "marital_status": "Divorced",
-    #     "address": "Planet Earth",
-    #     "year": 2023,
-    # }
-
-    # EmailService().push("Mettonapp Email Verification", context)
-
-    # dd("END")
     user = User.objects.get(id=request.user.id)
 
     if request.method == "POST":
@@ -156,16 +140,6 @@ def manageSchedule(request):
 
 @login_required
 def dashboard(request):
-    # context = {
-    #     "subject": "Mettonapp Email Verification",
-    #     "verification_link": "https://mettonapp.com",
-    #     "logo_url": f"http://mettonapp.com/assets/images/logo.png",
-    # }
-    template = os.path.join(
-        settings.BASE_DIR, "core/templates/emails/verify_email.html"
-    )
-    # email_sender.delay("Mettonapp Email Verification", template, context)
-
     choices = Event().get_frequency_choices
     if request.method == "POST":
         form = UnavailableDatesForm(request.POST or None)

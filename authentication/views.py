@@ -1,9 +1,12 @@
+import os
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as authLogin
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
+from core import settings
 from dashboard.models import User
+from dashboard.tasks import email_sender
 from .forms import RegisterForm
 from django.contrib.auth import get_user_model
 from functools import wraps
@@ -30,6 +33,15 @@ def register(request):
             password = form.cleaned_data["password1"]
             user = authenticate(request, email=email, password=password)
             if user is not None:
+                context = {
+                    "subject": "Mettonapp Welcome",
+                    "verification_link": "https://mettonapp.com/dashboard",
+                    "logo_url": f"http://mettonapp.com/assets/images/logo.png",
+                }
+                template = os.path.join(
+                    settings.BASE_DIR, "core/templates/emails/welcome.html"
+                )
+                email_sender.delay("Welcome to Metton", [email], template, context)
                 authLogin(request, user)
                 messages.success(request, "Welcome on board!")
                 return redirect("dashboard")

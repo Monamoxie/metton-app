@@ -10,6 +10,7 @@ from dashboard.services.eventservice import EventService
 def index(request):
     return render(request, "home/index.html", {})
 
+
 # Create your views here.
 def meet(request, public_id):
     user = User.objects.filter(public_id=public_id).first()
@@ -23,7 +24,7 @@ def meet(request, public_id):
 
     return render(
         request,
-        "home/meet.html",
+        "home/meet.dj.html",
         {
             "first_day_of_month": first_day_of_month,
             "choices": choices,
