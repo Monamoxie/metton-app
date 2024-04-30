@@ -25,12 +25,16 @@ A Python based utility app for receiving, booking and managing calendar schedule
   - AWS Cloudwatch - Logs and monitoring
   - AWS Systems Manager Parameter Store - Environment variables and Secrets
 
+## Note 
+
 ## Set up Instructions for Development
   - Clone repo
   - Run `cp env.example .env` and fill up details as desired
   - Run `chmox +x ./python_entrypoint.sh`
   - Run  `docker-compose up --build -d --wait`
   - Visit http://127.0.0.1:8080
+  - For local setup, you make use of the RabbitMQ and MySQL docker images
+  - In production, we take advantage of AWS infrastrures for that by using MQ and RDS
 
 
 ## Network flow

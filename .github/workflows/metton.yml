@@ -80,23 +80,10 @@ jobs:
           container-name: ${{ env.APP_NAME }}_nginx_container
           image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:nginx-${{ env.IMAGE_TAG }}
 
-      - name: Rabbitmq ECS task definition
-        id: rabbitmq-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
-        with:
-          task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
-          container-name: ${{ env.APP_NAME }}_rabbitmq_container
-          image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:rabbitmq-${{ env.IMAGE_TAG }}
-
-      # - name: Log ECS Task Definition Contents
-      #   run: |
-      #     echo "Contents of ECS Task Definition:"
-      #     cat ${{ env.ECS_TASK_DEFINITION }}
-
       - name: Deploy ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.rabbitmq-task-def.outputs.task-definition }}
+          task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: false

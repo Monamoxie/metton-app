@@ -1,7 +1,10 @@
 from datetime import datetime
+import email
 import json
 import dateutil.parser
 from django.http import JsonResponse
+import os
+from core import settings
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -10,10 +13,28 @@ from dashboard.models import User
 from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
 from .services.eventservice import EventService
 from django.contrib.auth import logout as authLogout
+from core.services.email_service import EmailService
+from dashboard.tasks import email_sender
 
 
 @login_required
 def editProfile(request):
+
+    # context = {
+    #     "subject": "Mettonapp Email Verification",
+    #     "verification_link": "https://mettonapp.com",
+    #     "logo_url": f"http://mettonapp.com/assets/images/logo.png",
+    #     # "logo_url": "https://mettonapp.com/assets/images/logo.png",
+    #     "age": 27,
+    #     "profession": "Software Developer",
+    #     "marital_status": "Divorced",
+    #     "address": "Planet Earth",
+    #     "year": 2023,
+    # }
+
+    # EmailService().push("Mettonapp Email Verification", context)
+
+    # dd("END")
     user = User.objects.get(id=request.user.id)
 
     if request.method == "POST":
@@ -135,6 +156,16 @@ def manageSchedule(request):
 
 @login_required
 def dashboard(request):
+    # context = {
+    #     "subject": "Mettonapp Email Verification",
+    #     "verification_link": "https://mettonapp.com",
+    #     "logo_url": f"http://mettonapp.com/assets/images/logo.png",
+    # }
+    template = os.path.join(
+        settings.BASE_DIR, "core/templates/emails/verify_email.html"
+    )
+    # email_sender.delay("Mettonapp Email Verification", template, context)
+
     choices = Event().get_frequency_choices
     if request.method == "POST":
         form = UnavailableDatesForm(request.POST or None)

@@ -140,8 +140,8 @@
     },
     {
       "name": "metton_nginx_container",
-      "memoryReservation": 256,
-      "cpu": 64,
+      "memoryReservation": 512,
+      "cpu": 128,
       "essential": true,
       "portMappings": [
         {
@@ -175,54 +175,6 @@
           "readOnly": true
         }
       ]
-    },
-    {
-      "name": "metton_rabbitmq_container",
-      "memoryReservation": 256,
-      "cpu": 64,
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 5672,
-          "hostPort": 5672
-        },
-        {
-          "containerPort": 15672,
-          "hostPort": 15672
-        }
-      ],
-      "secrets": [
-        {
-          "name": "RABBITMQ_DEFAULT_PASS",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_DEFAULT_PASS"
-        },
-        {
-          "name": "RABBITMQ_DEFAULT_USER",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_DEFAULT_USER"
-        },
-        {
-          "name": "RABBITMQ_MGT_PORT",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_MGT_PORT"
-        },
-        {
-          "name": "RABBITMQ_PORT",
-          "valueFrom": "arn:aws:ssm:eu-north-1:471112666841:parameter/RABBITMQ_PORT"
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/mettonapp-fargate-task/rabbitmq",
-          "awslogs-region": "eu-north-1",
-          "awslogs-stream-prefix": "rabbitmq"
-        }
-      },
-      "mountPoints": [
-        {
-          "sourceVolume": "mettonapp_rabbitmq_volume",
-          "containerPath": "/var/lib/rabbitmq"
-        }
-      ]
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
@@ -248,12 +200,6 @@
       "name": "mettonapp_media_root",
       "efsVolumeConfiguration": {
         "fileSystemId": "fs-093c46f05ac54fe3b"
-      }
-    },
-    {
-      "name": "mettonapp_rabbitmq_volume",
-      "efsVolumeConfiguration": {
-        "fileSystemId": "fs-07c3a370f1c834adc"
       }
     }
   ]
