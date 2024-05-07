@@ -44,7 +44,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "tempus_dominus",
     "django.contrib.contenttypes",

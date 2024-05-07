@@ -84,7 +84,7 @@ const renderCalender = function (pid) {
 
 
                     bookEl.addEventListener('click', event => {
-                        bookEl.setAttribute('disabled', true)
+                        // bookEl.setAttribute('disabled', true)
                         bookEl.innerHTML = 'Please wait...'
                         
                         const res = document.getElementById('response')
@@ -122,6 +122,7 @@ const renderCalender = function (pid) {
                                     endRecur: endRecur.value
                                 })
                             }).then((response) => {
+                                console.log(document.getElementsByName('csrfmiddlewaretoken')[0].value)
                                 return response.json()
                             }).then((data) => {
                                 if (data.errors.length > 0) {
@@ -130,7 +131,7 @@ const renderCalender = function (pid) {
                                     data.errors.forEach(error => {
                                         res.innerHTML += '<p> <i class="fa fa-warning"></i> ' + error + '</p>'
                                     });
-                                    bookEl.setAttribute('disabled', false)
+                                    // bookEl.setAttribute('disabled', false)
                                      bookEl.innerHTML = 'Book Now'
                                 } else {
                                     const bookingSection = document.getElementById('booking-section')
