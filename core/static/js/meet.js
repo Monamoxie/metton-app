@@ -100,14 +100,15 @@ const renderCalender = function (pid) {
                             }
                         }
                         
+                        const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
                         const req = (async () => {
-                            const rawResponse = await fetch('/meet/' + JSON.parse(document.getElementById('pid').textContent) + '/book', {
+                            const rawResponse = await fetch(baseUrl + 'meet/' + JSON.parse(document.getElementById('pid').textContent) + '/book', {
                                 method: 'post',
                                 credentials: 'same-origin',
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
-                                    'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value
+                                    'X-CSRFTOKEN': token
                                 },
                                 body: JSON.stringify({
                                     start_date: start_date,
@@ -122,7 +123,6 @@ const renderCalender = function (pid) {
                                     endRecur: endRecur.value
                                 })
                             }).then((response) => {
-                                console.log(document.getElementsByName('csrfmiddlewaretoken')[0].value)
                                 return response.json()
                             }).then((data) => {
                                 if (data.errors.length > 0) {

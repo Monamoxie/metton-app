@@ -41,6 +41,8 @@ CSRF_TRUSTED_ORIGINS = [
     for origin in os.environ.get("CSRF_TRUSTED_ORIGINS").split(",")
     if origin.strip()
 ]
+CSRF_COOKIE_HTTPONLY = True
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 
 
 # Application definition

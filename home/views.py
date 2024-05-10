@@ -2,7 +2,7 @@ import json
 from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
-
+from core import settings
 from dashboard.models import Event, User
 from dashboard.services.eventservice import EventService
 
@@ -27,6 +27,7 @@ def meet(request, public_id):
         "home/meet.dj.html",
         {
             "first_day_of_month": first_day_of_month,
+            "base_url": settings.BASE_URL,
             "choices": choices,
             "user": user,
             "public_id": public_id,
