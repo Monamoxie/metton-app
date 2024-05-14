@@ -7,4 +7,4 @@ def curr_year(request):
 
 
 def base_url(request):
-    return {"base_url": settings.BASE_URL}
+    return {"base_url": settings.BASE_URL.rstrip().rstrip("/")}

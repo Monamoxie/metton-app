@@ -21,16 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_URL = os.environ.get("BASE_URL")
 
+PROJECT_NAME = os.environ.get("PROJECT_NAME")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("APP_SECURITY_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-APP_ENV = os.environ.get("APP_ENV")
+PROJECT_ENV = os.environ.get("PROJECT_ENV")
 
-DEBUG = os.environ.get("APP_ENV") != "production"
+DEBUG = os.environ.get("PROJECT_ENV") != "production"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ALLOWED_HOSTS = [
@@ -193,7 +195,7 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 # EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
-EMAIL_USE_SSL = os.environ.get("APP_ENV") == "production"
+EMAIL_USE_SSL = os.environ.get("PROJECT_ENV") == "production"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 # Custom settings

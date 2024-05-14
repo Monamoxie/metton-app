@@ -5,7 +5,7 @@ networks:
 services:
   mysql:
     image: mysql:8.0.33
-    container_name: ${APP_NAME}_mysql_container
+    container_name: ${PROJECT_NAME}_mysql_container
     restart: unless-stopped
     ports:
       - ${DB_HOST_PORT}:3306
@@ -25,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.python
-    container_name: ${APP_NAME}_python_container
+    container_name: ${PROJECT_NAME}_python_container
     volumes:
       - .:/app
       - static_volume:/var/www/static
@@ -46,7 +46,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nginx
-    container_name: ${APP_NAME}_nginx_container
+    container_name: ${PROJECT_NAME}_nginx_container
     volumes:
       - static_volume:/var/www/static
       - media_volume:/app/core/media
@@ -64,7 +64,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.rabbitmq
-    container_name: ${APP_NAME}_rabbitmq_container
+    container_name: ${PROJECT_NAME}_rabbitmq_container
     hostname: rabbitmq
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
