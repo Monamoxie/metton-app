@@ -1,10 +1,7 @@
 from datetime import datetime
 from core import settings
+from core.data.template_data import TemplateData
 
 
-def curr_year(request):
-    return {"curr_year": datetime.today().year}
-
-
-def base_url(request):
-    return {"base_url": settings.BASE_URL.rstrip().rstrip("/")}
+def template_data(request):
+    return {"template_data": TemplateData()}
