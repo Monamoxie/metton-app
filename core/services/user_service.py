@@ -1,11 +1,11 @@
 import uuid
 
-# from dashboard.models import User
-
-# from dashboard.models import User
+from dashboard.models.user import User
 
 
 class UserService:
+    def generate_email_verification_link(self): ...
+
     def generate_unique_public_id(self):
         id_exists = True
         while id_exists:
