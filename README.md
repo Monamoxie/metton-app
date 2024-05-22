@@ -1,9 +1,8 @@
 <p align="left"><img src="core/static/images/logo.png"></p>
 
-A Python based utility app for receiving, booking and managing calendar schedules. <br><br>
+# METTON
 
-<p align="left">
-<img src="https://img.shields.io/github/languages/count/monamoxie/metton-python-utility-scheduler">
+A full-stack web app powered by Python and Django, designed to provide a seamless and efficient appointment management solution. Whether you are a solopreneur, SME, or a startup, Metton helps you optimize your scheduling, enhance client interactions, and drive your business forward.
 
 [![Github Actions](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml/badge.svg)](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml)
 
