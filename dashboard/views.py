@@ -9,7 +9,7 @@ from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from dashboard.models import User
+from dashboard.models.user import User
 from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
 from .services.eventservice import EventService
 from django.contrib.auth import logout as authLogout
