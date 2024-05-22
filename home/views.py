@@ -3,7 +3,8 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
 from core import settings
-from dashboard.models import Event, User
+from dashboard.models import User
+from dashboard.models import Event
 from dashboard.services.eventservice import EventService
 
 

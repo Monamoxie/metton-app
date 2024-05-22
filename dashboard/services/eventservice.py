@@ -9,7 +9,8 @@ from datetime import timedelta
 import dateutil.parser
 from django.db.models import Q
 
-from dashboard.models import Event, User
+from dashboard.models.user import User
+from dashboard.models.event import Event
 
 
 class EventService(Event):
