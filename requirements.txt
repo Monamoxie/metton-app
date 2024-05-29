@@ -19,7 +19,7 @@ packaging==24.0
 Pillow==10.3.0
 prompt-toolkit==3.0.43
 pycparser==2.21
-PyMySQL==1.1.0
+PyMySQL==1.1.1
 python-dateutil==2.8.2
 pytz==2023.3.post1
 setuptools==69.0.3
