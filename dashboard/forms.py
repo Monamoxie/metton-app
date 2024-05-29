@@ -5,9 +5,11 @@ from django import forms
 from django.contrib.auth import get_user_model
 from .models import Event, User
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
-class EditProfileForm(forms.ModelForm):
+class ProfileUpdateForm(forms.ModelForm):
     name = forms.CharField(
         required=True,
         label="Name",
@@ -74,30 +76,30 @@ class EditProfileForm(forms.ModelForm):
         return profile_photo
 
 
-class ChangePasswordForm(forms.ModelForm):
-    existing_password = forms.CharField(
-        label="Please enter existing password",
+class PasswordUpdateForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        label="Please enter current password",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
                 "password": "password",
-                "placeholder": "Create Password",
+                "placeholder": "Existing Password",
             }
         ),
     )
 
-    password1 = forms.CharField(
+    new_password1 = forms.CharField(
         label="Choose a new password",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
                 "password": "password",
-                "placeholder": "Create Password",
+                "placeholder": "Create New Password",
             }
         ),
     )
 
-    password2 = forms.CharField(
+    new_password2 = forms.CharField(
         label="Confirm your new password",
         widget=forms.PasswordInput(
             attrs={
@@ -108,19 +110,27 @@ class ChangePasswordForm(forms.ModelForm):
         ),
     )
 
+    def __init__(self, *args, request=None, user=None, **kwargs):
+        self.request = request
+        self.user = user
+
+        super().__init__(user=self.user, *args, **kwargs)
+
     def clean_password2(self):
-        password2 = self.cleaned_data.get("password2", None)
-        if password2 != self.cleaned_data.get("password1"):
+        password2 = self.cleaned_data.get("new_password2", None)
+        if password2 != self.cleaned_data.get("new_password1"):
             raise forms.ValidationError("Password 1 and 2 does not match")
 
         return password2
 
-    def clean_existing_password(self):
-        existing_password = self.cleaned_data.get("existing_password")
-        if self.instance.check_password(existing_password) is not True:
-            raise forms.ValidationError("The existing password does not match")
+    def save(self, commit=True):
+        self.user.set_password(self.cleaned_data["new_password1"])
 
-        return existing_password
+        if commit:
+            self.user.save()
+            update_session_auth_hash(self.request, self.user)
+
+        return self.user
 
     class Meta:
         model = get_user_model()

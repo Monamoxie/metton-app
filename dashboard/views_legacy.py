@@ -10,50 +10,11 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from dashboard.models import User
-from .forms import EditProfileForm, ChangePasswordForm, UnavailableDatesForm
+from .forms import PasswordUpdateForm, UnavailableDatesForm
 from .services.eventservice import EventService
 from django.contrib.auth import logout as authLogout
 from core.services.email_service import EmailService
 from dashboard.tasks import email_sender
-
-
-@login_required
-def editProfile(request):
-    user = User.objects.get(id=request.user.id)
-
-    if request.method == "POST":
-        form = EditProfileForm(
-            request.POST or None, request.FILES or None, instance=user
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated...")
-            return redirect("edit-profile")
-        else:
-            messages.error(request, form.errors)
-    else:
-        form = EditProfileForm(instance=user)
-
-    return render(request, "dashboard/edit_profile.html", {"form": form})
-
-
-@login_required
-def changePassword(request):
-    user = User.objects.get(id=request.user.id)
-    if request.method == "POST":
-        form = ChangePasswordForm(request.POST or None, instance=user)
-        if form.is_valid():
-            user.set_password(form.cleaned_data.get("password1"))
-            user.save()
-
-            messages.success(request, "Password update was successful!")
-            return redirect("dashboard")
-        else:
-            messages.error(request, form.errors)
-    else:
-        form = ChangePasswordForm(instance=user)
-
-    return render(request, "dashboard/password_update.html", {"form": form})
 
 
 @login_required

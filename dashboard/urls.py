@@ -1,10 +1,11 @@
 from . import views
 from django.urls import path
+from .views import ProfileUpdateView, PasswordUpdateView
 
 urlpatterns = [
     path("", views.dashboard, name="dashboard"),
-    path("edit-profile", views.editProfile, name="edit-profile"),
-    path("password/update", views.changePassword, name="password.update"),
+    path("profile-update", ProfileUpdateView.as_view(), name="profile_update"),
+    path("password-update", PasswordUpdateView.as_view(), name="password_update"),
     path("manage/schedule", views.manageSchedule, name="manage.schedule"),
     path("events", views.getEvents, name="events"),
     path("events/detach", views.detachEvent, name="delete-event"),
