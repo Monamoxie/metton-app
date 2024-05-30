@@ -5,6 +5,8 @@ from django.contrib.auth.models import (
 )
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
+
+from dashboard.enums import EventTypes
 from .event import Event
 
 
@@ -81,7 +83,7 @@ class User(AbstractUser):
         return str(self.email)
 
     def has_business_hours(self):
-        return self.event_set.filter(type=Event.EventTypes.BUSINESS_HOURS).exists()
+        return self.event_set.filter(type=EventTypes.BUSINESS_HOURS.value).exists()
 
     def save(self, *args, **kwargs):
         if self.public_id == "" or self.public_id is None:

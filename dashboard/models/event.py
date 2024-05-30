@@ -2,16 +2,11 @@ from django.db import models
 import uuid
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
-
+from dashboard.enums import EventTypes
 from core import settings
 
 
 class Event(models.Model):
-
-    class EventTypes(models.TextChoices):
-        PUBLIC = "1", _("Public")
-        BUSINESS_HOURS = "2", _("Business Hours")
-        UNAVAILABLE = "3", _("Unavailable")
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -22,7 +17,7 @@ class Event(models.Model):
     end_time = models.TimeField("end_time", blank=True)
     frequency = models.CharField("frequency", blank=True, max_length=100)
     type = models.CharField(
-        choices=EventTypes.choices, default=EventTypes.PUBLIC, max_length=2
+        choices=EventTypes.options(), default=EventTypes.PUBLIC.value, max_length=2
     )
     note = models.TextField("note", blank=True, max_length=250)
     timezone = models.CharField("timezone", blank=True, max_length=100)
@@ -32,20 +27,6 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.user.name} - {self.title} - {str(self.start_date)} : {str(self.start_time)} - {str(self.end_date)} : {str(self.end_time)} "
-
-    def get_frequency_choices(self):
-        choices = {
-            "no": "No repeat",
-            "0": "Every Sunday",
-            "1": "Every Monday",
-            "2": "Every Tuesday",
-            "3": "Every Wednesday",
-            "4": "Every Thursday",
-            "5": "Every Friday",
-            "6": "Every Saturday",
-        }
-
-        return choices
 
     def get_user_model(self):
         return get_user_model()

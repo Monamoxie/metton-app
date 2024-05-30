@@ -1,11 +1,14 @@
 import os
+import stat
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as authLogin
 from django.contrib import messages
 from django.shortcuts import redirect, render
-
+from django.templatetags.static import static
 from core import settings
-from dashboard.models import User
+from core.services.email_service import EmailService
+from core.services.user_service import UserService
+from dashboard.models.user import User
 from dashboard.tasks import email_sender
 from .forms import RegisterForm
 from django.contrib.auth import get_user_model
@@ -34,12 +37,12 @@ def register(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 context = {
-                    "subject": "Mettonapp Welcome",
+                    "subject": "Email Verification",
                     "verification_link": "https://mettonapp.com/dashboard",
-                    "logo_url": f"http://mettonapp.com/assets/images/logo.png",
                 }
                 template = os.path.join(
-                    settings.BASE_DIR, "core/templates/emails/welcome.html"
+                    settings.BASE_DIR,
+                    "core/templates/emails/email_verification.html",
                 )
                 email_sender.delay("Welcome to Metton", [email], template, context)
                 authLogin(request, user)

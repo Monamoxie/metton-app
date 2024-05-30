@@ -11,14 +11,15 @@ from django.db.models import Q
 
 from dashboard.models.user import User
 from dashboard.models.event import Event
+from dashboard.enums import EventTypes
 
 
 class EventService(Event):
     def get_event_title(type):
         if type == 2:
-            return Event.EventTypes.BUSINESS_HOURS.name.replace("_", " ")
+            return EventTypes.BUSINESS_HOURS.get_name()
         else:
-            return Event.EventTypes.UNAVAILABLE.name
+            return EventTypes.UNAVAILABLE.get_name()
 
     def get_business_hours(self, user, public_id=None):
         if public_id is not None:
@@ -30,7 +31,7 @@ class EventService(Event):
             return []
 
         events = Event.objects.filter(
-            user=user, type=Event.EventTypes.BUSINESS_HOURS
+            user=user, type=EventTypes.BUSINESS_HOURS.value
         ).order_by("created_at")
 
         data = []
@@ -177,7 +178,7 @@ class EventService(Event):
                 (Q(start_date__gte=start_date) & Q(end_date__lte=end_date))
                 | (Q(end_recur__gte=start_date))
             )
-            .exclude(type=Event.EventTypes.BUSINESS_HOURS)
+            .exclude(type=EventTypes.BUSINESS_HOURS.value)
         )
 
         return self.prep_event_data(events)
@@ -293,7 +294,7 @@ class EventService(Event):
 
             event_data["timetable"] = timetable
 
-            if event.type == Event.EventTypes.UNAVAILABLE:
+            if event.type == EventTypes.UNAVAILABLE.value:
                 event_data["display"] = "background"
                 event_data["backgroundColor"] = "#502c3c"
                 event_data["color"] = "#c0c0c0"

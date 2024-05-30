@@ -7,6 +7,7 @@ from .models import Event, User
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from dashboard.enums import EventTypes
 
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -139,7 +140,7 @@ class PasswordUpdateForm(PasswordChangeForm):
 
 
 # Set Unavailable dates
-class UnavailableDatesForm(forms.ModelForm):
+class ScheduleManagerForm(forms.ModelForm):
     type = forms.IntegerField(
         required=True,
         label="Choose Type",
@@ -151,10 +152,10 @@ class UnavailableDatesForm(forms.ModelForm):
             choices=(
                 ("", "Please Select"),
                 (
-                    Event.EventTypes.BUSINESS_HOURS,
-                    Event.EventTypes.labels[1],
+                    EventTypes.BUSINESS_HOURS.value,
+                    EventTypes.BUSINESS_HOURS.get_name(),
                 ),
-                (Event.EventTypes.UNAVAILABLE, Event.EventTypes.labels[2]),
+                (EventTypes.UNAVAILABLE.value, EventTypes.UNAVAILABLE.get_name()),
             ),
         ),
     )
@@ -229,7 +230,7 @@ class UnavailableDatesForm(forms.ModelForm):
     )
 
     # def __init__(self, user, *args, **kwargs):
-    #     super(UnavailableDatesForm, self).__init__(*args, **kwargs)
+    #     super(ScheduleManagerForm, self).__init__(*args, **kwargs)
 
     #     # Pull the user model out, then get the value for has_business_hours
     #     user = User.objects.filter(id=user.id).first()

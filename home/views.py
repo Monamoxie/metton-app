@@ -3,6 +3,8 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
 from core import settings
+from dashboard.enums import RecurrenceTypes
+from dashboard.enums import EventTypes
 from dashboard.models import User
 from dashboard.models import Event
 from dashboard.services.eventservice import EventService
@@ -21,7 +23,7 @@ def meet(request, public_id):
     today = datetime.today()
     first_day_of_month = today.strftime("%Y-%m-01")
 
-    choices = Event().get_frequency_choices
+    choices = RecurrenceTypes.options()
 
     return render(
         request,
@@ -122,7 +124,7 @@ def book(request, public_id):
                 status=404,
             )
         else:
-            type_input_value = Event.EventTypes.PUBLIC
+            type_input_value = EventTypes.PUBLIC.value
             user_time_zone = EventService().extract_user_timezone(data=data)
 
             event = Event(

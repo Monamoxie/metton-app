@@ -5,12 +5,13 @@ import dateutil.parser
 from django.http import JsonResponse
 import os
 from core import settings
+from dashboard.enums import EventTypes
 from .models import Event
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from dashboard.models import User
-from .forms import PasswordUpdateForm, UnavailableDatesForm
+from .forms import ScheduleManagerForm
 from .services.eventservice import EventService
 from django.contrib.auth import logout as authLogout
 from core.services.email_service import EmailService
@@ -21,7 +22,7 @@ from dashboard.tasks import email_sender
 def manageSchedule(request):
     choices = Event().get_frequency_choices
     if request.method == "POST":
-        form = UnavailableDatesForm(request.POST or None)
+        form = ScheduleManagerForm(request.POST or None)
         if form.is_valid():
             type_input_value = (
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
@@ -53,14 +54,14 @@ def manageSchedule(request):
                     request,
                     "Start time/End time could not be processed. Please ensure the correct slots were selected",
                 )
-                return redirect("manage.schedule")
+                return redirect("schedule_manager")
 
             if frequency == "" and (start_date == end_date and start_time > end_time):
                 messages.error(
                     request,
                     "Start time cannot be greater than End time, when start date and end date are the same",
                 )
-                return redirect("manage.schedule")
+                return redirect("schedule_manager")
 
             title = EventService.get_event_title(type_input_value)
             event = Event(
@@ -76,18 +77,18 @@ def manageSchedule(request):
             )
             event.save()
             messages.success(request, "Your schedule has been updated!")
-            return redirect("manage.schedule")
+            return redirect("schedule_manager")
 
         else:
             messages.error(request, form.errors)
     else:
-        form = UnavailableDatesForm(None)
+        form = ScheduleManagerForm(None)
 
     business_hours = EventService().get_business_hours(user=request.user)
 
     return render(
         request,
-        "dashboard/manage_schedules.html",
+        "dashboard/schedule_manager.html",
         {
             "form": form,
             "choices": choices,
@@ -103,7 +104,7 @@ def manageSchedule(request):
 def dashboard(request):
     choices = Event().get_frequency_choices
     if request.method == "POST":
-        form = UnavailableDatesForm(request.POST or None)
+        form = ScheduleManagerForm(request.POST or None)
         if form.is_valid():
             type_input_value = (
                 form.cleaned_data["type"] if "type" in form.cleaned_data else 2
@@ -135,14 +136,14 @@ def dashboard(request):
                     request,
                     "Start time/End time could not be processed. Please ensure the correct slots were selected",
                 )
-                return redirect("manage.schedule")
+                return redirect("schedule_manager")
 
             if frequency == "" and (start_date == end_date and start_time > end_time):
                 messages.error(
                     request,
                     "Start time cannot be greater than End time, when start date and end date are the same",
                 )
-                return redirect("manage.schedule")
+                return redirect("schedule_manager")
 
             title = EventService.get_event_title(type_input_value)
             event = Event(
@@ -158,16 +159,16 @@ def dashboard(request):
             )
             event.save()
             messages.success(request, "Your schedule has been updated!")
-            return redirect("manage.schedule")
+            return redirect("schedule_manager")
 
         else:
             messages.error(request, form.errors)
     else:
-        form = UnavailableDatesForm(None)
+        form = ScheduleManagerForm(None)
         # get the next meetings
         appointments = Event.objects.filter(
             start_date__gte=datetime.now().date(),
-            type=Event.EventTypes.PUBLIC,
+            type=EventTypes.PUBLIC.value,
         ).order_by("start_date", "start_time")[:7]
 
         upcoming_appointments = EventService().prep_event_data(
@@ -203,7 +204,7 @@ def getEvents(request):
 
     events = Event.objects.filter(
         user=request.user, start_date__gte=start_date
-    ).exclude(type=Event.EventTypes.BUSINESS_HOURS)
+    ).exclude(type=EventTypes.BUSINESS_HOURS.value)
     data = []
     for event in events:
         event_data = {}
@@ -258,7 +259,7 @@ def getEvents(request):
 
         event_data["timetable"] = timetable
 
-        if event.type == Event.EventTypes.UNAVAILABLE:
+        if event.type == EventTypes.UNAVAILABLE.value:
             event_data["display"] = "background"
             event_data["backgroundColor"] = "#502c3c"
             event_data["color"] = "#c0c0c0"
@@ -306,7 +307,7 @@ def detachBusinessHours(request):
         if "id" in body:
             data = json.loads(body)
             event = Event.objects.filter(
-                user=request.user, id=data["id"], type=Event.EventTypes.BUSINESS_HOURS
+                user=request.user, id=data["id"], type=EventTypes.BUSINESS_HOURS.value
             ).first()
             if event:
                 event.delete()
