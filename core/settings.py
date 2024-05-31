@@ -158,10 +158,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "/assets/"
-
-# from the docker container
-STATIC_ROOT = "/var/www/static/"
+if DEBUG:
+    STATIC_URL = "/dev_assets/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "core", "static/")
+else:
+    STATIC_URL = "/assets/"
+    # a special dir within the docker container
+    STATIC_ROOT = "/var/www/static/"
 
 # Extra directories where static files may be located
 # Centralized directory for all static assets within the project

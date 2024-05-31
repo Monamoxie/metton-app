@@ -16,8 +16,6 @@ RUN mkdir -p /var/www/static
 VOLUME /var/www/static
 VOLUME /app/core/media
 
-RUN python manage.py collectstatic --noinput
-
 COPY python_entrypoint.sh /app/python_entrypoint.sh
 RUN chmod +x /app/python_entrypoint.sh
 ENTRYPOINT ["/app/python_entrypoint.sh"]

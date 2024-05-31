@@ -9,6 +9,10 @@ server {
         alias /var/www/static/;
     }
 
+    location /dev_assets/ {
+        alias /app/core/static/;
+    }
+
     location /media/ {
         alias /app/core/media/;
     }

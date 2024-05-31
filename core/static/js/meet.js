@@ -9,7 +9,7 @@ const renderCalender = function (pid) {
         longPressDelay: 100,
         selectLongPressDelay: 100,
         timeZone: getTz(),
-        headerToolbar: { center: 'dayGridMonth,timeGridDay', end: 'prev,next'},
+        headerToolbar: { center: 'dayGridMonth,timeGridDay', end: 'prev,next' },
         views: {
             dayGridMonth: {
                 titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
@@ -18,7 +18,7 @@ const renderCalender = function (pid) {
                 titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
             }
         },
-        validRange: function(nowDate) {
+        validRange: function (nowDate) {
             return {
                 start: document.getElementById('f_day_month').value,
             }
@@ -29,7 +29,7 @@ const renderCalender = function (pid) {
             extraParams: {
                 type: 'schedule',
             },
-            failure: function() {
+            failure: function () {
                 console.log('there was an error fetching events!');
             },
         },
@@ -44,12 +44,12 @@ const renderCalender = function (pid) {
                 calendar.setOption('selectOverlap', true)
             }
         },
-        select: function(info) {
+        select: function (info) {
             const [start_date, start_time, today, end_date, end_time] = [
-                info.start.toISOString().slice(0, 10), 
-                info.start.toISOString().slice(11, 16), 
-                new Date().toISOString().slice(0,10),
-                info.end.toISOString().slice(0, 10), 
+                info.start.toISOString().slice(0, 10),
+                info.start.toISOString().slice(11, 16),
+                new Date().toISOString().slice(0, 10),
+                info.end.toISOString().slice(0, 10),
                 info.end.toISOString().slice(11, 16)
             ]
 
@@ -69,14 +69,14 @@ const renderCalender = function (pid) {
                 setTimeout(() => {
                     const myModalEl = document.getElementById('meet-modal')
                     const bookEl = document.getElementById('booking')
-                    
+
                     const endRecur = document.getElementById('endRecur')
                     const myModal = new bootstrap.Modal(myModalEl)
 
                     myModal.show()
 
                     endRecur.setAttribute('min', start_date)
-                    
+
                     myModalEl.addEventListener('hidden.bs.modal', event => {
                         myModal.hide()
                         calendar.unselect()
@@ -86,7 +86,7 @@ const renderCalender = function (pid) {
                     bookEl.addEventListener('click', event => {
                         // bookEl.setAttribute('disabled', true)
                         bookEl.innerHTML = 'Please wait...'
-                        
+
                         const res = document.getElementById('response')
                         const email = document.getElementById('email').value
                         const note = document.getElementById('note').value
@@ -99,10 +99,9 @@ const renderCalender = function (pid) {
                                 frequencies.push(frequencyChecks[i].value)
                             }
                         }
-                        
                         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
                         const req = (async () => {
-                            const rawResponse = await fetch(baseUrl + 'meet/' + JSON.parse(document.getElementById('pid').textContent) + '/book', {
+                            const rawResponse = await fetch('/meet/' + JSON.parse(document.getElementById('pid').textContent) + '/book', {
                                 method: 'post',
                                 credentials: 'same-origin',
                                 headers: {
@@ -132,25 +131,24 @@ const renderCalender = function (pid) {
                                         res.innerHTML += '<p> <i class="fa fa-warning"></i> ' + error + '</p>'
                                     });
                                     // bookEl.setAttribute('disabled', false)
-                                     bookEl.innerHTML = 'Book Now'
+                                    bookEl.innerHTML = 'Book Now'
                                 } else {
                                     const bookingSection = document.getElementById('booking-section')
                                     bookingSection.classList.add('booking-completed')
                                     bookingSection.innerHTML = '<i class="fa fa-check-circle text-success"></i><p>Booking completed</p>'
-                                    
+
                                     myModal.hide()
                                 }
                             }).catch((error) => {
                             });
                         })();
-                        
                     })
                 }, 500);
-            }      
+            }
         },
         slotLabelInterval: "00:30",
         eventColor: '#008000',
-        selectOverlap: function(event) {
+        selectOverlap: function (event) {
             return true
         },
         navLinks: false,
@@ -161,7 +159,7 @@ const renderCalender = function (pid) {
         businessHours: hasBusinessHours ? businessHours : false,
     });
     calendar.render();
-    
+
     if (window.outerWidth < 768) {
         calendar.changeView('timeGridDay');
     }
