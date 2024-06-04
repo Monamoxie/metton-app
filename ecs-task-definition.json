@@ -135,6 +135,10 @@
         {
           "sourceVolume": "mettonapp_media_root",
           "containerPath": "/app/core/media"
+        },
+        {
+          "sourceVolume": "mettonapp_static_root",
+          "containerPath": "/var/www/static"
         }
       ]
     },
