@@ -168,9 +168,9 @@ else:
 
     # Extra directories where static files may be located
     # Centralized directory for all static assets within the project
-    # STATICFILES_DIRS = [
-    #     os.path.join(BASE_DIR, "core", "static"),
-    # ]
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "core", "static"),
+    ]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "core/media/")
