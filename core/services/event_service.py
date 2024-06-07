@@ -13,7 +13,6 @@ from typing import Union, List
 from dashboard.models.user import User
 from dashboard.models.event import Event
 from dashboard.enums import EventTypes
-from core.serializers import EventSerializer
 
 
 class EventService:
@@ -71,7 +70,9 @@ class EventService:
 
     @classmethod
     def convert_to_user_timezone(cls, date_str: str, time_str: str, user_timezone: str, time_only: bool = False):
-        return EventService.timezone_conversion(date_str, time_str, cls.DEFAULT_TIMEZONE, user_timezone, time_only)
+        return cls.timezone_conversion(
+            str(date_str), str(time_str), cls.DEFAULT_TIMEZONE, user_timezone, time_only
+        )
 
     @staticmethod
     def timezone_conversion(date_str: str, time_str: str, from_timezone: str, to_timezone: str, time_only: bool = False):
@@ -188,7 +189,7 @@ class EventService:
             return ""
 
         frequencies = eval(form_frequencies) if isinstance(form_frequencies, str) else form_frequencies
-        
+
         return ",".join(str(f) for f in frequencies if f != "no")
 
     @staticmethod
