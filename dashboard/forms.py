@@ -141,7 +141,7 @@ class PasswordUpdateForm(PasswordChangeForm):
 
 # Set Unavailable dates
 class ScheduleManagerForm(forms.ModelForm):
-    type = forms.IntegerField(
+    type = forms.CharField(
         required=True,
         label="Choose Type",
         widget=forms.Select(
