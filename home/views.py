@@ -7,7 +7,7 @@ from dashboard.enums import RecurrenceTypes
 from dashboard.enums import EventTypes
 from dashboard.models import User
 from dashboard.models import Event
-from dashboard.services.eventservice import EventService
+from core.services import EventService
 
 
 def index(request):

@@ -1,13 +1,14 @@
+from tkinter import EventType
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from dashboard.forms import ScheduleManagerForm
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-from dashboard.services import EventService
+from core.services import EventService
 from dashboard.models import Event
 from datetime import datetime
 from django.contrib import messages
-from dashboard.enums import RecurrenceTypes
+from dashboard.enums import EventTypes, RecurrenceTypes
 
 
 class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
@@ -16,11 +17,12 @@ class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     success_url = reverse_lazy("schedule_manager")
 
     def get_context_data(self, **kwargs):
+        """Include some extra data, before passing it over to the template"""
         context = super().get_context_data(**kwargs)
 
         context["choices"] = RecurrenceTypes.options()
         context["weekday_num"] = datetime.now().isoweekday()
-        context["business_hours"] = EventService().get_business_hours(
+        context["business_hours"] = EventService.get_business_hours(
             user=self.request.user
         )
         context["display_name"] = self.request.user.name
@@ -28,6 +30,7 @@ class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return context
 
     def get_form_kwargs(self):
+        """Pass additional data to the form instance"""
         kwargs = super().get_form_kwargs()
         kwargs["data"] = self.request.POST or None
         return kwargs
@@ -64,13 +67,14 @@ class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
             )
             return self.form_invalid(form)
 
-        type_input_value = form.cleaned_data.get("type", 2)
-        title = EventService.get_event_title(type_input_value)
+        type_input = form.cleaned_data.get("type", EventTypes.BUSINESS_HOURS.value)
+        title = EventTypes.get_name_by_value(type_input)
+
         event = Event(
             frequency=frequency,
             user=self.request.user,
             title=title,
-            type=type_input_value,
+            type=type_input,
             start_date=start_date,
             start_time=start_time,
             end_date=end_date,
