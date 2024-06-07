@@ -1,3 +1,4 @@
+from typing import Union
 from enum import Enum
 
 
@@ -12,9 +13,20 @@ class EventTypes(Enum):
 
     def get_name(self):
         """
-        We reconstruct the name property and return a more friendly looking name
+        Reconstruct the name property and return a more friendly looking name
         """
         return self.name.replace("_", " ").title()
+
+    @classmethod
+    def get_name_by_value(cls, value: str) -> Union[str, None]:
+        """
+        Return the friendly name for a given value.
+        """
+        try:
+            member = cls._value2member_map_.get(value)
+            return member.get_name()
+        except:
+            raise ValueError(f"No member with value {value}")
 
 
 class RecurrenceTypes(Enum):
