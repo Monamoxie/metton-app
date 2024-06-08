@@ -25,18 +25,7 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 
 This is an ongoing and evolving work in progress. More components will be added or dropped as the need arises.
 
-- Github Actions - CI/CD
-- AWS fargate - Serverless
-- AWS ECR - Container registry
-- AWS ECS - Container orchestration
-- AWS MQ - Message Broker
-- AWS RDS - Database Service
-- AWS Cloudwatch - Logs and monitoring
-- AWS Systems Manager - Env variables and secrets
-
-## Note
-
-## Set up Instructions for Development
+## Deve Setup
 
 - Clone repo
 - Run `cp env.example .env` and fill up details as desired
