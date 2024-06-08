@@ -21,7 +21,7 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 - Bootstrap 5
 
 ## ARCHITECTURE
-<p align="center"><img src="core/static/images/snapshots/metton-arch.png"></p>
+<p align="center"><img src="core/static/images/snapshots/metton-arch.svg"></p>
 
 This is an ongoing and evolving work in progress. More components will be added or dropped as the need arises.
 
