@@ -20,7 +20,10 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 - JavaScript
 - Bootstrap 5
 
-## Devops and Cloud - Prod Setup
+## ARCHITECTURE
+<p align="center"><img src="core/static/images/snapshots/metton-arch.png"></p>
+
+This is an ongoing and evolving work in progress. More components will be added or dropped as the need arises.
 
 - Github Actions - CI/CD
 - AWS fargate - Serverless
@@ -53,9 +56,6 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 - `Python` and `Nginx` both share the same static volume
   <br>
 
-### Architecture - High Level Design
-
-<p align="center"><img src="core/static/images/snapshots/metton-high-level-design.svg"></p>
 
 ## And it comes with a beautiful User Interface you can customize or use straight out the box
 
