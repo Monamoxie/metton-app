@@ -5,4 +5,4 @@ nginx/conf.d
 *.pyc
 __pycache__
 core/media/*
-.DS_store
+.DS_Store
