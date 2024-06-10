@@ -1,12 +1,7 @@
 import string
 import time
-from tokenize import String
-from typing import Any
-from django.db import models
-import dashboard
 import pytz
 from datetime import datetime
-from datetime import timedelta
 import dateutil.parser
 from django.db.models import Q
 from typing import Union, List
@@ -101,11 +96,15 @@ class EventService:
         return None
 
     @staticmethod
-    def get_timetable_from_frequency(frequencies: str, start_date: str, start_time: str, end_time: str, only_days: bool = False) -> List:
+    def get_timetable_from_frequency(frequencies: Union[List, str], start_date: str, start_time: str, end_time: str, only_days: bool = False) -> List:
         days = EventService.get_days_of_week()
         timetable = []
 
-        for week_no in frequencies.split(","):
+        indices_list = (
+            frequencies if type(frequencies) is list else frequencies.split(",")
+        )
+
+        for week_no in indices_list:
             if week_no:
                 timetable.append(
                     [days[int(week_no)]]
@@ -148,8 +147,8 @@ class EventService:
 
     @staticmethod
     def get_events(inputs, public_id=None) -> List:
-        start_date = EventService.get_start_date(inputs)
-        end_date = EventService.get_end_date(inputs)
+        start_date = EventService.extract_start_date(inputs)
+        end_date = EventService.extract_end_date(inputs)
         user = None
 
         if public_id:
@@ -158,7 +157,7 @@ class EventService:
         if not user:
             return []
 
-        events = Event.objects.filter(user,
+        events = Event.objects.filter(Q(user=user),
             Q(start_date__gte=start_date, end_date__lte=end_date) |
             Q(end_recur__gte=start_date)
         ).exclude(type=EventTypes.BUSINESS_HOURS.value)
@@ -166,12 +165,12 @@ class EventService:
         return EventService.prep_event_data(events)
 
     @staticmethod
-    def get_start_date(params: List) -> str:
+    def extract_start_date(params: List) -> str:
         start_date = params.get("start", str(datetime.now()))
         return dateutil.parser.parse(start_date).date() 
 
     @staticmethod
-    def get_end_date(params: List) -> Union[str, None]:
+    def extract_end_date(params: List) -> Union[str, None]:
         end_date = params.get("end")
         if not end_date:
             return None  # Handle case where end date is not provided
@@ -203,14 +202,14 @@ class EventService:
             start = EventService.convert_to_user_timezone(
                 date_str=str(event.start_date),
                 time_str=str(event.start_time),
-                to_timezone=event.timezone,
+                user_timezone=event.timezone,
             )
             event_data["start"] = start
 
             end = EventService.convert_to_user_timezone(
                 date_str=str(event.end_date),
                 time_str=str(event.end_time),
-                to_timezone=event.timezone,
+                user_timezone=event.timezone,
             )
             event_data["end"] = end
 
@@ -233,13 +232,13 @@ class EventService:
                 EventService.convert_to_user_timezone(
                     date_str=str(event.start_date),
                     time_str=str(event.start_time),
-                    to_timezone=event.timezone,
+                    user_timezone=event.timezone,
                     time_only=True,
                 ),
                 EventService.convert_to_user_timezone(
                     date_str=str(event.end_date),
                     time_str=str(event.end_time),
-                    to_timezone=event.timezone,
+                    user_timezone=event.timezone,
                     time_only=True,
                 ),
                 True,
