@@ -193,7 +193,7 @@ class EventService:
         return ",".join(str(f) for f in frequencies if f != "no")
 
     @staticmethod
-    def prep_event_data(self, events, format_date_time=False):
+    def prep_event_data(events, format_date_time=False):
         data = []
         for event in events:
             event_data = {}

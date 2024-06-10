@@ -89,7 +89,7 @@ def dashboard(request):
             type=EventTypes.PUBLIC.value,
         ).order_by("start_date", "start_time")[:7]
 
-        upcoming_appointments = EventService().prep_event_data(
+        upcoming_appointments = EventService.prep_event_data(
             appointments, format_date_time=True
         )
 
