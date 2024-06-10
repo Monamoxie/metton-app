@@ -5,6 +5,7 @@ from .views import (
     PasswordUpdateView,
     ScheduleManagerView,
     EventListView,
+    EventDeleteView,
 )
 
 urlpatterns = [
@@ -13,7 +14,7 @@ urlpatterns = [
     path("password-update", PasswordUpdateView.as_view(), name="password_update"),
     path("manage/schedule", ScheduleManagerView.as_view(), name="schedule_manager"),
     path("events", EventListView.as_view(), name="events"),
-    path("events/detach", views.detachEvent, name="delete-event"),
+    path("events/detach", EventDeleteView.as_view(), name="event_delete"),
     path("business-hours", views.getBusinessHours, name="business-hours"),
     path("business-hours/detach", views.detachBusinessHours, name="business-hours"),
     path("logout", views.logout, name="logout"),
