@@ -1,6 +1,6 @@
 let hasBusinessHours = false
 let businessHours = false
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     function getTz() {
         let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         return tz ? tz : "UTC"
@@ -29,18 +29,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 extraParams: {
                     type: 'schedule',
                 },
-                failure: function() {
+                failure: function () {
                     console.log('there was an error while fetching events!');
                 },
             },
-            eventClick: function(arg) {
-                
+            eventClick: function (arg) {
+
                 const info = arg.event
-               
-                
+
+
                 const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
                 const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
-                
+
                 document.getElementById('eventTitle').innerHTML = info.title
                 document.getElementById('eventStart').innerHTML = start_date + ' ' + start_time
                 document.getElementById('eventEnd').innerHTML = end_date + ' ' + end_time
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const myModalEl = document.getElementById('appointment-modal')
                     const myModal = new bootstrap.Modal(myModalEl)
                     myModal.show()
-          
+
                     myModalEl.addEventListener('hidden.bs.modal', event => {
                         myModal.hide()
                     })
@@ -69,19 +69,19 @@ document.addEventListener('DOMContentLoaded', function() {
             unselectAuto: false,
             nowIndicator: true,
             businessHours: hasBusinessHours ? businessHours : false,
-            selectConstraint:  hasBusinessHours ? "businessHours" : null,
+            selectConstraint: hasBusinessHours ? "businessHours" : null,
         });
-        calendar.render(); 
+        calendar.render();
     }
 
     // pull NBH
     async function getNbh() {
-        await fetch("/dashboard/business-hours", {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
+        await fetch("/dashboard/events/business-hours", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
         }).then((response) => {
             return response.json()
         }).then((data) => {
@@ -97,17 +97,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     getNbh()
-    
+
     const buttons = document.querySelectorAll('.r-bh');
-    buttons.forEach(function(btn) {
-        btn.addEventListener('click', function(event) {
+    buttons.forEach(function (btn) {
+        btn.addEventListener('click', function (event) {
             const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
             const id = btn.dataset.id;
             const p = document.getElementById("bh-" + id)
             p.style.display = "none"
             if (confirm('Do you wish to delete this business hour?')) {
                 (async () => {
-                    const rawResponse = await fetch('/dashboard/business-hours/detach', {
+                    const rawResponse = await fetch('/dashboard/events/business-hours/detach', {
                         method: 'post',
                         credentials: 'same-origin',
                         headers: {
@@ -115,12 +115,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': token
                         },
-                        body: JSON.stringify({id: id})
+                        body: JSON.stringify({ id: id })
                     });
                     const content = await rawResponse.json();
                 })();
             }
         });
     });
-    
+
 }); 

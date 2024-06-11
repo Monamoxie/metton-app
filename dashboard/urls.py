@@ -6,6 +6,7 @@ from .views import (
     ScheduleManagerView,
     EventListView,
     EventDeleteView,
+    EventListBusinessHoursView,
 )
 
 urlpatterns = [
@@ -15,7 +16,13 @@ urlpatterns = [
     path("manage/schedule", ScheduleManagerView.as_view(), name="schedule_manager"),
     path("events", EventListView.as_view(), name="events"),
     path("events/detach", EventDeleteView.as_view(), name="event_delete"),
-    path("business-hours", views.getBusinessHours, name="business-hours"),
-    path("business-hours/detach", views.detachBusinessHours, name="business-hours"),
+    path(
+        "events/business-hours",
+        EventListBusinessHoursView.as_view(),
+        name="business_hours",
+    ),
+    path(
+        "events/business-hours/detach", views.detachBusinessHours, name="business-hours"
+    ),
     path("logout", views.logout, name="logout"),
 ]

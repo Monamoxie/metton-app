@@ -1,6 +1,6 @@
 let hasBusinessHours = false
 let businessHours = false
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     function getTz() {
         let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         return tz ? tz : "UTC"
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
                 }
             },
-            validRange: function(nowDate) {
+            validRange: function (nowDate) {
                 return {
                     start: nowDate, //grey out areas
                 }
@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 extraParams: {
                     type: 'schedule',
                 },
-                failure: function() {
+                failure: function () {
                     console.log('there was an error while fetching events!');
                 },
             },
-            eventClick: function(arg) {
+            eventClick: function (arg) {
                 const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
                 if (confirm('Do you wish to delete this event?')) {
                     (async () => {
@@ -52,20 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
                                 'Content-Type': 'application/json',
                                 'X-CSRFToken': token
                             },
-                            body: JSON.stringify({id: arg.event.id})
+                            body: JSON.stringify({ id: arg.event.id })
                         });
                         const content = await rawResponse.json();
                     })();
                 }
             },
-            eventColor: '#008000', 
+            eventColor: '#008000',
             navLinks: true,
             selectable: true,
             selectMirror: true,
-            select: function(info) {
+            select: function (info) {
                 const [start_date, start_time] = [info.start.toISOString().slice(0, 10), info.start.toISOString().slice(11, 16)]
                 const [end_date, end_time] = [info.end.toISOString().slice(0, 10), info.end.toISOString().slice(11, 16)]
-                
+
                 document.getElementById('id_start_date').value = start_date
                 document.getElementById('id_start_time').value = start_time
                 document.getElementById('id_end_date').value = end_date
@@ -78,31 +78,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     const myModalEl = document.getElementById('manage-schedule-modal')
                     const myModal = new bootstrap.Modal(myModalEl)
                     myModal.show()
-          
+
                     myModalEl.addEventListener('hidden.bs.modal', event => {
                         calendar.unselect()
                         myModal.hide()
                     })
                 }, 900);
             },
-            selectOverlap: function(event) {
+            selectOverlap: function (event) {
                 return false
             },
             unselectAuto: false,
             nowIndicator: true,
             businessHours: hasBusinessHours ? businessHours : false,
         });
-        calendar.render(); 
+        calendar.render();
     }
 
     // pull NBH
     async function getNbh() {
-        await fetch("/dashboard/business-hours", {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
+        await fetch("/dashboard/events/business-hours", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
         }).then((response) => {
             return response.json()
         }).then((data) => {
@@ -118,17 +118,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     getNbh()
-    
+
     const buttons = document.querySelectorAll('.r-bh');
-    buttons.forEach(function(btn) {
-        btn.addEventListener('click', function(event) {
+    buttons.forEach(function (btn) {
+        btn.addEventListener('click', function (event) {
             const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
             const id = btn.dataset.id;
             const p = document.getElementById("bh-" + id)
             if (confirm('Do you wish to delete this business hour?')) {
                 p.style.display = "none";
                 (async () => {
-                    const rawResponse = await fetch('/dashboard/business-hours/detach', {
+                    const rawResponse = await fetch('/dashboard/events/business-hours/detach', {
                         method: 'post',
                         credentials: 'same-origin',
                         headers: {
@@ -136,11 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': token
                         },
-                        body: JSON.stringify({id: id})
+                        body: JSON.stringify({ id: id })
                     });
                 })();
             }
         });
     });
-    
+
 }); 
