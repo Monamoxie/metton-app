@@ -24,7 +24,7 @@ prompt-toolkit==3.0.43
 pycparser==2.21
 pydantic==2.7.3
 pydantic_core==2.18.4
-PyMySQL==1.1.0
+PyMySQL==1.1.1
 python-dateutil==2.8.2
 pytz==2023.3.post1
 setuptools==69.0.3
