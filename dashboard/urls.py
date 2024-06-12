@@ -7,6 +7,7 @@ from .views import (
     EventListView,
     EventDeleteView,
     EventListBusinessHoursView,
+    EventDeleteBusinessHoursView,
 )
 
 urlpatterns = [
@@ -22,7 +23,9 @@ urlpatterns = [
         name="business_hours",
     ),
     path(
-        "events/business-hours/detach", views.detachBusinessHours, name="business-hours"
+        "events/business-hours/detach",
+        EventDeleteBusinessHoursView.as_view(),
+        name="delete_business_hours",
     ),
     path("logout", views.logout, name="logout"),
 ]

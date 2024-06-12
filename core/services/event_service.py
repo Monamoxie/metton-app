@@ -50,10 +50,10 @@ class EventService:
             event_data = {
                 "id": event.id,
                 "startTime": cls.convert_to_user_timezone(
-                    event.start_date, event.start_time, event.timezone
+                    str(event.start_date), str(event.start_time), event.timezone
                 ),
                 "endTime": cls.convert_to_user_timezone(
-                    event.end_date, event.end_time, event.timezone
+                    str(event.end_date), str(event.end_time), event.timezone
                 ),
                 "daysOfWeek": cls.get_week_indices_from_event(
                     event.frequency, event.start_date, event.start_time
