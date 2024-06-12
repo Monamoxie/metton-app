@@ -3,9 +3,10 @@ from django.views.generic import DeleteView
 import json
 from dashboard.models import Event
 from dashboard.enums import EventTypes
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class EventDeleteBusinessHoursView(DeleteView):
+class EventDeleteBusinessHoursView(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         body = request.body.decode("utf-8")
         if "id" in body:
