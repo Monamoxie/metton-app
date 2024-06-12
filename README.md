@@ -35,15 +35,14 @@ This project is currently in alpha stage. More components are continuosly being 
 - For local setup, you make use of the RabbitMQ and MySQL docker images
 - In production, we take advantage of AWS infrastrures by using MQ and RDS
 
-## PROD & DEV SETUP
+## WORKFLOW
 - The entire application is fully `containerised`. 
-- For `scaling and efficiency`, I'm taking advangtage of AWS Managed Services for certain components like the Database and Message Queues. 
+- For `scaling and efficiency` in PROD, I'm taking advangtage of AWS Managed Services for certain components like the Database and Message Queues. 
 - For a complete overview of container services available on PROD, please check this file: `ecs-task-definition.json`
 - While for a complete overview of container services available on DEV, please check the docker compose file: `docker-compose.yaml`
-- `Nginx` acts as a reverse proxy; through port 8080 on the Host machine & port 80 in the container
-- `Nginx` serves static contents & routes incoming requests to `Gunicorn`
-- `Gunicorn` serves the main app on port 8000.
-- `Python` service EXPOSES port 8000 for this purpose.
+- `Nginx` acts as a reverse proxy; For Development, this is made possible through port 8080 on the Host machine & port 80 in the container. You can always configure or change this from your `.env` config
+- `Nginx` also serves static contents & routes incoming requests to `Gunicorn`
+- Django through `Gunicorn` serves the main app on port 8000. The `Python` container EXPOSES port 8000 for this purpose.
 - `collectstatic` uses /var/www/static as static volume in PROD. But you don't have to worry about this during development, as Django would serve the assets directly from core/static
 - `Python` and `Nginx` both share the same static volume
   <br>
