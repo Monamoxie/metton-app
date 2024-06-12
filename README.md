@@ -23,7 +23,7 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 ## ARCHITECTURE
 <p align="center"><img src="core/static/images/snapshots/metton-arch.svg"></p>
 
-This project is currently in alpha stage. More components are continusoly being added or dropped as the need arises.
+This project is currently in alpha stage. More components are continuosly being added or dropped as the need arises.
 
 ## Deve Setup
 
