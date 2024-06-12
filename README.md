@@ -25,7 +25,7 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 
 This project is currently in alpha stage. More components are continuosly being added or dropped as the need arises.
 
-## Deve Setup
+## DEV Setup
 
 - Clone repo
 - Run `cp env.example .env` and fill up details as desired
@@ -35,13 +35,16 @@ This project is currently in alpha stage. More components are continuosly being 
 - For local setup, you make use of the RabbitMQ and MySQL docker images
 - In production, we take advantage of AWS infrastrures by using MQ and RDS
 
-## Network flow
-
-- `Nginx` acts as a reverse proxy; through port 8080 on the Host machine & port 80 within the container
-- `Nginx` serves static contents & transfers incoming requests to `Gunicorn`
-- `Gunicorn` serves the app on port 8000.
+## PROD & DEV SETUP
+- The entire application is fully `containerised`. 
+- For `scaling and efficiency`, I'm taking advangtage of AWS Managed Services for certain components like the Database and Message Queues. 
+- For a complete overview of container services available on PROD, please check this file: `ecs-task-definition.json`
+- While for a complete overview of container services available on DEV, please check the docker compose file: `docker-compose.yaml`
+- `Nginx` acts as a reverse proxy; through port 8080 on the Host machine & port 80 in the container
+- `Nginx` serves static contents & routes incoming requests to `Gunicorn`
+- `Gunicorn` serves the main app on port 8000.
 - `Python` service EXPOSES port 8000 for this purpose.
-- `collectstatic` uses /var/www/static as static volume
+- `collectstatic` uses /var/www/static as static volume in PROD. But you don't have to worry about this during development, as Django would serve the assets directly from core/static
 - `Python` and `Nginx` both share the same static volume
   <br>
 
