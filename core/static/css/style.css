@@ -93,7 +93,8 @@ a {
     border: none;
 }
 
-.main-nav a {
+.main-nav a,
+.main-nav button {
     color: var(--white);
     font-weight: 400;
     letter-spacing: 200;
@@ -109,7 +110,8 @@ a {
     background-color: var(--skin);
 }
 
-a.dropdown-item {
+a.dropdown-item,
+button.dropdown-item {
     color: #000;
 }
 
