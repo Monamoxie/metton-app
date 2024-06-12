@@ -114,15 +114,3 @@ def dashboard(request):
             "upcoming_appointments": upcoming_appointments,
         },
     )
-
-
-
-
- 
-
-
-@login_required
-def logout(request):
-    authLogout(request)
-    messages.success(request, "Goodbye! See you soon")
-    return redirect("index")
