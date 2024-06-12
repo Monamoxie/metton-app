@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     (async () => {
                         arg.event.remove()
                         const rawResponse = await fetch('/dashboard/events/detach', {
-                            method: 'post',
+                            method: 'DELETE',
                             credentials: 'same-origin',
                             headers: {
                                 'Accept': 'application/json',
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 p.style.display = "none";
                 (async () => {
                     const rawResponse = await fetch('/dashboard/events/business-hours/detach', {
-                        method: 'post',
+                        method: 'DELETE',
                         credentials: 'same-origin',
                         headers: {
                             'Accept': 'application/json',

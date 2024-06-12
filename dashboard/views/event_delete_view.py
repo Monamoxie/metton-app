@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 
 class EventDeleteView(LoginRequiredMixin, View):
-    def post(self, request):
+    def delete(self, request):
         body = request.body.decode("utf-8")
         if "id" in body:
             data = json.loads(body)
