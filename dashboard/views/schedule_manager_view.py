@@ -19,7 +19,6 @@ class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     def get_context_data(self, **kwargs):
         """Include some extra data, before passing it over to the template"""
         context = super().get_context_data(**kwargs)
-
         context["choices"] = RecurrenceTypes.options()
         context["weekday_num"] = datetime.now().isoweekday()
         context["business_hours"] = EventService.get_business_hours(
@@ -28,12 +27,6 @@ class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
         context["display_name"] = self.request.user.name
         context["position"] = self.request.user.position
         return context
-
-    def get_form_kwargs(self):
-        """Pass additional data to the form instance"""
-        kwargs = super().get_form_kwargs()
-        kwargs["data"] = self.request.POST or None
-        return kwargs
 
     def form_valid(self, form):
         user_time_zone = EventService().extract_user_timezone(form.data)

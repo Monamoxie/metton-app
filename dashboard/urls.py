@@ -4,6 +4,7 @@ from .views import (
     ProfileUpdateView,
     PasswordUpdateView,
     ScheduleManagerView,
+    DashboardView,
     EventListView,
     EventDeleteView,
     EventListBusinessHoursView,
@@ -12,7 +13,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", views.dashboard, name="dashboard"),
+    path("", DashboardView.as_view(), name="dashboard"),
     path("profile-update", ProfileUpdateView.as_view(), name="profile_update"),
     path("password-update", PasswordUpdateView.as_view(), name="password_update"),
     path("manage/schedule", ScheduleManagerView.as_view(), name="schedule_manager"),
@@ -28,5 +29,5 @@ urlpatterns = [
         EventDeleteBusinessHoursView.as_view(),
         name="delete_business_hours",
     ),
-    path("logout", LogoutView.as_view(), name="logout"), 
+    path("logout", LogoutView.as_view(), name="logout"),
 ]

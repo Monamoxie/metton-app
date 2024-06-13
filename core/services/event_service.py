@@ -8,21 +8,21 @@ from typing import Union, List
 from dashboard.models.user import User
 from dashboard.models.event import Event
 from dashboard.enums import EventTypes
-
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 
 class EventService:
     DEFAULT_TIMEZONE = "UTC"
 
     @staticmethod
-    def get_event_title(event_type: int) -> Union[str, None]:
+    def get_event_title(event_type: str) -> Union[str, None]:
         try:
             return EventTypes(event_type).get_name()
         except ValueError:
             return None
 
     @classmethod
-    def get_business_hours(cls,
-        user: Union[User, None], public_id: Union[str, None] = None
+    def get_business_hours(
+        cls, user: Union[AbstractBaseUser,AnonymousUser, None], public_id: Union[str, None] = None
     ) -> List[dict]:
         if public_id:
             user = User.objects.filter(public_id=public_id).first()
@@ -67,6 +67,14 @@ class EventService:
     def convert_to_user_timezone(cls, date_str: str, time_str: str, user_timezone: str, time_only: bool = False):
         return cls.timezone_conversion(
             str(date_str), str(time_str), cls.DEFAULT_TIMEZONE, user_timezone, time_only
+        )
+
+    @classmethod
+    def convert_to_utc(
+        cls, date_str: str, time_str: str, user_timezone: str, time_only: bool = False
+    ):
+        return cls.timezone_conversion(
+            str(date_str), str(time_str), user_timezone, cls.DEFAULT_TIMEZONE, time_only
         )
 
     @staticmethod
