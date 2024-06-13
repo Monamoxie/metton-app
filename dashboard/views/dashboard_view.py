@@ -15,7 +15,7 @@ from dashboard.models.user import User
 
 class DashboardView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     form_class = ScheduleManagerForm
-    succeess_url = reverse_lazy("password_update")
+    succeess_url = reverse_lazy("password-update")
     success_message = "Your schedule has been updated!"
     template_name = "dashboard/index.html"
 

@@ -25,7 +25,7 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         UpdateView -> BaseUpdateView -> ModelFormMixin -> FormMixin
         """
 
-        return reverse_lazy("profile_update")
+        return reverse_lazy("profile-update")
 
     def form_invalid(self, form):
         """

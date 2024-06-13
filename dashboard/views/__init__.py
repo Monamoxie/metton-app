@@ -7,4 +7,3 @@ from .event_delete_view import EventDeleteView
 from .event_list_business_hours_view import EventListBusinessHoursView
 from .event_delete_business_hours_view import EventDeleteBusinessHoursView
 from .logout_view import LogoutView
-from dashboard.views_legacy import *
