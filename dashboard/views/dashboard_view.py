@@ -99,7 +99,7 @@ class DashboardView(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
         event.save()
         messages.success(self.request, "Your schedule has been updated!")
-        return redirect("schedule_manager")
+        return redirect("schedule-manager")
 
     def form_invalid(self, form):
         messages.error(self.request, form.errors)

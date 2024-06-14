@@ -15,7 +15,7 @@ urlpatterns = [
     path("", DashboardView.as_view(), name="dashboard"),
     path("profile-update", ProfileUpdateView.as_view(), name="profile-update"),
     path("password-update", PasswordUpdateView.as_view(), name="password-update"),
-    path("manage/schedule", ScheduleManagerView.as_view(), name="schedule_manager"),
+    path("manage/schedule", ScheduleManagerView.as_view(), name="schedule-manager"),
     path("events", EventListView.as_view(), name="events"),
     path("events/detach", EventDeleteView.as_view(), name="event_delete"),
     path(

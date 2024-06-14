@@ -14,7 +14,7 @@ from dashboard.enums import EventTypes, RecurrenceTypes
 class ScheduleManagerView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     template_name = "dashboard/schedule_manager.html"
     form_class = ScheduleManagerForm
-    success_url = reverse_lazy("schedule_manager")
+    success_url = reverse_lazy("schedule-manager")
 
     def get_context_data(self, **kwargs):
         """Include some extra data, before passing it over to the template"""
