@@ -13,7 +13,7 @@ class PasswordUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """
 
     form_class = PasswordUpdateForm
-    template_name = "dashboard/password-update.html"
+    template_name = "dashboard/password_update.html"
     success_message = "Password update was successful!"
     success_url = reverse_lazy("password-update")
 
