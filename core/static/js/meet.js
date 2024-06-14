@@ -115,11 +115,11 @@ const renderCalender = function (pid) {
                                     end_date: end_date,
                                     end_time: end_time,
                                     frequencies: frequencies,
-                                    utz: getTz(),
+                                    user_timezone: getTz(),
                                     title: title,
                                     email: email,
                                     note: note,
-                                    endRecur: endRecur.value
+                                    end_recur: endRecur.value
                                 })
                             }).then((response) => {
                                 return response.json()

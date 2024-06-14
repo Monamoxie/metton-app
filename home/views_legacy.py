@@ -124,14 +124,13 @@ def book(request, public_id):
                 status=404,
             )
         else:
-            type_input_value = EventTypes.PUBLIC.value
             user_time_zone = EventService().extract_user_timezone(data=data)
 
             event = Event(
                 frequency=frequencies,
                 user=user,
                 title=title,
-                type=type_input_value,
+                type=EventTypes.PUBLIC.value,
                 start_date=start_date,
                 start_time=start_time,
                 end_date=end_date,
