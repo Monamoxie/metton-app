@@ -17,16 +17,16 @@ urlpatterns = [
     path("password-update", PasswordUpdateView.as_view(), name="password-update"),
     path("manage/schedule", ScheduleManagerView.as_view(), name="schedule-manager"),
     path("events", EventListView.as_view(), name="events"),
-    path("events/detach", EventDeleteView.as_view(), name="event_delete"),
+    path("events/detach", EventDeleteView.as_view(), name="event-delete"),
     path(
         "events/business-hours",
         EventListBusinessHoursView.as_view(),
-        name="business_hours",
+        name="business-hours",
     ),
     path(
         "events/business-hours/detach",
         EventDeleteBusinessHoursView.as_view(),
-        name="delete_business_hours",
+        name="delete-business-hours",
     ),
     path("logout", LogoutView.as_view(), name="logout"),
 ]
