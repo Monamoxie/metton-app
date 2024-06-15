@@ -19,7 +19,7 @@ kombu==5.3.7
 mypy-extensions==1.0.0
 mysqlclient==2.2.0
 packaging==24.0
-Pillow==10.0.1
+Pillow==10.3.0
 prompt-toolkit==3.0.43
 pycparser==2.21
 pydantic==2.7.3
