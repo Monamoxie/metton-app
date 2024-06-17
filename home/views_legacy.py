@@ -10,10 +10,6 @@ from dashboard.models import Event
 from core.services import EventService
 
 
-def index(request):
-    return render(request, "home/index.html", {})
-
-
 def getUserBusinessHours(request, public_id):
     data = EventService().get_business_hours(user=None, public_id=public_id)
 
