@@ -1,6 +1,10 @@
-from . import views_legacy
 from django.urls import path
-from home.views import BookingView, BookingCalendarView, UserBusinessHoursView
+from home.views import (
+    BookingView,
+    BookingCalendarView,
+    UserBusinessHoursView,
+    UserEventsView,
+)
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -12,5 +16,5 @@ urlpatterns = [
         UserBusinessHoursView.as_view(),
         name="meet-business-hours",
     ),
-    path("events/<public_id>", views_legacy.getUserEvents, name="meet-user-events"),
+    path("events/<public_id>", UserEventsView.as_view(), name="meet-user-events"),
 ]
