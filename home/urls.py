@@ -1,6 +1,6 @@
 from . import views_legacy
 from django.urls import path
-from home.views import BookingView, BookingCalendarView
+from home.views import BookingView, BookingCalendarView, UserBusinessHoursView
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -9,7 +9,7 @@ urlpatterns = [
     path("meet/<str:public_id>/book", BookingView.as_view(), name="book"),
     path(
         "business-hours/<public_id>",
-        views_legacy.getUserBusinessHours,
+        UserBusinessHoursView.as_view(),
         name="meet-business-hours",
     ),
     path("events/<public_id>", views_legacy.getUserEvents, name="meet-user-events"),
