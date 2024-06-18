@@ -29,8 +29,3 @@ class SignupForm(UserCreationForm):
         model = get_user_model()
         fields = ("email", "password1", "password2")
 
-
-class LoginForm:
-    class Meta(UserCreationForm.Meta):
-        model = get_user_model()
-        fields = ("email",)
