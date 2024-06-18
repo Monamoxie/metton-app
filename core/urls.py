@@ -20,7 +20,7 @@ from django.urls import path
 from django.urls import include
 from core import settings
 from django.conf.urls.static import static
-from authentication import views
+from authentication import views_legacy
 
 urlpatterns = [
     path("admin/", admin.site.urls),
