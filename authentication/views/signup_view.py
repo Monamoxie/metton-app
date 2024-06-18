@@ -2,7 +2,7 @@ from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from authentication.forms import RegisterForm
+from authentication.forms import SignupForm
 from core.mixins import GuestOnlyMixin
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -10,11 +10,11 @@ import os
 from core import settings
 from dashboard.tasks import email_sender
 from django.shortcuts import redirect
-from asgiref.sync import async_to_sync
+
 
 class SignupView(GuestOnlyMixin, CreateView):
     template_name = "authentication/signup.html"
-    form_class = RegisterForm
+    form_class = SignupForm
     success_url = reverse_lazy("dashboard")
 
     def form_valid(self, form):
@@ -39,7 +39,7 @@ class SignupView(GuestOnlyMixin, CreateView):
         login(self.request, user)
 
         messages.success(self.request, "Welcome on board!")
-        return redirect(self.get_success_url())
+        return redirect(self.success_url)
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         messages.error(self.request, f"{form.errors}")

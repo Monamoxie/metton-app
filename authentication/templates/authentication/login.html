@@ -3,7 +3,7 @@
 {% block authForm %}
     <h3>Welcome <strong>Back</strong></h3>
     <p class="mb-4">Let's schedule. The world is waiting</p>
-    <form action="{% url 'login' %}" method="post">
+    <form action="{% url 'signin' %}" method="post">
         {% csrf_token %}
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>

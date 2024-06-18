@@ -4,18 +4,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from core import settings
 from dashboard.tasks import email_sender
-from .forms import RegisterForm
 from functools import wraps
-
-
-def guest_only(view_func):
-    def _decorator(request, *args, **kwargs):
-        if not request.user.is_anonymous:
-            return redirect("dashboard")
-
-        return view_func(request, *args, **kwargs)
-
-    return wraps(view_func)(_decorator)
 
 
 def login(request):
@@ -30,6 +19,6 @@ def login(request):
             return redirect("dashboard")
         else:
             messages.error(request, "Email/Password is incorrect")
-            return redirect("login")
+            return redirect("signin")
     else:
         return render(request, "authentication/login.html")
