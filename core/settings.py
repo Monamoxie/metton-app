@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "home",
     "django.contrib.admin",
     "django.contrib.auth",
+    "widget_tweaks",
 ]
 
 AUTH_USER_MODEL = "dashboard.User"
