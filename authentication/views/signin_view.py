@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from core.mixins import GuestOnlyMixin
 
 
-class SigninView(View):
+class SigninView(GuestOnlyMixin, View):
     template_name = "authentication/signin.html"
     success_url = reverse_lazy("signin")
 
