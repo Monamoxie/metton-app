@@ -42,3 +42,25 @@ class RecurrenceTypes(Enum):
     @classmethod
     def options(cls):
         return {option.value: option.name.replace("_", " ").title() for option in cls}
+
+
+class ImageUploadTypes(Enum):
+    PNG = "image/png"
+    JPEG = "image/jpeg"
+    JPG = "image/jpg"
+
+    @classmethod
+    def get_values(cls):
+        return [item.value for item in cls]
+
+    @classmethod
+    def get_names(cls):
+        return [item.name for item in cls]
+
+    @classmethod
+    def get_values_as_string(cls):
+        return ",".join(cls.get_values())
+
+    @classmethod
+    def get_names_as_string(cls):
+        return ",".join(cls.get_names())
