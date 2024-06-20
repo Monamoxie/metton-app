@@ -1,5 +1,5 @@
 {% extends "Base/auth.html" %}
-
+{% load widget_tweaks %}
 {% block authForm %}
     <h3>Schedule and <strong>Meet</strong></h3>
         <p class="mb-4">Start your journey. It's free</p>
@@ -9,7 +9,7 @@
                 <div class="form-row mt-3">
                     <label for="" class="col-form-label">{{ field.label }}</label>
                     <div class="col-md-12">
-                        {{ field }}
+                        {{ field|add_class:"form-control" }}
                     </div>
                     {% if field.help_text %}
                         <p class="muted">{{ field.help_text }}</p>
