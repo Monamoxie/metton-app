@@ -2,75 +2,13 @@ from dataclasses import fields
 import os
 from random import choices
 from django import forms
-from django.contrib.auth import get_user_model
 from .models import Event, User
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
+
 from dashboard.enums import EventTypes
 
 
 
-class PasswordUpdateForm(PasswordChangeForm):
-    old_password = forms.CharField(
-        label="Please enter current password",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "password": "password",
-                "placeholder": "Existing Password",
-            }
-        ),
-    )
-
-    new_password1 = forms.CharField(
-        label="Choose a new password",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "password": "password",
-                "placeholder": "Create New Password",
-            }
-        ),
-    )
-
-    new_password2 = forms.CharField(
-        label="Confirm your new password",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "password": "password",
-                "placeholder": "Confirm Password",
-            }
-        ),
-    )
-
-    def __init__(self, *args, request=None, user=None, **kwargs):
-        self.request = request
-        self.user = user
-
-        super().__init__(user=self.user, *args, **kwargs)
-
-    def clean_password2(self):
-        password2 = self.cleaned_data.get("new_password2", None)
-        if password2 != self.cleaned_data.get("new_password1"):
-            raise forms.ValidationError("Password 1 and 2 does not match")
-
-        return password2
-
-    def save(self, commit=True):
-        self.user.set_password(self.cleaned_data["new_password1"])
-
-        if commit:
-            self.user.save()
-            update_session_auth_hash(self.request, self.user)
-
-        return self.user
-
-    class Meta:
-        model = get_user_model()
-        exclude = ("user",)
-        fields = []
 
 
 # Set Unavailable dates

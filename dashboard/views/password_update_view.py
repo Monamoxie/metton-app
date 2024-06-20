@@ -4,7 +4,7 @@ from django.views.generic.edit import UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
-from dashboard.forms_legacy import PasswordUpdateForm
+from dashboard.forms import PasswordUpdateForm
 
 
 class PasswordUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):

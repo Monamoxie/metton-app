@@ -1,1 +1,2 @@
 from .profile_update_form import ProfileUpdateForm
+from .password_update_form import PasswordUpdateForm
