@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 from core.services.event_service import EventService
 from dashboard.enums import EventTypes
-from dashboard.forms_legacy import ScheduleManagerForm
+from dashboard.forms import ScheduleManagerForm
 from typing import Any
 from datetime import datetime
 from django.contrib import messages
