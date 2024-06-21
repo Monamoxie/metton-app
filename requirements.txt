@@ -14,6 +14,7 @@ django-dotenv==1.4.2
 django-dump-die==0.1.5
 django-stubs-ext==5.0.2
 django-tempus-dominus==5.1.2.17
+django-widget-tweaks==1.5.0
 gunicorn==22.0.0
 kombu==5.3.7
 mypy-extensions==1.0.0
@@ -21,6 +22,7 @@ mysqlclient==2.2.0
 packaging==24.0
 Pillow==10.0.1
 prompt-toolkit==3.0.43
+psycopg2==2.9.9
 pycparser==2.21
 pydantic==2.7.3
 pydantic_core==2.18.4
