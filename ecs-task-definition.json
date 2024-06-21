@@ -4,7 +4,7 @@
     {
       "name": "metton_python_container",
       "memoryReservation": 512,
-      "cpu": 128,
+      "cpu": 256,
       "essential": true,
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -145,7 +145,7 @@
     {
       "name": "metton_nginx_container",
       "memoryReservation": 512,
-      "cpu": 128,
+      "cpu": 256,
       "essential": true,
       "portMappings": [
         {
@@ -183,7 +183,7 @@
   ],
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
-  "cpu": "256",
+  "cpu": "512",
   "memory": "1024",
   "tags": [
     {
