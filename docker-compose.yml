@@ -21,6 +21,30 @@ services:
     networks:
       - metton_network
 
+  postgres:
+    image: postgres:latest
+    container_name: ${PROJECT_NAME}_postgres_container
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - metton_network
+
+  pgloader: 
+    image: dimitri/pgloader:latest
+    container_name: ${PROJECT_NAME}_pgloader_container
+    networks:
+      - metton_network
+    command: tail -f /dev/null
+  
   python:
     build:
       context: .
@@ -82,4 +106,5 @@ volumes:
   static_volume:
   media_volume:
   mysql_data:
+  postgres_data:
   rabbitmq_data:
