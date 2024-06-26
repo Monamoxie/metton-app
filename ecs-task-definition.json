@@ -188,11 +188,11 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/mettonapp-pgloader-task/pgloader",
+          "awslogs-group": "/ecs/mettonapp-fargate-task/pgloader",
           "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "pgloader"
         }
-      },
+      }
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
