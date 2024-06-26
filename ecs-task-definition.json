@@ -184,7 +184,15 @@
       "name": "metton_pgloader",
       "memoryReservation": 256,
       "cpu": 128,
-      "essential": false
+      "essential": false,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mettonapp-pgloader-task/pgloader",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "pgloader"
+        }
+      },
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
