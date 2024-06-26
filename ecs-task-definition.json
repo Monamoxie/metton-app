@@ -144,8 +144,8 @@
     },
     {
       "name": "metton_nginx_container",
-      "memoryReservation": 512,
-      "cpu": 256,
+      "memoryReservation": 256,
+      "cpu": 128,
       "essential": true,
       "portMappings": [
         {
@@ -179,6 +179,12 @@
           "readOnly": true
         }
       ]
+    },
+    {
+      "name": "metton_pgloader",
+      "memoryReservation": 256,
+      "cpu": 128,
+      "essential": false,
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
