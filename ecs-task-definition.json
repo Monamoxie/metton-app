@@ -197,7 +197,6 @@
       }
     }
   ],
-  "enableExecuteCommand": true,
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
   "cpu": "512",
