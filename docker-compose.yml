@@ -39,7 +39,9 @@ services:
       - metton_network
 
   pgloader: 
-    image: dimitri/pgloader:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.pgloader
     container_name: ${PROJECT_NAME}_pgloader_container
     networks:
       - metton_network
