@@ -185,6 +185,7 @@
       "memoryReservation": 256,
       "cpu": 128,
       "essential": false,
+      "entryPoint": ["/bin/sh", "-c"],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
