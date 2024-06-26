@@ -184,7 +184,7 @@
       "name": "metton_pgloader",
       "memoryReservation": 256,
       "cpu": 128,
-      "essential": false,
+      "essential": false
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
