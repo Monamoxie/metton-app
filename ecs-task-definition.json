@@ -6,7 +6,6 @@
       "memoryReservation": 512,
       "cpu": 256,
       "essential": true,
-      "enableExecuteCommand": true,
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -148,7 +147,6 @@
       "memoryReservation": 256,
       "cpu": 128,
       "essential": true,
-      "enableExecuteCommand": true,
       "portMappings": [
         {
           "containerPort": 80,
@@ -187,7 +185,6 @@
       "memoryReservation": 256,
       "cpu": 128,
       "essential": false,
-      "enableExecuteCommand": true,
       "entryPoint": ["/bin/sh", "-c"],
       "command": ["tail -f /dev/null"],
       "logConfiguration": {
@@ -200,6 +197,7 @@
       }
     }
   ],
+  "enableExecuteCommand": true,
   "requiresCompatibilities": ["FARGATE"],
   "networkMode": "awsvpc",
   "cpu": "512",
