@@ -12,7 +12,7 @@ A full-stack web app powered by Python and Django, designed to provide a seamles
 
 - Python
 - RabbitMQ / Celery
-- MySQL
+- PostgreSQL
 - Docker
 - Django
 - Gunicorn
@@ -32,7 +32,7 @@ This project is currently in alpha stage. More components are continuosly being 
 - Run `chmox +x ./python_entrypoint.sh`
 - Run `docker-compose up --build -d --wait`
 - Visit http://127.0.0.1:8080
-- For local setup, you make use of the RabbitMQ and MySQL docker images
+- For local setup, you make use of the RabbitMQ and PostgreSQL docker images
 - In production, we take advantage of AWS infrastrures by using MQ and RDS
 
 ## WORKFLOW
