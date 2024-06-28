@@ -23,7 +23,7 @@ services:
   python:
     build:
       context: .
-      dockerfile: Dockerfile.python
+      dockerfile: ./.docker/Dockerfile.python
     container_name: ${PROJECT_NAME}_python_container
     volumes:
       - .:/app
@@ -44,7 +44,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: ./.docker/Dockerfile.nginx
     container_name: ${PROJECT_NAME}_nginx_container
     volumes:
       - static_volume:/var/www/static
@@ -63,7 +63,7 @@ services:
   rabbitmq:
     build:
       context: .
-      dockerfile: Dockerfile.rabbitmq
+      dockerfile: ./.docker/Dockerfile.rabbitmq
     container_name: ${PROJECT_NAME}_rabbitmq_container
     hostname: rabbitmq
     volumes:
