@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0019_eventservice_alter_event_type'),
+        ("dashboard", "0018_alter_event_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='type',
-            field=models.CharField(choices=[('1', 'Public'), ('2', 'Business Hours'), ('3', 'Unavailable')], default='1', max_length=2),
+            model_name="event",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    ("1", "Public"),
+                    ("2", "Business Hours"),
+                    ("3", "Unavailable"),
+                ],
+                default="1",
+                max_length=2,
+            ),
         ),
     ]
