@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: ["master"]
 env:
-  ECS_TASK_DEFINITION: ./ecs-task-definition.json
+  ECS_TASK_DEFINITION: ./.aws/ecs-task-definition.json
   IMAGE_TAG: latest
   PROJECT_NAME: metton
   ECS_CLUSTER: mettonapp
