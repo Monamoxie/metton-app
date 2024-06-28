@@ -3,24 +3,6 @@ networks:
     driver: bridge
 
 services:
-  mysql:
-    image: mysql:8.0.33
-    container_name: ${PROJECT_NAME}_mysql_container
-    restart: unless-stopped
-    ports:
-      - ${DB_HOST_PORT}:3306
-    env_file:
-      - .env
-    volumes:
-      - mysql_data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-    networks:
-      - metton_network
-
   postgres:
     image: postgres:latest
     container_name: ${PROJECT_NAME}_postgres_container
