@@ -56,7 +56,7 @@ jobs:
           services=$(docker compose config --services)
           for service in $services; do
             if [[ "$service" != "rabbitmq" && "$service" != "postgres" ]]; then
-              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG -f Dockerfile.$service .
+              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG -f ./.docker/Dockerfile.$service .
               docker push $ECR_REGISTRY/$ECR_REPOSITORY:$service-$IMAGE_TAG
             fi
           done
