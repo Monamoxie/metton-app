@@ -144,8 +144,8 @@
     },
     {
       "name": "metton_nginx_container",
-      "memoryReservation": 256,
-      "cpu": 128,
+      "memoryReservation": 512,
+      "cpu": 256,
       "essential": true,
       "portMappings": [
         {
@@ -179,22 +179,6 @@
           "readOnly": true
         }
       ]
-    },
-    {
-      "name": "metton_pgloader",
-      "memoryReservation": 256,
-      "cpu": 128,
-      "essential": false,
-      "entryPoint": ["/bin/sh", "-c"],
-      "command": ["tail -f /dev/null"],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/mettonapp-fargate-task/pgloader",
-          "awslogs-region": "eu-north-1",
-          "awslogs-stream-prefix": "pgloader"
-        }
-      }
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
