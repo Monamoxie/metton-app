@@ -45,7 +45,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql
+      - postgres
       - rabbitmq
     networks:
       - metton_network
@@ -89,6 +89,5 @@ services:
 volumes:
   static_volume:
   media_volume:
-  mysql_data:
   postgres_data:
   rabbitmq_data:
