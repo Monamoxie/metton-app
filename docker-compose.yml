@@ -49,7 +49,7 @@ services:
     volumes:
       - static_volume:/var/www/static
       - media_volume:/app/core/media
-      - ./nginx/templates:/etc/nginx/templates
+      - ./.nginx/templates:/etc/nginx/templates
       - ./core/static:/app/core/static
     ports:
       - "${SERVER_PORT}:80"
