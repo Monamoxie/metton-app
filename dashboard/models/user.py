@@ -1,13 +1,8 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import (
-    AbstractUser,
-)
+from django.contrib.auth.models import AbstractUser, BaseUserManager, BaseUserManager
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.base_user import BaseUserManager
-
 from dashboard.enums import EventTypes
-from .event import Event
 
 
 class CustomUserManager(BaseUserManager):
@@ -45,8 +40,8 @@ class CustomUserManager(BaseUserManager):
 def rename_file(instance, filename):
     directory = "profile_photos/"
     file_ext = filename.split(".")[-1]
+    file_name = f"profile_photo_{instance.id}.{file_ext}"
 
-    file_name = "profile_photo_" + str(instance.id) + "." + file_ext
     return directory + file_name
 
 
@@ -56,7 +51,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    objects = CustomUserManager()
+    objects: BaseUserManager = CustomUserManager()
 
     email = models.EmailField("email_address", unique=True)
     name = models.CharField("name", max_length=190, blank=True)
@@ -82,9 +77,6 @@ class User(AbstractUser):
     def __str__(self):
         return str(self.email)
 
-    def has_business_hours(self):
-        return self.event_set.filter(type=EventTypes.BUSINESS_HOURS.value).exists()
-
     def save(self, *args, **kwargs):
         if self.public_id == "" or self.public_id is None:
             id_exists = True
@@ -94,4 +86,4 @@ class User(AbstractUser):
                     id_exists = False
             self.public_id = p_id
 
-        super().save(*args, **kwargs)  # Call the "real" save() method.
+        super().save(*args, **kwargs)
