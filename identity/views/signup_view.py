@@ -2,7 +2,7 @@ from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from authentication.forms import SignupForm
+from identity.forms import SignupForm
 from core.mixins import GuestOnlyMixin
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -13,7 +13,7 @@ from django.shortcuts import redirect
 
 
 class SignupView(GuestOnlyMixin, CreateView):
-    template_name = "authentication/signup.html"
+    template_name = "identity/signup.html"
     form_class = SignupForm
     success_url = reverse_lazy("dashboard")
 

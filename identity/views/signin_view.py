@@ -8,7 +8,7 @@ from core.mixins import GuestOnlyMixin
 
 
 class SigninView(GuestOnlyMixin, View):
-    template_name = "authentication/signin.html"
+    template_name = "identity/signin.html"
     success_url = reverse_lazy("signin")
 
     def post(self, request: HttpRequest) -> HttpResponse:

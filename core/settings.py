@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_dump_die",
     "dashboard",
-    "authentication",
+    "identity",
     "home",
     "django.contrib.admin",
     "django.contrib.auth",
