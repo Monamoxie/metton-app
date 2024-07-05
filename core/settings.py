@@ -65,7 +65,7 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "dashboard.User"
 
-LOGIN_URL = "/auth/login"
+LOGIN_URL = "/identity/login"
 
 MESSAGE_TAGS = {
     messages.INFO: "alert alert-primary p-3",
