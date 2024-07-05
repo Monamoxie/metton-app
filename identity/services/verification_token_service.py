@@ -1,12 +1,15 @@
 import hashlib
 from http.client import NOT_FOUND
 from typing import Union
+from django.urls import reverse
+from core import settings
 from dashboard.models.user import User
 import secrets
 from identity.enums import VerificationTokenTypes
 from identity.models.verification_token import VerificationToken
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 
 class VerificationTokenService:
@@ -14,23 +17,28 @@ class VerificationTokenService:
     SUCCESS_STATUS = "success"
     NOT_FOUND_STATUS = "Not found"
 
-    def __init__(self, type: str, user: User) -> None:
+    def __init__(self, type: str, user: Union[User, AbstractUser]) -> None:
         self.type = type
         self.user = user
 
-        if type not in VerificationTokenTypes.get_names():
+        if type not in VerificationTokenTypes.get_values():
             raise ValueError("Unknown verification type")
 
     def generate_email_token(self) -> Union[str, None]:
         """Generate email token"""
         unhashed_token = f"{secrets.token_urlsafe(32)}{self.user.email}"
         hashed_token = self._hash_token(unhashed_token)
-        expires_at = timezone.now() + timedelta(24)
+        expires_at = timezone.now() + timedelta(hours=24)
 
         if self._save(hashed_token=hashed_token, expires_at=expires_at):
             return unhashed_token
 
         return None
+
+    def generate_email_verification_url(self, token: str) -> str:
+        """Generate email verification url"""
+        relative_url = reverse("email-verification", kwargs={"token": token})
+        return f"{settings.BASE_URL}{relative_url}"
 
     def verify_email_token(self, token: str):
         hashed_token = self._hash_token(token)

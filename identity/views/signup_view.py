@@ -1,7 +1,10 @@
+from typing import Union
 from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from dashboard.models import User
+from identity.enums import VerificationTokenTypes
 from identity.forms import SignupForm
 from core.mixins import GuestOnlyMixin
 from django.contrib.auth import authenticate, login
@@ -10,6 +13,9 @@ import os
 from core import settings
 from dashboard.tasks import email_sender
 from django.shortcuts import redirect
+from django.contrib.auth.models import AbstractUser
+from identity.models import verification_token
+from identity.services.verification_token_service import VerificationTokenService
 
 
 class SignupView(GuestOnlyMixin, CreateView):
@@ -34,7 +40,7 @@ class SignupView(GuestOnlyMixin, CreateView):
             )
             return self.form_invalid(form)
 
-        self.send_signup_email(user_email)
+        self._send_signup_email(user)
 
         login(self.request, user)
 
@@ -45,15 +51,23 @@ class SignupView(GuestOnlyMixin, CreateView):
         messages.error(self.request, f"{form.errors}")
         return super().form_invalid(form)
 
-    def send_signup_email(self, user_email: str):
-        """Trigger a welcome email call to Celery/RabbitMQ"""
-        context = {
-            "subject": "Email Verification",
-            "verification_link": "https://mettonapp.com/dashboard",
-        }
-
-        template = os.path.join(
-            settings.BASE_DIR,
-            "core/templates/emails/email_verification.html",
+    def _send_signup_email(self, user: Union[User, AbstractUser]):
+        """Trigger an email verification event to Celery/RabbitMQ"""
+        service = VerificationTokenService(
+            VerificationTokenTypes.EMAIL_VERIFICATION.value, user
         )
-        email_sender.delay("Welcome to Metton", [user_email], template, context)
+
+        token = service.generate_email_token()
+        if token:
+            verification_link = service.generate_email_verification_url(token)
+
+            context = {
+                "subject": "Email Verification",
+                "verification_link": verification_link,
+            }
+
+            template = os.path.join(
+                settings.BASE_DIR,
+                "core/templates/emails/email_verification.html",
+            )
+            email_sender.delay("Welcome to Metton", [user.email], template, context)
