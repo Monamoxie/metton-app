@@ -35,7 +35,8 @@ class VerificationTokenService:
 
         return None
 
-    def generate_email_verification_url(self, token: str) -> str:
+    @staticmethod
+    def generate_email_verification_url(token: str) -> str:
         """Generate email verification url"""
         relative_url = reverse("email-verification", kwargs={"token": token})
         return f"{settings.BASE_URL}{relative_url}"
