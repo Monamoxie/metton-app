@@ -1,6 +1,7 @@
 #!/bin/bash
 
 python manage.py migrate
+celery -A core worker -l info &
 
 # Read the value of PROJECT_ENV environment variable
 PROJECT_ENV="${PROJECT_ENV:-development}"
@@ -10,5 +11,3 @@ if [ "$PROJECT_ENV" == "production" ]; then
 else
     python manage.py runserver 0.0.0.0:8000
 fi
-
-celery -A core worker -l info &
