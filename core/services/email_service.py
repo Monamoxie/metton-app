@@ -11,9 +11,8 @@ from core.custom_exceptions import InvalidInputException
 
 
 class EmailService:
-    def push(
-        self, subject: str, recipients: Union[str, list], template: str, context: dict
-    ):
+    @staticmethod
+    def push(subject: str, recipients: Union[str, list], template: str, context: dict):
         convert_to_html_content = render_to_string(
             template_name=template, context=context
         )
