@@ -9,5 +9,5 @@ if [ "$PROJECT_ENV" == "production" ]; then
     python manage.py collectstatic --noinput
     gunicorn --bind 0.0.0.0:8000 core.wsgi:application
 else
-    python manage.py runserver 0.0.0.0:8000
+    python manage.py runserver 0.0.0.0:8000 --skip-checks
 fi
