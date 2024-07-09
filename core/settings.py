@@ -199,6 +199,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+DEFAULT_FROM_NAME = os.environ.get("DEFAULT_FROM_NAME")
 
 # Custom settings
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")

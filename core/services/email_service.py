@@ -24,7 +24,7 @@ class EmailService:
         return send_mail(
             subject=subject,
             message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
+            from_email=f"{settings.DEFAULT_FROM_NAME} <{settings.DEFAULT_FROM_EMAIL}>",
             recipient_list=recipients if isinstance(recipients, list) else [recipients],
             html_message=convert_to_html_content,
         )
