@@ -2,7 +2,9 @@
 
 # METTON
 
-A full-stack web app powered by Python and Django, designed to provide a seamless and efficient appointment management solution. Whether you are a solopreneur, SME, or a startup, Metton helps you optimize your scheduling, enhance client interactions, and drive your business forward.
+A full-stack web app powered by Python and Django, designed to provide seamless and efficient calendar management solution. 
+
+Whether you are a solopreneur, SME, or a startup, Metton helps you optimize your schedules, enhance client interactions, and drive your business forward.
 
 [![Github Actions](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml/badge.svg)](https://github.com/Monamoxie/metton-python-utility-scheduler/actions/workflows/metton.yml)
 
