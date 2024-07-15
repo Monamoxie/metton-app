@@ -1,6 +1,6 @@
 from typing import Union
 from django.forms import BaseModelForm
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from dashboard.models import User
@@ -59,7 +59,9 @@ class SignupView(GuestOnlyMixin, CreateView):
 
         token = service.generate_email_token()
         if token:
-            verification_link = service.generate_email_verification_url(token)
+            verification_link = (
+                VerificationTokenService.generate_email_verification_url(token)
+            )
 
             context = {
                 "subject": "Email Verification",
@@ -68,6 +70,6 @@ class SignupView(GuestOnlyMixin, CreateView):
 
             template = os.path.join(
                 settings.BASE_DIR,
-                "core/templates/emails/email_verification.html",
+                "identity/templates/identity/emails/email_verification.email.html",
             )
             email_sender.delay("Welcome to Metton", [user.email], template, context)
