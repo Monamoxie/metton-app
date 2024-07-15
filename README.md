@@ -50,7 +50,7 @@ This project is currently in alpha stage. More components are continuosly being 
   <br>
 
 
-## And it comes with a beautiful User Interface you can customize or use straight out the box
+<!-- ## And it comes with a beautiful User Interface you can customize or use straight out the box
 
 #### Landing page
 
@@ -70,8 +70,8 @@ This project is currently in alpha stage. More components are continuosly being 
 
 #### Manage Appointments
 
-<p align="center"><img src="core/static/images/snapshots/upcoming-appointments.png"></p>
+<p align="center"><img src="core/static/images/snapshots/upcoming-appointments.png"></p> -->
 
 ## License
 
-Open-sourced and licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[MIT license](https://opensource.org/licenses/MIT).
