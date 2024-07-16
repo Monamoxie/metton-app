@@ -1,0 +1,10 @@
+{% extends "Base/verification.html" %}
+
+{% block content %}
+    <h3 class="py-2"> {{ type }} <strong>Verification</strong></h3>
+    {% if not valid %}
+        <p>Your email could not be verified</p>
+        <div class="alert alert-danger">Error: {{ token_status }}</div>
+    {% endif %}
+    
+{% endblock %}

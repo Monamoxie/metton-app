@@ -13,11 +13,12 @@ from django.contrib.auth.models import AbstractUser
 
 
 class VerificationTokenService:
-    EXPIRED_STATUS = "expired"
+    EXPIRED_STATUS = "Token is expired"
     SUCCESS_STATUS = "success"
-    NOT_FOUND_STATUS = "Not found"
+    NOT_FOUND_STATUS = "Invalid token"
+    NO_USER_FOUND = "No user found"
 
-    def __init__(self, type: str, user: Union[User, AbstractUser]) -> None:
+    def __init__(self, type: str, user: Union[None, User, AbstractUser]) -> None:
         self.type = type
         self.user = user
 
@@ -26,6 +27,9 @@ class VerificationTokenService:
 
     def generate_email_token(self) -> Union[str, None]:
         """Generate email token"""
+        if not self.user:
+            return self.NO_USER_FOUND
+
         unhashed_token = f"{secrets.token_urlsafe(32)}{self.user.email}"
         hashed_token = self._hash_token(unhashed_token)
         expires_at = timezone.now() + timedelta(hours=24)
