@@ -63,13 +63,10 @@ class SignupView(GuestOnlyMixin, CreateView):
                 VerificationTokenService.generate_email_verification_url(token)
             )
 
-            context = {
-                "subject": "Email Verification",
-                "verification_link": verification_link,
-            }
+            context = {"verification_link": verification_link}
 
             template = os.path.join(
                 settings.BASE_DIR,
                 "identity/templates/identity/emails/email_verification.email.html",
             )
-            email_sender.delay("Welcome to Metton", [user.email], template, context)
+            email_sender.delay("Email Verification", [user.email], template, context)
