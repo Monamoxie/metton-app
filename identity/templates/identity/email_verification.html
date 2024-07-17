@@ -5,6 +5,11 @@
     {% if not valid %}
         <p>Your email could not be verified</p>
         <div class="alert alert-danger">Error: {{ token_status }}</div>
+    {% else %}
+        <p class="alert alert-success">Your email has been successfully verified</p>
+        <a href="{% url 'dashboard' %}">
+            <button type="submit" class="btn btn-success">Go to Dashboard</button>
+        </a>
     {% endif %}
     
 {% endblock %}
