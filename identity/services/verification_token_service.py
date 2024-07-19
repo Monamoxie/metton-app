@@ -17,6 +17,7 @@ class VerificationTokenService:
     SUCCESS_STATUS = "success"
     NOT_FOUND_STATUS = "Invalid token"
     NO_USER_FOUND_STATUS = "No user found"
+    UNABLE_TO_GENERATE_TOKEN_STATUS = "Unable to generate token"
 
     def __init__(self, type: str, user: Union[None, User, AbstractUser]) -> None:
         self.type = type
@@ -45,6 +46,11 @@ class VerificationTokenService:
     def generate_email_verification_url(token: str) -> str:
         """Generate email verification url"""
         relative_url = reverse("email-verification", kwargs={"token": token})
+        return f"{settings.BASE_URL}{relative_url}"
+
+    def generate_reset_password_verification_link(self, token: str) -> str:
+        """Generate reset password verification link"""
+        relative_url = reverse("password-reset-verification", kwargs={"token": token})
         return f"{settings.BASE_URL}{relative_url}"
 
     def verify_email_token(self, token: str):

@@ -4,6 +4,7 @@ from identity.views import (
     SigninView,
     EmailVerificationView,
     ForgotPasswordView,
+    PasswordResetVerificationView,
 )
 
 urlpatterns = [
@@ -14,5 +15,10 @@ urlpatterns = [
         "verify/email/<str:token>",
         EmailVerificationView.as_view(),
         name="email-verification",
+    ),
+    path(
+        "verify/password-reset/<str:token>",
+        PasswordResetVerificationView.as_view(),
+        name="password-reset-verification",
     ),
 ]
