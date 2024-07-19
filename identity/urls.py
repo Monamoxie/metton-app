@@ -4,7 +4,7 @@ from identity.views import (
     SigninView,
     EmailVerificationView,
     ForgotPasswordView,
-    PasswordResetVerificationView,
+    PasswordResetView,
 )
 
 urlpatterns = [
@@ -18,7 +18,7 @@ urlpatterns = [
     ),
     path(
         "verify/password-reset/<str:token>",
-        PasswordResetVerificationView.as_view(),
+        PasswordResetView.as_view(),
         name="password-reset-verification",
     ),
 ]
