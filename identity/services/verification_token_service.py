@@ -5,7 +5,7 @@ from django.urls import reverse
 from core import settings
 from dashboard.models.user import User
 import secrets
-from identity.enums import VerificationTokenTypes
+from identity.enums import VerificationTypes
 from identity.models.verification_token import VerificationToken
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -23,7 +23,7 @@ class VerificationTokenService:
         self.type = type
         self.user = user
 
-        if type not in VerificationTokenTypes.get_values():
+        if type not in VerificationTypes.get_values():
             raise ValueError("Unknown verification type")
 
     def generate_token(self) -> Union[str, None]:

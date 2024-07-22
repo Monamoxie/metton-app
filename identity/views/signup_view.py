@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from dashboard.models import User
-from identity.enums import VerificationTokenTypes
+from identity.enums import VerificationTypes
 from identity.forms import SignupForm
 from core.mixins import GuestOnlyMixin
 from django.contrib.auth import authenticate, login
@@ -54,7 +54,7 @@ class SignupView(GuestOnlyMixin, CreateView):
     def _send_signup_email(self, user: Union[User, AbstractUser]):
         """Trigger an email verification event to Celery/RabbitMQ"""
         service = VerificationTokenService(
-            VerificationTokenTypes.EMAIL_VERIFICATION.value, user
+            VerificationTypes.EMAIL_VERIFICATION.value, user
         )
 
         token = service.generate_token()

@@ -1,7 +1,7 @@
 from typing import Any
 from django.views.generic import TemplateView
 
-from identity.enums import VerificationTokenTypes
+from identity.enums import VerificationTypes
 from identity.services.verification_token_service import VerificationTokenService
 
 
@@ -16,7 +16,7 @@ class PasswordResetView(TemplateView):
 
         token = self.kwargs.get("token")
         status = VerificationTokenService(
-            VerificationTokenTypes.EMAIL_VERIFICATION.value, None
+            VerificationTypes.EMAIL_VERIFICATION.value, None
         ).verify_email_token(token)
 
         context["valid"] = status == VerificationTokenService.SUCCESS_STATUS

@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from core.mixins import GuestOnlyMixin
 from core.services.user_service import UserService
-from identity.enums import VerificationTokenTypes
+from identity.enums import VerificationTypes
 from django.contrib.auth.forms import PasswordResetForm
 from identity.services import VerificationTokenService
 import os
@@ -25,9 +25,7 @@ class ForgotPasswordView(GuestOnlyMixin, FormView):
         user = UserService.get_user_by_email(form.cleaned_data["email"])
 
         if user:
-            verification_type = (
-                VerificationTokenTypes.FORGOT_PASSWORD_VERIFICATION.value
-            )
+            verification_type = VerificationTypes.FORGOT_PASSWORD_VERIFICATION.value
 
             service = VerificationTokenService(verification_type, user)
             token = service.generate_token()
