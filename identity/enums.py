@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Dict, List
 
 
-class VerificationTokenTypes(Enum):
+class VerificationTypes(Enum):
     EMAIL_VERIFICATION = "email_verification"
     PHONE_VERIFICATION = "phone_verification"
     FORGOT_PASSWORD_VERIFICATION = "forgot_password_verification"
