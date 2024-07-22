@@ -30,7 +30,7 @@ class ForgotPasswordView(GuestOnlyMixin, FormView):
             )
 
             service = VerificationTokenService(verification_type, user)
-            token = service.generate_email_token()
+            token = service.generate_token()
 
             if not token:
                 messages.error(self.request, service.UNABLE_TO_GENERATE_TOKEN_STATUS)

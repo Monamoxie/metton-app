@@ -26,8 +26,8 @@ class VerificationTokenService:
         if type not in VerificationTokenTypes.get_values():
             raise ValueError("Unknown verification type")
 
-    def generate_email_token(self) -> Union[str, None]:
-        """Generate email token"""
+    def generate_token(self) -> Union[str, None]:
+        """Generate token"""
         if not self.user:
             return self.NO_USER_FOUND_STATUS
 

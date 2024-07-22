@@ -57,7 +57,7 @@ class SignupView(GuestOnlyMixin, CreateView):
             VerificationTokenTypes.EMAIL_VERIFICATION.value, user
         )
 
-        token = service.generate_email_token()
+        token = service.generate_token()
         if token:
             verification_link = (
                 VerificationTokenService.generate_email_verification_url(token)
