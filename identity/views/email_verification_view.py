@@ -15,9 +15,10 @@ class EmailVerificationView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         token = self.kwargs.get("token")
-        status = VerificationTokenService(
-            VerificationTypes.EMAIL_VERIFICATION.value, None
-        ).verify_email_token(token)
+        verification_type = VerificationTypes.EMAIL_VERIFICATION.value
+        service = VerificationTokenService(verification_type)
+        
+        status = service.verify_email_token(token)
 
         context["valid"] = status == VerificationTokenService.SUCCESS_STATUS
         context["type"] = "Email"
