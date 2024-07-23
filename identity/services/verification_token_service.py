@@ -18,26 +18,26 @@ class VerificationTokenService:
     NOT_FOUND_STATUS = "Invalid token"
     NO_USER_FOUND_STATUS = "No user found"
     UNABLE_TO_GENERATE_TOKEN_STATUS = "Unable to generate token"
+    INVALID_RESET_LINK = "The reset link you visited was invalid. Please try again or request for another link"
 
-    def __init__(self, type: str, user: Union[None, User, AbstractUser]) -> None:
+    def __init__(self, type: str) -> None:
         self.type = type
-        self.user = user
 
         if type not in VerificationTypes.get_values():
             raise ValueError("Unknown verification type")
 
-    def generate_token(self) -> Union[str, None]:
+    def generate_token(self, user: Union[User, AbstractUser]) -> Union[str, None]:
         """Generate token"""
-        if not self.user:
+        if not user:
             return self.NO_USER_FOUND_STATUS
 
-        email_string = self._hash_token(self.user.email)
+        email_string = self._hash_token(user.email)
         plain_token = f"{secrets.token_urlsafe(32)}{email_string}"
 
         hashed_token = self._hash_token(plain_token)
         expires_at = timezone.now() + timedelta(hours=24)
 
-        if self._save(hashed_token=hashed_token, expires_at=expires_at):
+        if self._save(hashed_token=hashed_token, user=user, expires_at=expires_at):
             return plain_token
 
         return None
@@ -53,12 +53,12 @@ class VerificationTokenService:
         relative_url = reverse("password-reset-verification", kwargs={"token": token})
         return f"{settings.BASE_URL}{relative_url}"
 
-    def verify_email_token(self, token: str):
-        """Verify email token"""
+    def validate(self, token: str) -> Union[str, VerificationToken]:
+        """Check if token is valid"""
         hashed_token = self._hash_token(token)
 
         verification_token = VerificationToken.objects.filter(
-            token=hashed_token
+            token=hashed_token, type=self.type
         ).first()
 
         if not verification_token:
@@ -69,6 +69,15 @@ class VerificationTokenService:
             and timezone.now() > verification_token.expires_at
         ):
             return self.EXPIRED_STATUS
+
+        return verification_token
+
+    def verify_email_token(self, token: str):
+        """Verify email token"""
+        verification_token = self.validate(token)
+
+        if not isinstance(verification_token, VerificationToken):
+            return verification_token
 
         if not verification_token.user:
             return self.NO_USER_FOUND_STATUS
@@ -81,10 +90,20 @@ class VerificationTokenService:
 
         return self.SUCCESS_STATUS
 
-    def _save(self, hashed_token: str, expires_at: datetime) -> VerificationToken:
+    def destroy(self, token: str):
+        """Destroy token"""
+        hashed_token = self._hash_token(token)
+
+        return VerificationToken.objects.filter(
+            token=hashed_token, type=self.type
+        ).delete()
+
+    def _save(
+        self, hashed_token: str, user: Union[User, AbstractUser], expires_at: datetime
+    ) -> VerificationToken:
         """private method to save token"""
         return VerificationToken.objects.create(
-            type=self.type, user=self.user, token=hashed_token, expires_at=expires_at
+            type=self.type, user=user, token=hashed_token, expires_at=expires_at
         )
 
     def _hash_token(self, token: str) -> str:
