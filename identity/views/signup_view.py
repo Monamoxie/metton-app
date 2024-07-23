@@ -53,11 +53,9 @@ class SignupView(GuestOnlyMixin, CreateView):
 
     def _send_signup_email(self, user: Union[User, AbstractUser]):
         """Trigger an email verification event to Celery/RabbitMQ"""
-        service = VerificationTokenService(
-            VerificationTypes.EMAIL_VERIFICATION.value, user
-        )
+        service = VerificationTokenService(VerificationTypes.EMAIL_VERIFICATION.value)
 
-        token = service.generate_token()
+        token = service.generate_token(user=user)
         if token:
             verification_link = (
                 VerificationTokenService.generate_email_verification_url(token)
