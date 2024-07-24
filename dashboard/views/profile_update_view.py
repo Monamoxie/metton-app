@@ -33,5 +33,5 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         UpdateView -> BaseUpdateView -> ModelFormMixin -> FormMixin
         """
 
-        messages.error(self.request, form.errors)
+        messages.error(self.request, f"{form.errors}")
         return super().form_invalid(form)
