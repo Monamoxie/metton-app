@@ -15,6 +15,7 @@ from identity.services.verification_token_service import VerificationTokenServic
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib import messages
 from django.shortcuts import redirect
+from core.utils import get_template_path
 
 
 class PasswordResetView(GuestOnlyMixin, FormView):
@@ -83,11 +84,7 @@ class PasswordResetView(GuestOnlyMixin, FormView):
         form.save()
         self.service.destroy(self.token)
 
-        # todo ::: Trigger email to user to notifiy them of the password change
-        template = os.path.join(
-            settings.BASE_DIR,
-            "identity/templates/identity/emails/password_updated.email.html",
-        )
+        template = get_template_path("identity", "emails/password_updated.email.html")
         email_sender.delay("Password Updated!", [self.user.email], template, {})
 
         messages.success(self.request, "Password reset successful. You can now login")
