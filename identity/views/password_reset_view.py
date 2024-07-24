@@ -1,11 +1,14 @@
+import os
 from typing import Any, Union
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import FormView
+from core import settings
 from core.mixins.guest_only_mixin import GuestOnlyMixin
 from core.services.user_service import UserService
 from dashboard.models.user import User
+from dashboard.tasks import email_sender
 from identity.enums import VerificationTypes
 from identity.models.verification_token import VerificationToken
 from identity.services.verification_token_service import VerificationTokenService
@@ -19,7 +22,7 @@ class PasswordResetView(GuestOnlyMixin, FormView):
 
     service: VerificationTokenService
     token: str
-    user: Union[User, None]
+    user: User
 
     template_name = "identity/password_reset.html"
     form_class = SetPasswordForm
@@ -46,11 +49,13 @@ class PasswordResetView(GuestOnlyMixin, FormView):
         self.service = VerificationTokenService(type=type)
 
         self.token = self.kwargs.get("token")
-        self.user = self.get_user()
+        user = self.get_user()
 
-        if not self.user:
+        if not user:
             messages.error(request, VerificationTokenService.INVALID_RESET_LINK)
             return redirect("forgot-password")
+
+        self.user = user
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -77,6 +82,14 @@ class PasswordResetView(GuestOnlyMixin, FormView):
     def form_valid(self, form):
         form.save()
         self.service.destroy(self.token)
+
+        # todo ::: Trigger email to user to notifiy them of the password change
+        template = os.path.join(
+            settings.BASE_DIR,
+            "identity/templates/identity/emails/password_updated.email.html",
+        )
+        email_sender.delay("Password Updated!", [self.user.email], template, {})
+
         messages.success(self.request, "Password reset successful. You can now login")
         return redirect(self.success_url)
 
