@@ -37,13 +37,14 @@ class VerificationTokenService:
         hashed_token = self._hash_token(plain_token)
         expires_at = timezone.now() + timedelta(hours=24)
 
+        self.destroy_user_existing_tokens(user)
+
         if self._save(hashed_token=hashed_token, user=user, expires_at=expires_at):
             return plain_token
 
         return None
 
-    @staticmethod
-    def generate_email_verification_url(token: str) -> str:
+    def generate_email_verification_url(self, token: str) -> str:
         """Generate email verification url"""
         relative_url = reverse("email-verification", kwargs={"token": token})
         return f"{settings.BASE_URL}{relative_url}"
@@ -97,6 +98,10 @@ class VerificationTokenService:
         return VerificationToken.objects.filter(
             token=hashed_token, type=self.type
         ).delete()
+
+    def destroy_user_existing_tokens(self, user: Union[User, AbstractUser]):
+        """Destroy existing tokens of same type for this user"""
+        return VerificationToken.objects.filter(user=user, type=self.type).delete()
 
     def _save(
         self, hashed_token: str, user: Union[User, AbstractUser], expires_at: datetime
