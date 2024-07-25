@@ -5,6 +5,7 @@ from identity.views import (
     EmailVerificationView,
     ForgotPasswordView,
     PasswordResetView,
+    ResendEmailVerificationView,
 )
 
 urlpatterns = [
@@ -20,5 +21,10 @@ urlpatterns = [
         "verify/password-reset/<str:token>",
         PasswordResetView.as_view(),
         name="password-reset-verification",
+    ),
+    path(
+        "verify/email/resend/verification",
+        ResendEmailVerificationView.as_view(),
+        name="resend-email-verification",
     ),
 ]
