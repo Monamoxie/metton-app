@@ -8,6 +8,17 @@
           <div class="card-header">
             <h3 class="card-title">Update Profile</h3>
           </div>
+          {% if not email_verified %}
+          <div class="alert alert-warning">
+            <strong><i class="fa fa-warning"> </i></strong> Your email is not verified.  
+            Please click 
+            <form class="d-inline" action="{% url 'resend-email-verification' %}" method="POST">
+              {% csrf_token %}
+              <input type="submit" value="HERE" class="btn btn-outline-secondary-subtle p-0" />
+            </form> to verify. 
+            <br/>You'll receive an email with verification instructions.
+          </div>
+          {% endif %}
           <div class="card-body text-left">
             <form
               method="POST"

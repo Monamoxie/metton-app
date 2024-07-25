@@ -1,3 +1,4 @@
+from typing import Any
 from dashboard.forms import ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,6 +19,13 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         """
 
         return self.request.user
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        context["email_verified"] = self.request.user.email_verified
+
+        return context
 
     def get_success_url(self):
         """
