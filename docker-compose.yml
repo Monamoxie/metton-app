@@ -5,7 +5,7 @@ networks:
 services:
   postgres:
     image: postgres:latest
-    container_name: ${PROJECT_NAME}_postgres_container
+    container_name: ${PROJECT_NAME}_postgres
     restart: unless-stopped
     ports:
       - 5433:5432
@@ -19,12 +19,12 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - metton_network
-  
+
   python:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile.python
-    container_name: ${PROJECT_NAME}_python_container
+    container_name: ${PROJECT_NAME}_python
     volumes:
       - .:/app
       - static_volume:/var/www/static
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile.nginx
-    container_name: ${PROJECT_NAME}_nginx_container
+    container_name: ${PROJECT_NAME}_nginx
     volumes:
       - static_volume:/var/www/static
       - media_volume:/app/core/media
@@ -60,11 +60,30 @@ services:
     networks:
       - metton_network
 
+  node:
+    build:
+      context: .
+      dockerfile: ./.docker/Dockerfile.node
+    container_name: ${PROJECT_NAME}_node
+    environment:
+      NODE_ENV: ${PROJECT_ENV}
+    ports:
+      # TODO :::
+      # after migrating all existing functionalities over to React/Nextjs,
+      # this port will no longer be publicly accessible. Rather, Nginx will handle traffic to it as it deems fit
+      - 3200:3000
+    volumes:
+      - ./frontend:/var/www/html:rw
+    depends_on:
+      - python
+    networks:
+      - metton_network
+
   rabbitmq:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile.rabbitmq
-    container_name: ${PROJECT_NAME}_rabbitmq_container
+    container_name: ${PROJECT_NAME}_rabbitmq
     hostname: rabbitmq
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
