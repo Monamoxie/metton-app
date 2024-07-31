@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - metton_network
-  
+
   python:
     build:
       context: .
@@ -55,6 +55,25 @@ services:
       - "${SERVER_PORT}:80"
     env_file:
       - .env
+    depends_on:
+      - python
+    networks:
+      - metton_network
+
+  node:
+    build:
+      context: .
+      dockerfile: ./.docker/Dockerfile.node
+    container_name: ${PROJECT_NAME}_node
+    environment:
+      NODE_ENV: ${PROJECT_ENV}
+    ports:
+      # TODO :::
+      # after migrating all existing functionalities over to React/Nextjs,
+      # this port will no longer be publicly accessible. Rather, Nginx will handle traffic to it as it deems fit
+      - 3200:3000
+    volumes:
+      - ./frontend:/var/www/html:rw
     depends_on:
       - python
     networks:

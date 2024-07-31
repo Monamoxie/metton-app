@@ -1,0 +1,9 @@
+FROM node:latest
+
+WORKDIR /var/www/html
+
+EXPOSE 3000
+
+USER node
+
+COPY ./frontend /var/www/html
