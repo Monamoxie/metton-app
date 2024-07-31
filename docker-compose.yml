@@ -5,7 +5,7 @@ networks:
 services:
   postgres:
     image: postgres:latest
-    container_name: ${PROJECT_NAME}_postgres_container
+    container_name: ${PROJECT_NAME}_postgres
     restart: unless-stopped
     ports:
       - 5433:5432
@@ -24,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile.python
-    container_name: ${PROJECT_NAME}_python_container
+    container_name: ${PROJECT_NAME}_python
     volumes:
       - .:/app
       - static_volume:/var/www/static
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile.nginx
-    container_name: ${PROJECT_NAME}_nginx_container
+    container_name: ${PROJECT_NAME}_nginx
     volumes:
       - static_volume:/var/www/static
       - media_volume:/app/core/media
@@ -83,7 +83,7 @@ services:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile.rabbitmq
-    container_name: ${PROJECT_NAME}_rabbitmq_container
+    container_name: ${PROJECT_NAME}_rabbitmq
     hostname: rabbitmq
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
