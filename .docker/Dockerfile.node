@@ -1,9 +1,17 @@
 FROM node:latest
 
-WORKDIR /var/www/html
+WORKDIR /app
+
+COPY ./frontend /app/
 
 EXPOSE 3000
 
+COPY ./.shell/node_entrypoint.sh /app/.shell/node_entrypoint.sh
+RUN chmod +x /app/.shell/node_entrypoint.sh
+
+RUN chown -R node:node /app
+RUN chown -R node:node /usr/local/lib/node_modules /usr/local/bin
+
 USER node
 
-COPY ./frontend /var/www/html
+ENTRYPOINT ["/app/.shell/node_entrypoint.sh"]
