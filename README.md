@@ -31,7 +31,7 @@ This project is currently in alpha stage. More components are continuosly being 
 
 - Clone repo
 - Run `cp env.example .env` and fill up details as desired
-- Run `chmox +x ./python_entrypoint.sh`
+- Run `chmox +x ./.shell/python_entrypoint.sh`
 - Run `docker-compose up --build -d --wait`
 - Visit http://127.0.0.1:8080
 - For local setup, you make use of the RabbitMQ and PostgreSQL docker images
