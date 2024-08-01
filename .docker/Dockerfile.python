@@ -16,6 +16,6 @@ RUN mkdir -p /var/www/static
 VOLUME /var/www/static
 VOLUME /app/core/media
 
-COPY python_entrypoint.sh /app/python_entrypoint.sh
-RUN chmod +x /app/python_entrypoint.sh
-ENTRYPOINT ["/app/python_entrypoint.sh"]
+COPY ./.shell/python_entrypoint.sh /app/.shell/python_entrypoint.sh
+RUN chmod +x /app/.shell/python_entrypoint.sh
+ENTRYPOINT ["/app/.shell/python_entrypoint.sh"]
