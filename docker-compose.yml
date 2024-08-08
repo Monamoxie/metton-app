@@ -73,7 +73,7 @@ services:
       # this port will no longer be publicly accessible. Rather, Nginx will handle traffic to it as it deems fit
       - 3200:3000
     volumes:
-      - ./frontend:/var/www/html:rw
+      - ./frontend:/app:rw
     depends_on:
       - python
     networks:
