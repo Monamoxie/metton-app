@@ -50,6 +50,10 @@ This project is currently in alpha stage. More components are continuosly being 
   <br>
 
 
+## UI Components
+- Material UI
+- Magic UI
+
 <!-- ## And it comes with a beautiful User Interface you can customize or use straight out the box
 
 #### Landing page
