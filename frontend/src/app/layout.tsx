@@ -10,7 +10,7 @@ import "./globals.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import ScopedCssBaseline from "@mui/material/ScopedCssBaseline";
 import * as React from "react";
-import { LayoutProps } from "@/interfaces/layout_props";
+import { LayoutProps } from "@/interfaces/layout-props";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
