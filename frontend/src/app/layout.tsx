@@ -10,6 +10,7 @@ import "./globals.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import { LayoutProps } from "@/interfaces/layout-props";
 import ColorModeProviderContext from "@/contexts/ColorModeProviderContext";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 // export const metadata: Metadata = {
 //   title: "Hello Next App",

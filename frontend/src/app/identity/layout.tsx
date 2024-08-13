@@ -5,8 +5,7 @@ import { LayoutProps } from "@/interfaces/layout-props";
 import Stack from "@mui/material/Stack";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import ToggleColorMode from "@/app/identity/signup/ToggleColorMode";
-import * as React from "react";
-import useColorMode  from "@/hooks/useColorMode";
+import useColorMode from "@/hooks/useColorMode";
 
 export default function IdentityLayout(props: LayoutProps) {
   const { mode, toggleColorMode } = useColorMode();
@@ -23,11 +22,7 @@ export default function IdentityLayout(props: LayoutProps) {
         }}
       >
         {
-          <Button
-            startIcon={<ArrowBackRoundedIcon />}
-            component="a"
-            href="/material-ui/getting-started/templates/"
-          >
+          <Button startIcon={<ArrowBackRoundedIcon />} component="a" href="#">
             Home
           </Button>
         }
