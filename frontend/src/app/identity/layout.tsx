@@ -1,38 +1,25 @@
 "use client";
 
-import Button from "@mui/material/Button";
 import { LayoutProps } from "@/interfaces/layout-props";
 import Stack from "@mui/material/Stack";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import ToggleColorMode from "@/app/identity/signup/ToggleColorMode";
+import IdentityNav from "@/components/identity/IdentityNav";
 import useColorMode from "@/hooks/useColorMode";
+import {
+  IdentityRowWrapperCss,
+  IdentityColumnWrapperCss,
+} from "@/styles/modules/identity/identity-layout.css";
 
 export default function IdentityLayout(props: LayoutProps) {
   const { mode, toggleColorMode } = useColorMode();
 
   return (
     <div className="identity">
-      <Stack
-        direction="row"
-        sx={{
-          justifyContent: "space-between",
-          position: { sm: "static", md: "fixed" },
-          width: "100%",
-          p: { xs: 2, sm: 4 },
-        }}
-      >
-        {
-          <Button startIcon={<ArrowBackRoundedIcon />} component="a" href="#">
-            Home
-          </Button>
-        }
-        <ToggleColorMode
-          data-screenshot="toggle-mode"
-          mode={mode}
-          toggleColorMode={toggleColorMode}
-        />
+      <Stack direction="row" sx={IdentityRowWrapperCss}>
+        <IdentityNav mode={mode} toggleColorMode={toggleColorMode} />
       </Stack>
-      {props.children}
+      <Stack direction="column" sx={IdentityColumnWrapperCss}>
+        {props.children}
+      </Stack>
     </div>
   );
 }
