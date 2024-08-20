@@ -1,9 +1,13 @@
+"use client";
+
 import { createContext, useState } from "react";
 import { ColorModeContextProps } from "@/interfaces/theme";
 import { LayoutProps } from "@/interfaces/layout-props";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-export const ColorModeContext = createContext<ColorModeContextProps | null>(null);
+export const ColorModeContext = createContext<ColorModeContextProps | null>(
+  null
+);
 
 export default function ColorModeProviderContext({ children }: LayoutProps) {
   const [mode, setMode] = useState<"light" | "dark">("dark");
