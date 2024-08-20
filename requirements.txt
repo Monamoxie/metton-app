@@ -28,7 +28,7 @@ pydantic==2.7.3
 pydantic_core==2.18.4
 python-dateutil==2.8.2
 pytz==2023.3.post1
-setuptools==69.0.3
+setuptools==70.0.0
 six==1.16.0
 sqlparse==0.5.0
 types-python-dateutil==2.9.0.20240316
