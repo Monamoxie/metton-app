@@ -10,11 +10,9 @@ export default function IdentityLayout(props: LayoutProps) {
   const { mode, toggleColorMode } = useColorMode();
 
   return (
-    <div className="identity">
-      <Stack direction="column" sx={IdentityWrapperCss}>
-        <IdentityNav mode={mode} toggleColorMode={toggleColorMode} />
-        {props.children}
-      </Stack>
-    </div>
+    <Stack direction="column" sx={IdentityWrapperCss}>
+      <IdentityNav mode={mode} toggleColorMode={toggleColorMode} />
+      {props.children}
+    </Stack>
   );
 }

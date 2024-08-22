@@ -7,11 +7,11 @@ export const IdentityWrapperCss = (theme: Theme): SxProps<Theme> => ({
   border: "1px solid blue",
   width: "100%",
   height: { xs: "auto", md: "100dvh" },
-  // p: { xs: 2, sm: 4 },
   position: { sm: "static", md: "fixed" },
+  backgroundColor: theme.palette.background.default,
   backgroundSize: "cover",
-  backgroundImage:
-    "radial-gradient(ellipse at 70% 51%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
+  // backgroundImage:
+  //   "radial-gradient(ellipse at 70% 51%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
   ...(theme.palette.mode === "dark" && {
     backgroundImage:
       "radial-gradient(at 70% 51%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))",
