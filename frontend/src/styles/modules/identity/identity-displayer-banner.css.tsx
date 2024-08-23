@@ -12,9 +12,10 @@ export const Identity_Display_Banner_Css: SxProps = {
   m: "auto",
   borderRadius: "10px",
   "& img": {
-    border: "1px solid red",
     bottom: 0,
     position: "relative",
+    maxWidth: "600px",
+    maxHeight: "700px",
   },
 };
 
