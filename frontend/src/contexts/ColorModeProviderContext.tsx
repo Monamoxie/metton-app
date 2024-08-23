@@ -4,6 +4,8 @@ import { createContext, useState } from "react";
 import { ColorModeContextProps } from "@/interfaces/theme";
 import { LayoutProps } from "@/interfaces/layout-props";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import defaultTheme from "@/utils/theme/default";
 
 export const ColorModeContext = createContext<ColorModeContextProps | null>(
   null
@@ -16,16 +18,15 @@ export default function ColorModeProviderContext({ children }: LayoutProps) {
     setMode((prevMode) => (prevMode === "dark" ? "light" : "dark"));
   };
 
-  const defaultTheme = createTheme({ palette: { mode } });
-
-  const value = {
-    mode,
-    toggleColorMode,
-  };
+  const theme = createTheme(defaultTheme(mode));
+  const value = { mode, toggleColorMode };
 
   return (
     <ColorModeContext.Provider value={value}>
-      <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
     </ColorModeContext.Provider>
   );
 }
