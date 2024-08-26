@@ -7,7 +7,6 @@ export default function IdentityDisplayBanner() {
     <Stack direction="column" sx={Identity_Display_Banner_Css}>
       <Box>
         <h1>Do Great Things. Together.</h1>
-        {/* <img src="/images/banner1.jpeg" /> */}
       </Box>
     </Stack>
   );

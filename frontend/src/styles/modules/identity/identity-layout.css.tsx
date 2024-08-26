@@ -31,7 +31,7 @@ export const Identity_Signup_Signin_Shared_Css = (
       position: "relative",
       height: "100%",
       ...(theme.palette.mode === "dark" && {
-        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        backgroundColor: "rgba(0, 0, 0, 0.95)",
       }),
       ...(theme.palette.mode === "light" && {
         backgroundColor: "rgba(255, 255, 255, 0.85)",
@@ -63,5 +63,22 @@ export const Identity_Form_Card_Css = (theme: Theme): SxProps<Theme> => ({
       boxShadow:
         "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px, hsla(220, 30%, 5%, 0.05) 0px 0px 0px 1px",
     }),
+  },
+
+  "& .identity-form-card-title": {
+    width: "100%",
+    fontSize: "clamp(2rem, 10vw, 2.15rem)",
+  },
+
+  "& .card-content": {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    gap: 2,
+  },
+
+  "& .password-label-wrap": {
+    display: "flex",
+    justifyContent: "space-between",
   },
 });
