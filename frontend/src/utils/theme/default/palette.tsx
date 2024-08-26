@@ -1,6 +1,8 @@
+import { brand } from "@/utils/theme/default/color";
+
 export const lightPalette = {
   primary: {
-    main: "#1976d2",
+    main: brand[900],
   },
   secondary: {
     main: "#dc004e",
@@ -12,13 +14,14 @@ export const lightPalette = {
 
 export const darkPalette = {
   primary: {
-    main: "#90caf9",
+    main: brand[900],
   },
   secondary: {
     main: "#f48fb1",
   },
   background: {
-    default: "#000",
+    default: "#0e0e0e",
+    paper: "#141414",
   },
   // Add other custom colors here
 };
