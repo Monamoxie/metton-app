@@ -13,7 +13,9 @@ export const IdentityWrapperCss = (theme: Theme): SxProps<Theme> => ({
 });
 
 // ***************** Identity SignUp SignIn Page Common Css ***************** //
-export const Identity_Sign_Shared_Css = (theme: Theme): SxProps<Theme> => ({
+export const Identity_Signup_Signin_Shared_Css = (
+  theme: Theme
+): SxProps<Theme> => ({
   // gap: { xs: 6, sm: 12 },
   height: { xs: "100%", md: "100dvh" },
   zIndex: 0,
@@ -35,5 +37,31 @@ export const Identity_Sign_Shared_Css = (theme: Theme): SxProps<Theme> => ({
         backgroundColor: "rgba(255, 255, 255, 0.85)",
       }),
     },
+  },
+});
+
+export const Identity_Form_Card_Css = (theme: Theme): SxProps<Theme> => ({
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100vh",
+
+  "& .identity-form-card": {
+    display: "flex",
+    borderRadius: theme.spacing(2),
+    flexDirection: "column",
+    alignSelf: "center",
+    gap: theme.spacing(4),
+    padding: theme.spacing(2),
+    // backgroundColor: theme.palette.background.paper,
+    boxShadow:
+      "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px, hsla(220, 30%, 5%, 0.05) 0px 0px 0px 1px",
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing(4),
+      width: "450px",
+    },
+    ...theme.applyStyles("dark", {
+      boxShadow:
+        "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px, hsla(220, 30%, 5%, 0.05) 0px 0px 0px 1px",
+    }),
   },
 });
