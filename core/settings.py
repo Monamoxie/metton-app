@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from django.contrib.messages import constants as messages
+from datetime import timedelta
 
 # from django.contrib.auth import get_user_model
 
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "widget_tweaks",
     "rest_framework",
+    "rest_framework_simplejwt",
 ]
 
 AUTH_USER_MODEL = "dashboard.User"
@@ -204,3 +206,19 @@ DEFAULT_FROM_NAME = os.environ.get("DEFAULT_FROM_NAME")
 
 # Custom settings
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+SIMPLE_JWT = {
+    # todo ::: 
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
