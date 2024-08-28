@@ -8,6 +8,7 @@ from identity.views import (
     ResendEmailVerificationView,
 )
 
+# Deprecated in favor of DRF ::: Migration to DRF in progress
 urlpatterns = [
     path("signup", SignupView.as_view(), name="signup"),
     path("signin", SigninView.as_view(), name="signin"),
@@ -27,4 +28,10 @@ urlpatterns = [
         ResendEmailVerificationView.as_view(),
         name="resend-email-verification",
     ),
+]
+
+
+# API Routes ::: Migration to DRF in progress
+urlpatterns += [
+    path("signup", SignupView.as_view(), name="signup"),
 ]
