@@ -29,9 +29,3 @@ urlpatterns = [
         name="resend-email-verification",
     ),
 ]
-
-
-# API Routes ::: Migration to DRF in progress
-urlpatterns += [
-    path("signup", SignupView.as_view(), name="signup"),
-]
