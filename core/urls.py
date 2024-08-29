@@ -21,11 +21,16 @@ from django.urls import include
 from core import settings
 from django.conf.urls.static import static
 
+# Deprecated in favor of DRF ::: Migration to DRF in progress
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("identity/", include("identity.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("", include("home.urls")),
+]
+
+urlpatterns += [
+    path("api/v1/identity/", include("identity.api_urls")),
 ]
 
 # Serve static files during development
