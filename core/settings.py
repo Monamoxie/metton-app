@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "widget_tweaks",
     "rest_framework",
-    "rest_framework_simplejwt",
+    "knox",
 ]
 
 AUTH_USER_MODEL = "dashboard.User"
@@ -86,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_dump_die.middleware.DumpAndDieMiddleware",
+    "core.middleware.ApiResponseMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -209,9 +210,7 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
