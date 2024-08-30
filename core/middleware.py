@@ -20,8 +20,9 @@ class ApiResponseMiddleware(MiddlewareMixin):
 
             status_code = response.status_code
             custom_response = {
+                "message": self._extract_message(data),
                 "data": data if status_code < 400 else None,
-                "error": data if status_code >= 400 else None,
+                "errors": data if status_code >= 400 else None,
                 "status": (
                     self.SUCCESS_MESSAGE if status_code < 400 else self.ERROR_MESSAGE
                 ),
@@ -35,3 +36,8 @@ class ApiResponseMiddleware(MiddlewareMixin):
 
         # Return other types of responses unmodified
         return response
+
+    def _extract_message(self, data):
+        if isinstance(data, dict):
+            return data.pop("_message", None)
+        return None
