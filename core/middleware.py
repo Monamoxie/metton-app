@@ -1,13 +1,14 @@
+from typing import Union
 from django.http import JsonResponse
+from rest_framework import status
 from rest_framework.response import Response
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.translation import gettext_lazy as _
 
+from core.message_bag import MessageBag
+
 
 class ApiResponseMiddleware(MiddlewareMixin):
-    SUCCESS_MESSAGE = _("success")
-    ERROR_MESSAGE = _("error")
-
     def process_response(self, request, response):
         try:
             if isinstance(response, Response):
@@ -20,12 +21,9 @@ class ApiResponseMiddleware(MiddlewareMixin):
 
             status_code = response.status_code
             custom_response = {
-                "message": self._extract_message(data),
+                "message": self._extract_message(data, status_code),
                 "data": data if status_code < 400 else None,
                 "errors": data if status_code >= 400 else None,
-                "status": (
-                    self.SUCCESS_MESSAGE if status_code < 400 else self.ERROR_MESSAGE
-                ),
                 "code": status_code,
             }
 
@@ -37,7 +35,11 @@ class ApiResponseMiddleware(MiddlewareMixin):
         # Return other types of responses unmodified
         return response
 
-    def _extract_message(self, data):
-        if isinstance(data, dict):
+    def _extract_message(self, data, status_code: int) -> str:
+        if isinstance(data, dict) and "_message" in data:
             return data.pop("_message", None)
-        return None
+
+        if status_code == status.HTTP_200_OK:
+            return MessageBag.GENERIC_SUCCESS_MESSAGE
+        else:
+            return MessageBag.GENERIC_ERROR_MESSAGE

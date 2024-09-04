@@ -1,4 +1,3 @@
-from re import M
 from rest_framework import serializers
 from dashboard.models.user import User
 from django.contrib.auth.password_validation import validate_password
@@ -15,7 +14,7 @@ class SignupSerializer(serializers.ModelSerializer):
         required=True,
         error_messages={"required": MessageBag.FIELD_IS_REQUIRED.format(field="email")},
         validators=[
-            EmailValidator(message=MessageBag.FIELD_IS_INVALID.format(field="email")),
+            EmailValidator(message=MessageBag.DATA_IS_INVALID.format(data="email")),
             UniqueValidator(
                 queryset=User.objects.all(),
                 message=MessageBag.FIELD_IS_DUPLICATE.format(field="email"),
