@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from core.message_bag import MessageBag
 from dashboard.models.user import User
+from identity.permissions import GuestOnly
 from identity.serializers import SignupSerializer, UserSerializer
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
@@ -19,7 +20,7 @@ User = get_user_model()
 
 
 class SignupView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [GuestOnly]
 
     def post(self, request, *args, **kwargs):
         serializer = SignupSerializer(data=request.data)
