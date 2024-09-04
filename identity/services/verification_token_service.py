@@ -3,6 +3,7 @@ from http.client import NOT_FOUND
 from typing import Union
 from django.urls import reverse
 from core import settings
+from core.message_bag import MessageBag
 from dashboard.models.user import User
 import secrets
 from identity.enums import VerificationTypes
@@ -13,12 +14,10 @@ from django.contrib.auth.models import AbstractUser
 
 
 class VerificationTokenService:
-    EXPIRED_STATUS = "Token is expired"
-    SUCCESS_STATUS = "success"
-    NOT_FOUND_STATUS = "Invalid token"
-    NO_USER_FOUND_STATUS = "No user found"
-    UNABLE_TO_GENERATE_TOKEN_STATUS = "Unable to generate token"
-    INVALID_RESET_LINK = "The reset link you visited was invalid. Please try again or request for another link"
+    EXPIRED_STATUS = MessageBag.DATA_IS_EXPIRED.format(data="token")
+    SUCCESS_STATUS = MessageBag.SUCCESSFUL_DATA_VALIDATION.format(data="Token")
+    NOT_FOUND_STATUS = MessageBag.DATA_IS_INVALID.format(data="token")
+    NO_USER_FOUND_STATUS = MessageBag.DATA_NOT_FOUND.format(data="User")
 
     def __init__(self, type: str) -> None:
         self.type = type
@@ -73,7 +72,7 @@ class VerificationTokenService:
 
         return verification_token
 
-    def verify_email_token(self, token: str):
+    def verify_email_token(self, token: str) -> str:
         """Verify email token"""
         verification_token = self.validate(token)
 
