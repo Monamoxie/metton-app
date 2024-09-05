@@ -25,7 +25,7 @@ class EmailVerificationView(UpdateAPIView):
             response = service.verify_email_token(request.data.get("token"))
             return Response(
                 {
-                    "_message": response,
+                    "token": response,
                 },
                 status=(
                     status.HTTP_200_OK
