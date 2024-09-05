@@ -1,26 +1,14 @@
-from datetime import datetime, timedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from core.message_bag import MessageBag
 from dashboard.models.user import User
-from identity.permissions import GuestOnly
+from identity.permissions import GuestOnlyPermission
 from identity.serializers import SignupSerializer, UserSerializer
-from rest_framework.permissions import AllowAny
-from django.contrib.auth import get_user_model
-from knox.views import LoginView as KnoxLoginView
-from knox.models import AuthToken
-from rest_framework import generics
-from knox.settings import CONSTANTS, knox_settings
-from django.utils import timezone
-from rest_framework.authtoken.models import Token
 from identity.utils import send_signup_email
 
-User = get_user_model()
-
-
 class SignupView(APIView):
-    permission_classes = [GuestOnly]
+    permission_classes = [GuestOnlyPermission]
 
     def post(self, request, *args, **kwargs):
         serializer = SignupSerializer(data=request.data)
