@@ -25,3 +25,6 @@ class MessageBag:
     # Generic messages
     GENERIC_ERROR_MESSAGE = _("An error occurred while processing your request")
     GENERIC_SUCCESS_MESSAGE = _("Action completed successfully")
+
+    # Authentication based messages
+    INVALID_SIGNIN_CREDENTIALS = _("Invalid email or password")

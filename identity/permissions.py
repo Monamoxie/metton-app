@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class GuestOnly(permissions.BasePermission):
+class GuestOnlyPermission(permissions.BasePermission):
     """
     Custom permission to only allow non-authenticated users (guests).
     """
