@@ -25,9 +25,11 @@ class SignInSerializer(serializers.ModelSerializer):
         validators=[validate_password],
     )
 
+    remember_me = serializers.BooleanField(default=False, required=False)
+
     class Meta:
         model = User
-        fields = ["email", "password"]
+        fields = ["email", "password", "remember_me"]
 
     def validate(self, data):
         user = authenticate(email=data["email"], password=data["password"])
