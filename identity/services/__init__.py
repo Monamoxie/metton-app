@@ -1,1 +1,2 @@
 from .verification_token_service import VerificationTokenService
+from .user_service import UserService

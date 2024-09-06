@@ -3,6 +3,8 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework.response import Response
 from identity.serializers.signin_serializer import SignInSerializer
 from rest_framework import status
+from identity.serializers import UserSerializer
+from identity.services import UserService
 
 
 class SignInView(KnoxLoginView):
@@ -11,9 +13,18 @@ class SignInView(KnoxLoginView):
     def post(self, request, *args, **kwargs):
         serializer = SignInSerializer(data=request.data)
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
-            user = serializer.validated_data["user"]
+            user = serializer.validated_data.get("user")
             request.user = user
 
-            return super(SignInView, self).post(request, format=None)
+            is_remember_user = serializer.validated_data.get("remember_me", False)
 
+            token = UserService.create_token(user=user, remember_user=is_remember_user)
+
+            if isinstance(token, UserSerializer):
+                return Response(token, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"token_error": token},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
