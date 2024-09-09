@@ -1,7 +1,9 @@
 from typing import Union
 from knox.models import AuthToken
 from datetime import timedelta
-
+import uuid
+from typing import Union
+from dashboard.models.user import User
 from identity.serializers import AuthTokenSerializer
 from core.message_bag import MessageBag
 from identity.serializers import UserSerializer
@@ -34,3 +36,17 @@ class UserService:
 
         else:
             return cls.TOKEN_NOT_GENERATED_STATUS
+
+    def generate_email_verification_link(self): ...
+
+    def generate_unique_public_id(self):
+        id_exists = True
+        while id_exists:
+            p_id = uuid.uuid4().hex[:7]
+            if not User().objects.filter(public_id=p_id).exists():
+                id_exists = False
+        return p_id
+
+    @staticmethod
+    def get_user_by_email(email: str) -> Union[User, None]:
+        return User.objects.filter(email=email).first()

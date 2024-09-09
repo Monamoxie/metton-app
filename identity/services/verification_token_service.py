@@ -18,6 +18,7 @@ class VerificationTokenService:
     SUCCESS_STATUS = MessageBag.SUCCESSFUL_DATA_VALIDATION.format(data="Token")
     NOT_FOUND_STATUS = MessageBag.DATA_IS_INVALID.format(data="token")
     NO_USER_FOUND_STATUS = MessageBag.DATA_NOT_FOUND.format(data="User")
+    UNABLE_TO_GENERATE_TOKEN_STATUS = MessageBag.UNABLE_TO_GENERATE_DATA
 
     def __init__(self, type: str) -> None:
         self.type = type

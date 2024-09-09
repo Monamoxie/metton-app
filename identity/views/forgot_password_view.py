@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from core.mixins import GuestOnlyMixin
-from core.services.user_service import UserService
+from identity.services import UserService
 from identity.enums import VerificationTypes
 from django.contrib.auth.forms import PasswordResetForm
 from identity.services import VerificationTokenService

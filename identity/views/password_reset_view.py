@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 from core import settings
 from core.mixins.guest_only_mixin import GuestOnlyMixin
-from core.services.user_service import UserService
+from identity.services import UserService
 from dashboard.models.user import User
 from dashboard.tasks import email_sender
 from identity.enums import VerificationTypes
