@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useState } from "react";
-import { ColorModeContextProps } from "@/interfaces/theme";
-import { LayoutProps } from "@/interfaces/layout-props";
+import { ColorModeContextProps } from "@/types/theme";
+import { LayoutProps } from "@/types/layout-props";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import defaultTheme from "@/utils/theme/default";

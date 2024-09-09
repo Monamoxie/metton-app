@@ -6,7 +6,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./globals.css";
 import CssBaseline from "@mui/material/CssBaseline";
-import { LayoutProps } from "@/interfaces/layout-props";
+import { LayoutProps } from "@/types/layout-props";
 import ColorModeProviderContext from "@/contexts/ColorModeProviderContext";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
