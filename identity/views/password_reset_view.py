@@ -4,7 +4,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import FormView
+from rest_framework.templatetags.rest_framework import data
 from core import settings
+from core.message_bag import MessageBag
 from core.mixins.guest_only_mixin import GuestOnlyMixin
 from identity.services import UserService
 from dashboard.models.user import User
@@ -53,7 +55,7 @@ class PasswordResetView(GuestOnlyMixin, FormView):
         user = self.get_user()
 
         if not user:
-            messages.error(request, VerificationTokenService.INVALID_RESET_LINK)
+            messages.error(request, MessageBag.DATA_NOT_FOUND.format(data="User"))
             return redirect("forgot-password")
 
         self.user = user
