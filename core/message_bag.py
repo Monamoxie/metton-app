@@ -21,6 +21,7 @@ class MessageBag:
     DATA_RETURNED_SUCCESSFULLY = _("Data returned successfully")
     DATA_NOT_FOUND = _("{data} not found")
     UNABLE_TO_GENERATE_DATA = _("Unable to generate {data}")
+    UNABLE_TO_VALIDATE_DATA = _("Unable to validate {data}")
 
     # Generic messages
     GENERIC_ERROR_MESSAGE = _("An error occurred while processing your request")
