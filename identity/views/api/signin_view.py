@@ -18,13 +18,18 @@ class SignInView(KnoxLoginView):
 
             is_remember_user = serializer.validated_data.get("remember_me", False)
 
-            token = UserService.create_token(user=user, remember_user=is_remember_user)
+            response = UserService.create_token(
+                user=user, remember_user=is_remember_user
+            )
 
-            if isinstance(token, UserSerializer):
-                return Response(token, status=status.HTTP_200_OK)
+            if isinstance(response, object):
+                return Response(
+                    response,
+                    status=status.HTTP_200_OK,
+                )
             else:
                 return Response(
-                    {"token_error": token},
+                    {"token_error": response},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
