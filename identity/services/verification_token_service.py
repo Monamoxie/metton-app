@@ -29,7 +29,7 @@ class VerificationTokenService:
     def generate_token(self, user: Union[User, AbstractUser]) -> Union[str, None]:
         """Generate token"""
         if not user:
-            return self.NO_USER_FOUND_STATUS
+            return False
 
         email_string = self._hash_token(user.email)
         plain_token = f"{secrets.token_urlsafe(32)}{email_string}"

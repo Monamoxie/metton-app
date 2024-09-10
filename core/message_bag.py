@@ -16,6 +16,7 @@ class MessageBag:
     CREATED_SUCCESSFULLY = _("{data} created successfully")
     UPDATED_SUCCESSFULLY = _("{data} updated successfully")
     DELETED_SUCCESSFULLY = _("{data} deleted successfully")
+    SENT_SUCCESSFULLY = _("{data} has been sent successfully")
 
     # Retrieval based messages
     DATA_RETURNED_SUCCESSFULLY = _("Data returned successfully")
