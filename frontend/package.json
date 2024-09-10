@@ -15,13 +15,15 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.0.14",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.0.0-beta.4",
     "@mui/material": "^6.0.0-beta.4",
     "@mui/material-nextjs": "^6.0.0-beta.4",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.53.0"
+    "react-hook-form": "^7.53.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",
