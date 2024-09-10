@@ -4,6 +4,7 @@ from identity.views.api import (
     EmailVerificationView,
     SignInView,
     ForgotPasswordView,
+    PasswordResetVerificationView,
 )
 
 
@@ -13,4 +14,5 @@ urlpatterns = [
     path("verify/email", EmailVerificationView.as_view()),
     path("signin", SignInView.as_view()),
     path("forgot-password", ForgotPasswordView.as_view()),
+    path("verify/password-reset", PasswordResetVerificationView.as_view()),
 ]
