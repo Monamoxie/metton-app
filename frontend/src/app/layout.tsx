@@ -7,7 +7,7 @@ import "@fontsource/roboto/700.css";
 import "./globals.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import { LayoutProps } from "@/types/layout-props";
-import ColorModeProviderContext from "@/contexts/ColorModeProviderContext";
+import AppProvider from "@/providers/AppProvider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function RootLayout(props: Readonly<LayoutProps>) {
       <meta name="viewport" content="initial-scale=1, width=device-width" />
       <body>
         <>
-          <ColorModeProviderContext>{props.children}</ColorModeProviderContext>
+          <AppProvider>{props.children}</AppProvider>
         </>
       </body>
     </html>
