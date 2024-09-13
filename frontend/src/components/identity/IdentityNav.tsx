@@ -3,7 +3,7 @@
 import ToggleColorMode from "@/app/identity/signup/ToggleColorMode";
 import { Box, Stack } from "@mui/material";
 import { Identity_Nav_Css } from "@/styles/modules/identity/identity-nav.css";
-import useColorMode from "@/hooks/useColorMode";
+import useColorMode from "@/hooks/use-color-mode";
 
 export default function IdentityNav() {
   const logo = "/images/logo.png";
