@@ -5,14 +5,16 @@ from identity.views.api import (
     SignInView,
     ForgotPasswordView,
     PasswordResetVerificationView,
+    PasswordResetView,
 )
 
 
 # API Routes ::: Migration to DRF in progress
 urlpatterns = [
     path("signup", SignupView.as_view()),
-    path("verify/email", EmailVerificationView.as_view()),
+    path("email/verify", EmailVerificationView.as_view()),
     path("signin", SignInView.as_view()),
     path("forgot-password", ForgotPasswordView.as_view()),
-    path("verify/password-reset", PasswordResetVerificationView.as_view()),
+    path("password-reset/verify", PasswordResetVerificationView.as_view()),
+    path("password-reset", PasswordResetView.as_view()),
 ]

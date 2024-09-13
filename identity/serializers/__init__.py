@@ -3,3 +3,5 @@ from .signin_serializer import SignInSerializer
 from .user_serializer import UserSerializer
 from .auth_token_serializer import AuthTokenSerializer
 from .forgot_password_serializer import ForgotPasswordSerializer
+from .password_reset_verification_serializer import PasswordResetVerificationSerializer
+from .password_reset_serializer import PasswordResetSerializer
