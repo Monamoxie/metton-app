@@ -13,57 +13,27 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Identity_Form_Card_Css } from "@/styles/modules/identity/identity-layout.css";
 import ForgotPassword from "../../app/identity/signup/ForgotPassword";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { signupSchema } from "@/schemas/identity";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+
+export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
 
 export default function SignUpCard() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const t = useTranslations();
+  const schema = signupSchema(t);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupInputs>({
+    resolver: zodResolver(schema),
+  });
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
-  const validateInputs = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    return isValid;
-  };
+  const onSubmit: SubmitHandler<SignupInputs> = (data) => console.log(data);
 
   return (
     <Stack direction="column" sx={Identity_Form_Card_Css}>
@@ -73,74 +43,96 @@ export default function SignUpCard() {
         </Typography>
         <Box
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           noValidate
           className="card-content"
         >
           <FormControl>
             <FormLabel htmlFor="email">Email</FormLabel>
             <TextField
-              error={emailError}
-              helperText={emailErrorMessage}
+              {...register("email")}
+              error={!!errors.email}
+              helperText={(errors.email?.message as string) || ""}
               id="email"
               type="email"
-              name="email"
-              placeholder="your@email.com"
-              autoComplete="email"
+              placeholder={t("prompts.ENTER_YOUR_DATA", {
+                data: "email address",
+              })}
+              autoComplete="true"
               autoFocus
               required
-              fullWidth
-              variant="outlined"
-              color={emailError ? "error" : "primary"}
               sx={{ ariaLabel: "email" }}
             />
           </FormControl>
           <FormControl>
             <Box className="password-label-wrap">
               <FormLabel htmlFor="password">Password</FormLabel>
-              <Link
+              {/* <Link
                 component="button"
-                onClick={handleClickOpen}
+                // onClick={handleClickOpen}
                 variant="body2"
                 sx={{ alignSelf: "baseline" }}
               >
                 Forgot your password?
-              </Link>
+              </Link> */}
             </Box>
             <TextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              name="password"
+              {...register("password")}
+              error={!!errors.password}
+              helperText={(errors.password?.message as string) || ""}
               placeholder="••••••"
               type="password"
               id="password"
               autoComplete="current-password"
               autoFocus
               required
-              fullWidth
-              variant="outlined"
-              color={passwordError ? "error" : "primary"}
+              sx={{ ariaLabel: "password" }}
             />
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <ForgotPassword open={open} handleClose={handleClose} />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            onClick={validateInputs}
-          >
+
+          <FormControl>
+            <FormLabel htmlFor="password-conf">Re-enter Password</FormLabel>
+            <TextField
+              {...register("password_conf")}
+              error={!!errors.password_conf}
+              helperText={(errors.password_conf?.message as string) || ""}
+              name="password_conf"
+              placeholder="••••••"
+              type="password"
+              id="password-conf"
+              autoComplete="confirm-password"
+              autoFocus
+              required
+              sx={{ ariaLabel: "password-conf" }}
+            />
+          </FormControl>
+
+          <Button type="submit" fullWidth variant="contained">
             Sign Up
           </Button>
-          <Link variant="body2" sx={{ alignSelf: "center" }}>
-            Have an account? Sign In
-          </Link>
         </Box>
-        {/* <Divider>or</Divider> */}
       </Card>
     </Stack>
   );
 }
+
+//  {/* <Divider>or</Divider> */}
+// {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
+//  <FormControlLabel
+//    control={<Checkbox value="remember" color="primary" />}
+//    label="Remember me"
+//  />;
+
+/* <Link variant="body2" sx={{ alignSelf: "center" }}>
+  Have an account? Sign In
+</Link>; */
+
+// const handleClickOpen = () => {
+//   setOpen(true);
+// };
+
+// const handleClose = () => {
+//   setOpen(false);
+// };
+
+// };
