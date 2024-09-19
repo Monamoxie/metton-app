@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "rest_framework",
     "knox",
+    "corsheaders",
 ]
 
 AUTH_USER_MODEL = "dashboard.User"
@@ -78,6 +79,7 @@ MESSAGE_TAGS = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -219,3 +221,27 @@ REST_FRAMEWORK = {
 REST_KNOX = {
     "TOKEN_TTL": timedelta(hours=1),
 }
+
+
+CORS_ALLOWED_ORIGINS = [
+    host.strip() for host in os.environ.get("ALLOWED_HOSTS").split(",") if host.strip()
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True

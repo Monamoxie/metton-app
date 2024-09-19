@@ -10,6 +10,7 @@ click-plugins==1.1.1
 click-repl==0.3.0
 cryptography==43.0.1
 Django==5.0.8
+django-cors-headers==4.4.0
 django-dotenv==1.4.2
 django-dump-die==0.1.5
 django-rest-knox==5.0.1
