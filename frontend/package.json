@@ -19,7 +19,7 @@
     "@mui/icons-material": "^6.0.0-beta.4",
     "@mui/material": "^6.0.0-beta.4",
     "@mui/material-nextjs": "^6.0.0-beta.4",
-    "next": "14.2.5",
+    "next": "14.2.12",
     "next-intl": "^3.19.1",
     "react": "^18",
     "react-dom": "^18",
