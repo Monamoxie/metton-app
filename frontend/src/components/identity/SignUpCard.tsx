@@ -18,12 +18,20 @@ import { signupSchema } from "@/schemas/identity";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-
+import { signupAction } from "@/data/identity/signup-action";
+import { useState } from "react";
 export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
+import ErrorDisplay from "@/components/ErrorDisplay";
 
 export default function SignUpCard() {
   const t = useTranslations();
   const schema = signupSchema(t);
+  const [responseErrors, setResponseErrors] = useState<{
+    [key: string]: string[];
+  }>({});
+  const [responseData, setResponseData] = useState<{
+    [key: string]: string[];
+  }>({});
 
   const {
     register,
@@ -33,7 +41,14 @@ export default function SignUpCard() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<SignupInputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
+    const response = await signupAction(data);
+    console.log(response);
+
+    response.code !== 200
+      ? setResponseErrors(response.errors)
+      : setResponseData(response.data);
+  };
 
   return (
     <Stack direction="column" sx={Identity_Form_Card_Css}>
@@ -41,6 +56,7 @@ export default function SignUpCard() {
         <Typography component="h1" variant="h4" className="card-title">
           Create Account
         </Typography>
+        {responseErrors && <ErrorDisplay errors={responseErrors} />}
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -59,6 +75,7 @@ export default function SignUpCard() {
                 data: "email address",
               })}
               autoComplete="true"
+              value="dkd@dkd.com"
               autoFocus
               required
               sx={{ ariaLabel: "email" }}
@@ -86,6 +103,7 @@ export default function SignUpCard() {
               autoComplete="current-password"
               autoFocus
               required
+              value="123"
               sx={{ ariaLabel: "password" }}
             />
           </FormControl>
@@ -103,6 +121,7 @@ export default function SignUpCard() {
               autoComplete="confirm-password"
               autoFocus
               required
+              value="123"
               sx={{ ariaLabel: "password-conf" }}
             />
           </FormControl>
