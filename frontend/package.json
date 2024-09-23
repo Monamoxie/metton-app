@@ -19,12 +19,18 @@
     "@mui/icons-material": "^6.0.0-beta.4",
     "@mui/material": "^6.0.0-beta.4",
     "@mui/material-nextjs": "^6.0.0-beta.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "cookies-next": "^4.2.1",
+    "framer-motion": "^11.5.6",
+    "lucide-react": "^0.445.0",
     "next": "14.2.12",
     "next-intl": "^3.19.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -40,10 +46,13 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "eslint-plugin-storybook": "^0.8.0",
+    "postcss": "^8.4.47",
     "storybook": "^8.2.6",
+    "tailwindcss": "^3.4.12",
     "typescript": "^5"
   }
 }
