@@ -3,7 +3,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Card, Stack } from "@mui/material";
+import { Card, CircularProgress, Stack } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -32,6 +32,7 @@ export default function SignUpCard() {
   const [responseData, setResponseData] = useState<{
     [key: string]: string[];
   }>({});
+  const [processing, setProcessing] = useState(false);
 
   const {
     register,
@@ -42,8 +43,28 @@ export default function SignUpCard() {
   });
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    const response = await signupAction(data);
-    console.log(response);
+    // const response = await signupAction(data);
+    setProcessing(true);
+    const request = await fetch("/api/identity/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+        password_conf: data.password_conf,
+      }),
+    });
+
+    const response = await request.json();
+    setProcessing(false);
+
+    if (!request.ok) {
+      console.error(response.errors);
+    } else {
+      console.log("Login successful!!!", response);
+    }
 
     response.code !== 200
       ? setResponseErrors(response.errors)
@@ -75,7 +96,6 @@ export default function SignUpCard() {
                 data: "email address",
               })}
               autoComplete="true"
-              value="dkd@dkd.com"
               autoFocus
               required
               sx={{ ariaLabel: "email" }}
@@ -103,7 +123,6 @@ export default function SignUpCard() {
               autoComplete="current-password"
               autoFocus
               required
-              value="123"
               sx={{ ariaLabel: "password" }}
             />
           </FormControl>
@@ -121,13 +140,17 @@ export default function SignUpCard() {
               autoComplete="confirm-password"
               autoFocus
               required
-              value="123"
               sx={{ ariaLabel: "password-conf" }}
             />
           </FormControl>
 
-          <Button type="submit" fullWidth variant="contained">
-            Sign Up
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={processing}
+          >
+            {getButtonContent(processing)}
           </Button>
         </Box>
       </Card>
@@ -135,7 +158,13 @@ export default function SignUpCard() {
   );
 }
 
-//  {/* <Divider>or</Divider> */}
+function getButtonContent(processing: boolean): JSX.Element | string {
+  if (processing) {
+    return <CircularProgress size={22} sx={{ color: "#fff" }} />;
+  }
+  return "Create Account";
+}
+
 // {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
 //  <FormControlLabel
 //    control={<Checkbox value="remember" color="primary" />}
@@ -145,13 +174,3 @@ export default function SignUpCard() {
 /* <Link variant="body2" sx={{ alignSelf: "center" }}>
   Have an account? Sign In
 </Link>; */
-
-// const handleClickOpen = () => {
-//   setOpen(true);
-// };
-
-// const handleClose = () => {
-//   setOpen(false);
-// };
-
-// };
