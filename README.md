@@ -19,8 +19,10 @@ Whether you are a solopreneur, SME, or a startup, Metton helps you optimize your
 - Django
 - Gunicorn
 - Nginx
-- JavaScript
-- Bootstrap 5
+- TypeScript
+- React Js
+- Next Js
+- Material UI
 
 ## PRODUCTION ARCHITECTURE
 <p align="center"><img src="core/static/images/snapshots/metton-arch.webp"></p>
