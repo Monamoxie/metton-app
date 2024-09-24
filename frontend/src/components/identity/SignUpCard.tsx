@@ -21,13 +21,16 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
+import { Dispatch, SetStateAction } from "react";
+
+export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
 
 export default function SignUpCard() {
   const t = useTranslations();
   const schema = signupSchema(t);
+
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
@@ -43,23 +46,12 @@ export default function SignUpCard() {
   });
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    setProcessing(true);
-    const request = await fetch("/api/identity/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-        password_conf: data.password_conf,
-      }),
-    });
-
-    const response = await request.json();
-    setProcessing(false);
-
-    !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
+    await processSubmission(
+      data,
+      setProcessing,
+      setResponseErrors,
+      setIsFinished
+    );
   };
 
   return (
@@ -180,6 +172,31 @@ function getCompletedContent(): JSX.Element {
   );
 }
 
+async function processSubmission(
+  data: SignupInputs,
+  setProcessing: Dispatch<SetStateAction<boolean>>,
+  setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>,
+  setIsFinished: Dispatch<SetStateAction<boolean>>
+) {
+  setProcessing(true);
+
+  const request = await fetch("/api/identity/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: data.email,
+      password: data.password,
+      password_conf: data.password_conf,
+    }),
+  });
+
+  const response = await request.json();
+  setProcessing(false);
+
+  !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
+}
 // {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
 //  <FormControlLabel
 //    control={<Checkbox value="remember" color="primary" />}
