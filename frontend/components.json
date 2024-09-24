@@ -12,8 +12,8 @@
   },
   "aliases": {
     "components": "@/src/components",
-    "utils": "@/src/utils",
-    "ui": "@/src/components/ui",
-    "magicui": "@/src/components/magicui"
+    "utils": "@/utils",
+    "ui": "@/components/ui",
+    "magicui": "@/components/magicui"
   }
 }

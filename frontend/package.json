@@ -19,6 +19,8 @@
     "@mui/icons-material": "^6.0.0-beta.4",
     "@mui/material": "^6.0.0-beta.4",
     "@mui/material-nextjs": "^6.0.0-beta.4",
+    "@types/canvas-confetti": "^1.6.4",
+    "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cookies-next": "^4.2.1",
