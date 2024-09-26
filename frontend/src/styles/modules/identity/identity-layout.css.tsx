@@ -2,8 +2,9 @@ import { Theme } from "@mui/system";
 import { SxProps } from "@mui/material";
 
 // ***************** IdentityRowWrapperCss ***************** //
-export const IdentityWrapperCss = (theme: Theme): SxProps<Theme> => ({
-  justifyContent: "space-between",
+export const IDENTITY_WRAPPER_CSS = (theme: Theme): SxProps<Theme> => ({
+  alignItems: "stretch",
+  flexWrap: "wrap",
   position: "relative",
   width: "100%",
   height: { xs: "auto", md: "100dvh" },
@@ -12,10 +13,8 @@ export const IdentityWrapperCss = (theme: Theme): SxProps<Theme> => ({
   backgroundSize: "cover",
 });
 
-// ***************** Identity SignUp SignIn Page Common Css ***************** //
-export const Identity_Signup_Signin_Shared_Css = (
-  theme: Theme
-): SxProps<Theme> => ({
+// ***************** IDENTITY DOUBLE COLUMNS CSS ***************** //
+export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SxProps<Theme> => ({
   // gap: { xs: 6, sm: 12 },
   height: { xs: "100%", md: "100dvh" },
   zIndex: 0,

@@ -2,7 +2,7 @@
 
 import ToggleColorMode from "@/app/identity/signup/ToggleColorMode";
 import { Box, Stack } from "@mui/material";
-import { Identity_Nav_Css } from "@/styles/modules/identity/identity-nav.css";
+import { IDENTITY_NAV_CSS } from "@/styles/modules/identity/identity-nav.css";
 import useColorMode from "@/hooks/use-color-mode";
 
 export default function IdentityNav() {
@@ -11,7 +11,7 @@ export default function IdentityNav() {
   const { mode, toggleColorMode } = useColorMode();
 
   return (
-    <Stack direction="row" sx={Identity_Nav_Css}>
+    <Stack direction="row" sx={IDENTITY_NAV_CSS}>
       <Box className="identity-nav-logo-box">
         <img src={logo} />
       </Box>
