@@ -3,11 +3,11 @@
 import { LayoutProps } from "@/types/layout-props";
 import Stack from "@mui/material/Stack";
 import IdentityNav from "@/components/identity/IdentityNav";
-import { IdentityWrapperCss } from "@/styles/modules/identity/identity-layout.css";
+import { IDENTITY_WRAPPER_CSS } from "@/styles/modules/identity/identity-layout.css";
 
 export default function IdentityLayout(props: LayoutProps) {
   return (
-    <Stack direction="column" sx={IdentityWrapperCss}>
+    <Stack sx={IDENTITY_WRAPPER_CSS}>
       <IdentityNav />
       {props.children}
     </Stack>
