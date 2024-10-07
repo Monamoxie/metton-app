@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
 type ErrorProps = {
@@ -9,7 +10,7 @@ type ErrorProps = {
 
 export default function ErrorDisplay({ errors, message }: ErrorProps) {
   return (
-    <div>
+    <Box sx={{ mb: 5 }}>
       {Object.keys(errors).map((key) => (
         <Alert severity="error" key={key}>
           <strong>{message}</strong>{" "}
@@ -18,6 +19,6 @@ export default function ErrorDisplay({ errors, message }: ErrorProps) {
             : errors[key]}
         </Alert>
       ))}
-    </div>
+    </Box>
   );
 }
