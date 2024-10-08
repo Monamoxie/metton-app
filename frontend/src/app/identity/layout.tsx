@@ -3,7 +3,7 @@
 import { LayoutProps } from "@/types/layout-props";
 import Stack from "@mui/material/Stack";
 import IdentityNav from "@/components/identity/IdentityNav";
-import { IDENTITY_WRAPPER_CSS } from "@/styles/modules/identity/identity-layout.css";
+import { IDENTITY_WRAPPER_CSS } from "@/styles/modules/identity/identity.css";
 
 export default function IdentityLayout(props: LayoutProps) {
   return (

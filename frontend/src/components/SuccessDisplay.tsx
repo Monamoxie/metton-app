@@ -1,20 +1,36 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
-type ErrorProps = {
+interface ctaButtonProps {
+  ctaUrl?: string;
+  ctaMessage?: string;
+}
+
+interface SuccessDisplayProps extends ctaButtonProps {
   title?: string;
   message?: string;
-};
+}
 
-export default function SuccessDisplay({ title, message }: ErrorProps) {
+export default function SuccessDisplay(props: SuccessDisplayProps) {
   return (
-    <Box>
+    <Box sx={{ p: 4 }}>
       <Alert severity="success">
         <Typography variant="h5" component="h5">
-          {title}
+          {props.title}
         </Typography>
-        <div>{message}</div>
+        <Box sx={{ mb: 4 }}>{props.message}</Box>
+        <CTAButton ctaUrl={props.ctaUrl} ctaMessage={props.ctaMessage} />
       </Alert>
     </Box>
+  );
+}
+
+function CTAButton({ ctaUrl, ctaMessage }: ctaButtonProps) {
+  return (
+    <Link href={ctaUrl}>
+      <Button type="button" variant="contained">
+        {ctaMessage}
+      </Button>
+    </Link>
   );
 }

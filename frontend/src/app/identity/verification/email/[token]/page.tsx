@@ -18,7 +18,13 @@ export default async function EmailVerificationPage({ params }: PageProps) {
       <Card>
         {response.code !== 200 && <ErrorDisplay errors={response.errors} />}
 
-        {response.code === 200 && <SuccessDisplay title={response.message} />}
+        {response.code === 200 && (
+          <SuccessDisplay
+            title={response.message}
+            ctaMessage="Go to Dashboard"
+            ctaUrl="/"
+          />
+        )}
       </Card>
     </Container>
   );
