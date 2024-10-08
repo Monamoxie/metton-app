@@ -14,7 +14,7 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { Identity_Form_Card_Css } from "@/styles/modules/identity/identity-layout.css";
+import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signupSchema } from "@/schemas/identity";
 import * as z from "zod";
@@ -55,7 +55,7 @@ export default function SignUpCard() {
   };
 
   return (
-    <Stack direction="column" sx={Identity_Form_Card_Css}>
+    <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
       {isFinished && getCompletedContent()}
 
       {!isFinished && (

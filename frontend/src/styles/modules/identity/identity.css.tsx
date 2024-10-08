@@ -1,14 +1,29 @@
 import { Theme } from "@mui/system";
 import { SxProps } from "@mui/material";
 
+export const IDENTITY_NAV_CSS = (theme: Theme): SxProps<Theme> => ({
+  p: 4,
+  pl: { xs: 4, sm: 4, lg: 10 },
+  pr: { xs: 4, sm: 4, lg: 10 },
+  justifyContent: "space-between",
+  alignItems: "flex-start",
+  width: "100%",
+  height: "auto",
+  zIndex: 10,
+  position: "absolute",
+
+  "& .identity-nav-logo-box img": {
+    width: 125,
+    height: 55,
+  },
+});
+
 // ***************** IdentityRowWrapperCss ***************** //
 export const IDENTITY_WRAPPER_CSS = (theme: Theme): SxProps<Theme> => ({
   alignItems: "stretch",
-  flexWrap: "wrap",
   position: "relative",
   width: "100%",
   height: { xs: "auto", md: "100dvh" },
-  // position: { sm: "static", md: "fixed" },
   backgroundColor: theme.palette.background.default,
   backgroundSize: "cover",
 });
@@ -19,12 +34,13 @@ export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SxProps<Theme> => ({
   height: { xs: "100%", md: "100dvh" },
   zIndex: 0,
 
-  "& .identity-sign-shared-grid": {
+  "& .identity-col-1": {
     backgroundImage: "url('/images/bg/group.jpg')",
     backgroundSize: "cover",
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
     position: "relative",
+    display: { xs: "None", sm: "block" },
 
     "& .identity-sign-shared-backdrop": {
       position: "relative",
@@ -39,7 +55,7 @@ export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SxProps<Theme> => ({
   },
 });
 
-export const Identity_Form_Card_Css = (theme: Theme): SxProps<Theme> => ({
+export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
   justifyContent: "center",
   alignItems: "center",
   height: "100vh",
@@ -52,12 +68,16 @@ export const Identity_Form_Card_Css = (theme: Theme): SxProps<Theme> => ({
     gap: theme.spacing(4),
     padding: theme.spacing(2),
     // backgroundColor: theme.palette.background.paper,
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px, hsla(220, 30%, 5%, 0.05) 0px 0px 0px 1px",
     [theme.breakpoints.up("sm")]: {
       padding: theme.spacing(4),
       width: "450px",
     },
+    [theme.breakpoints.down("sm")]: {
+      padding: theme.spacing(4),
+      width: "94%",
+    },
+    boxShadow:
+      "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px, hsla(220, 30%, 5%, 0.05) 0px 0px 0px 1px",
     ...theme.applyStyles("dark", {
       boxShadow:
         "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px, hsla(220, 30%, 5%, 0.05) 0px 0px 0px 1px",
