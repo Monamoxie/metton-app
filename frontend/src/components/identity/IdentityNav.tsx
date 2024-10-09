@@ -1,6 +1,6 @@
 "use client";
 
-import ToggleColorMode from "@/app/identity/signup/ToggleColorMode";
+import ToggleColorMode from "@/components/ToggleColorMode";
 import { Box, Link, Stack } from "@mui/material";
 import { IDENTITY_NAV_CSS } from "@/styles/modules/identity/identity.css";
 import useColorMode from "@/hooks/use-color-mode";
