@@ -14,6 +14,7 @@ export async function verifyToken(
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          "Cache-Control": "no-store",
         },
         body: JSON.stringify({
           token,
