@@ -15,7 +15,7 @@ export default function SuccessDisplay(props: SuccessDisplayProps) {
   return (
     <Box sx={{ p: 4 }}>
       <Alert severity="success">
-        <Typography variant="h5" component="h5">
+        <Typography variant="h6" component="h6">
           {props.title}
         </Typography>
         <Box sx={{ mb: 4 }}>{props.message}</Box>

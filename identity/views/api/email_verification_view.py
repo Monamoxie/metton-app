@@ -28,7 +28,7 @@ class EmailVerificationView(UpdateAPIView):
             response = {}
             status_code = (
                 status.HTTP_200_OK
-                if response == VerificationTokenService.SUCCESS_STATUS
+                if verification_message == VerificationTokenService.SUCCESS_STATUS
                 else status.HTTP_400_BAD_REQUEST
             )
 
