@@ -2,7 +2,7 @@
 
 import ToggleColorMode from "@/components/ToggleColorMode";
 import { Box, Link, Stack } from "@mui/material";
-import { IDENTITY_NAV_CSS } from "@/styles/modules/identity/identity.css";
+import { IDENTITY_NAV_CSS } from "@/styles/modules/identity.css";
 import useColorMode from "@/hooks/use-color-mode";
 
 export default function IdentityNav() {
@@ -14,7 +14,7 @@ export default function IdentityNav() {
     <Stack direction="row" sx={IDENTITY_NAV_CSS}>
       <Box className="identity-nav-logo-box">
         <Link href="/">
-        <img src={logo} />
+          <img src={logo} />
         </Link>
       </Box>
       <ToggleColorMode

@@ -3,7 +3,7 @@
 import * as React from "react";
 import Stack from "@mui/material/Stack";
 import SignUpCard from "@/components/identity/SignUpCard";
-import { IDENTITY_DOUBLE_COLUMNS_CSS } from "@/styles/modules/identity/identity.css";
+import { IDENTITY_DOUBLE_COLUMNS_CSS } from "@/styles/modules/identity.css";
 import Grid from "@mui/material/Grid2";
 import IdentityDisplayBanner from "@/components/identity/IdentityDisplayBanner";
 import { Backdrop } from "@mui/material";

@@ -1,4 +1,4 @@
-import { IDENTITY_OVERLAY_CSS } from "@/styles/modules/identity/identity.css";
+import { IDENTITY_OVERLAY_CSS } from "@/styles/modules/identity.css";
 import { Box, Card, Stack } from "@mui/material";
 import Image from "next/image";
 

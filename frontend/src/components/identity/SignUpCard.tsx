@@ -14,7 +14,7 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity/identity.css";
+import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signupSchema } from "@/schemas/identity";
 import * as z from "zod";
