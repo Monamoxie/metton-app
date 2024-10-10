@@ -55,6 +55,29 @@ export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SxProps<Theme> => ({
   },
 });
 
+// ***************** IDENTITY OVERLAY CSS ***************** //
+export const IDENTITY_OVERLAY_CSS = (theme: Theme): SxProps<Theme> => ({
+  justifyContent: "center",
+  position: "relative",
+  alignItems: "center",
+  backgroundColor: "rgba(0, 0, 0, 0.75)",
+  ...(theme.palette.mode === "light" && {
+    color: theme.palette.text.primary,
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
+  }),
+  p: 8,
+  height: "30vh",
+  width: "30vw",
+  m: "auto",
+  borderRadius: "10px",
+  "& img": {
+    bottom: 0,
+    position: "relative",
+    maxWidth: "600px",
+    maxHeight: "700px",
+  },
+});
+
 export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
   justifyContent: "center",
   alignItems: "center",

@@ -1,12 +1,16 @@
-import { Identity_Display_Banner_Css } from "@/styles/modules/identity/identity-displayer-banner.css";
+import { IDENTITY_OVERLAY_CSS } from "@/styles/modules/identity/identity.css";
 import { Box, Card, Stack } from "@mui/material";
 import Image from "next/image";
 
-export default function IdentityDisplayBanner() {
+type BannerProps = {
+  message: string;
+};
+
+export default function IdentityDisplayBanner({ message }: BannerProps) {
   return (
-    <Stack direction="column" sx={Identity_Display_Banner_Css}>
+    <Stack direction="column" sx={IDENTITY_OVERLAY_CSS}>
       <Box>
-        <h1>Do Great Things. Together.</h1>
+        <h1>{message}</h1>
       </Box>
     </Stack>
   );
