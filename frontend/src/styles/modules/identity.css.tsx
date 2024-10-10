@@ -117,6 +117,7 @@ export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
     flexDirection: "column",
     width: "100%",
     gap: 2,
+    mt: -8,
   },
 
   "& .password-label-wrap": {
