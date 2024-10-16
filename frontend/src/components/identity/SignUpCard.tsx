@@ -8,6 +8,7 @@ import {
   AlertTitle,
   Card,
   CircularProgress,
+  Link,
   Stack,
 } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
@@ -24,6 +25,7 @@ import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
+import NextLink from "next/link";
 
 export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
 
@@ -90,14 +92,6 @@ export default function SignUpCard() {
             <FormControl>
               <Box className="password-label-wrap">
                 <FormLabel htmlFor="password">Password</FormLabel>
-                {/* <Link
-                component="button"
-                // onClick={handleClickOpen}
-                variant="body2"
-                sx={{ alignSelf: "baseline" }}
-              >
-                Forgot your password?
-              </Link> */}
               </Box>
               <TextField
                 {...register("password")}
@@ -124,7 +118,6 @@ export default function SignUpCard() {
                 type="password"
                 id="password-conf"
                 autoComplete="confirm-password"
-                autoFocus
                 required
                 sx={{ ariaLabel: "password-conf" }}
               />
@@ -139,6 +132,9 @@ export default function SignUpCard() {
               {getButtonContent(processing)}
             </Button>
           </Box>
+          <Link href="/identity/signin" component={NextLink}>
+            Have an account? Sign In
+          </Link>
         </Card>
       )}
     </Stack>

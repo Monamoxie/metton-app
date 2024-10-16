@@ -27,6 +27,7 @@ import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
+import NextLink from "next/link";
 
 type SignInInputs = z.infer<ReturnType<typeof signInSchema>>;
 
@@ -127,8 +128,13 @@ export default function SignInCard() {
               {getButtonContent(processing)}
             </Button>
 
-            <Link variant="body1" sx={{ mt: 2 }}>
-              No account? Create One Now. It&apos;s Free
+            <Link
+              href="/identity/signup"
+              component={NextLink}
+              variant="body1"
+              sx={{ mt: 2 }}
+            >
+              No account? Create One. It&apos;s Free
             </Link>
           </Box>
         </Card>
