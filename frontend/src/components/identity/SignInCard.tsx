@@ -28,6 +28,7 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 
 type SignInInputs = z.infer<ReturnType<typeof signInSchema>>;
 
@@ -56,6 +57,8 @@ export default function SignInCard() {
       setIsFinished
     );
   };
+
+  const router = useRouter();
 
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
@@ -94,10 +97,10 @@ export default function SignInCard() {
               <Box className="password-label-wrap">
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <Link
-                  component="button"
-                  // onClick={handleClickOpen}
+                  component="span"
+                  onClick={() => router.push("/identity/forgot-password")}
                   variant="body2"
-                  sx={{ alignSelf: "baseline" }}
+                  sx={{ alignSelf: "baseline", cursor: "pointer" }}
                 >
                   Forgot your password?
                 </Link>
@@ -110,7 +113,6 @@ export default function SignInCard() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                autoFocus
                 required
                 sx={{ ariaLabel: "password" }}
               />
@@ -193,7 +195,4 @@ async function processSubmission(
   setProcessing(false);
 
   !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
-}
-{
-  /* <ForgotPassword open={open} handleClose={handleClose} /> */
 }

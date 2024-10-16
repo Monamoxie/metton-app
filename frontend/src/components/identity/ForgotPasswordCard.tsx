@@ -7,7 +7,9 @@ import {
   Alert,
   AlertTitle,
   Card,
+  Checkbox,
   CircularProgress,
+  FormControlLabel,
   Link,
   Stack,
 } from "@mui/material";
@@ -17,7 +19,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { signupSchema } from "@/schemas/identity";
+import { signInSchema } from "@/schemas/identity";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -26,28 +28,28 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 
-export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
+type SignInInputs = z.infer<ReturnType<typeof signInSchema>>;
 
-export default function SignUpCard() {
-  const t = useTranslations();
-  const schema = signupSchema(t);
-
+export default function ForgotPasswordCard() {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
   const [isFinished, setIsFinished] = useState(false);
   const [processing, setProcessing] = useState(false);
 
+  const t = useTranslations();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupInputs>({
-    resolver: zodResolver(schema),
+  } = useForm<SignInInputs>({
+    resolver: zodResolver(signInSchema(t)),
   });
 
-  const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
+  const onSubmit: SubmitHandler<SignInInputs> = async (data) => {
     await processSubmission(
       data,
       setProcessing,
@@ -56,14 +58,16 @@ export default function SignUpCard() {
     );
   };
 
+  const router = useRouter();
+
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
       {isFinished && getCompletedContent()}
 
       {!isFinished && (
         <Card className="identity-form-card">
-          <Typography component="h1" variant="h4" className="card-title">
-            Create Account
+          <Typography component="h4" variant="h4" className="card-title">
+            Request Password Reset
           </Typography>
           {responseErrors && <ErrorDisplay errors={responseErrors} />}
           <Box
@@ -89,38 +93,6 @@ export default function SignUpCard() {
                 sx={{ ariaLabel: "email" }}
               />
             </FormControl>
-            <FormControl>
-              <Box className="password-label-wrap">
-                <FormLabel htmlFor="password">Password</FormLabel>
-              </Box>
-              <TextField
-                {...register("password")}
-                error={!!errors.password}
-                helperText={(errors.password?.message as string) || ""}
-                placeholder="••••••"
-                type="password"
-                id="password"
-                autoComplete="current-password" 
-                required
-                sx={{ ariaLabel: "password" }}
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="password-conf">Re-enter Password</FormLabel>
-              <TextField
-                {...register("password_conf")}
-                error={!!errors.password_conf}
-                helperText={(errors.password_conf?.message as string) || ""}
-                name="password_conf"
-                placeholder="••••••"
-                type="password"
-                id="password-conf"
-                autoComplete="confirm-password"
-                required
-                sx={{ ariaLabel: "password-conf" }}
-              />
-            </FormControl>
 
             <Button
               type="submit"
@@ -130,10 +102,16 @@ export default function SignUpCard() {
             >
               {getButtonContent(processing)}
             </Button>
+
+            <Link
+              href="/identity/signin"
+              component={NextLink}
+              variant="body1"
+              sx={{ mt: 2 }}
+            >
+              Remember password? Sign In.
+            </Link>
           </Box>
-          <Link href="/identity/signin" component={NextLink}>
-            Have an account? Sign In
-          </Link>
         </Card>
       )}
     </Stack>
@@ -144,7 +122,7 @@ function getButtonContent(processing: boolean): JSX.Element | string {
   if (processing) {
     return <CircularProgress size={22} sx={{ color: "#fff" }} />;
   }
-  return "Create Account";
+  return "Sign In";
 }
 
 function getCompletedContent(): JSX.Element {
@@ -168,7 +146,7 @@ function getCompletedContent(): JSX.Element {
 }
 
 async function processSubmission(
-  data: SignupInputs,
+  data: SignInInputs,
   setProcessing: Dispatch<SetStateAction<boolean>>,
   setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>,
   setIsFinished: Dispatch<SetStateAction<boolean>>
@@ -183,7 +161,6 @@ async function processSubmission(
     body: JSON.stringify({
       email: data.email,
       password: data.password,
-      password_conf: data.password_conf,
     }),
   });
 
@@ -192,12 +169,3 @@ async function processSubmission(
 
   !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
 }
-// {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
-//  <FormControlLabel
-//    control={<Checkbox value="remember" color="primary" />}
-//    label="Remember me"
-//  />;
-
-/* <Link variant="body2" sx={{ alignSelf: "center" }}>
-  Have an account? Sign In
-</Link>; */

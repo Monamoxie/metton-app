@@ -10,7 +10,7 @@ export default function IdentityDisplayBanner({ message }: BannerProps) {
   return (
     <Stack direction="column" sx={IDENTITY_OVERLAY_CSS}>
       <Box>
-        <h1>{message}</h1>
+        <h2>{message}</h2>
       </Box>
     </Stack>
   );
