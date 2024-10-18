@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/types/api";
-import { ApiExceptionHandler } from "@/utils/utils";
+import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 
 type VerifyTokenProps = string | undefined;
 
@@ -18,6 +18,25 @@ export async function verifyToken(
         },
         body: JSON.stringify({
           token,
+        }),
+      }
+    );
+
+    return await request.json();
+  } catch (error: any) {
+    return ApiExceptionHandler(error.message);
+  }
+}
+
+export async function newPasswordRequest(email: string): Promise<ApiResponse> {
+  try {
+    const request = await fetch(
+      process.env.API_BASE_URL + "/identity/forgot-password",
+      {
+        method: "POST",
+        headers: getDefaultApiHeader(),
+        body: JSON.stringify({
+          email,
         }),
       }
     );
