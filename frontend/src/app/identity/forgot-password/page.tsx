@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
             open={true}
             sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
           >
-            <IdentityDisplayBanner message="No worries. It happens" />
+            <IdentityDisplayBanner message="Don't worry. It happens" />
           </Backdrop>
         </Grid>
         <Grid size={{ xs: 12, md: 5 }} sx={{ padding: "12" }}>

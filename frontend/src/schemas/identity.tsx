@@ -28,3 +28,11 @@ export const signInSchema = (t: ReturnType<typeof useTranslations>) => {
       .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
   });
 };
+
+export const forgotPasswordSchema = (t: ReturnType<typeof useTranslations>) => {
+  return z.object({
+    email: z
+      .string()
+      .email(t("errors.FIELD_IS_INVALID", { field: "email address" })),
+  });
+};

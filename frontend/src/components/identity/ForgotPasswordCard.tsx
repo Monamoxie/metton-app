@@ -19,7 +19,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { signInSchema } from "@/schemas/identity";
+import { forgotPasswordSchema } from "@/schemas/identity";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -30,13 +30,14 @@ import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
-type SignInInputs = z.infer<ReturnType<typeof signInSchema>>;
+type ForgotPasswordInput = z.infer<ReturnType<typeof forgotPasswordSchema>>;
 
 export default function ForgotPasswordCard() {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
   const [isFinished, setIsFinished] = useState(false);
+  const [message, setMessage] = useState("");
   const [processing, setProcessing] = useState(false);
 
   const t = useTranslations();
@@ -45,16 +46,17 @@ export default function ForgotPasswordCard() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInInputs>({
-    resolver: zodResolver(signInSchema(t)),
+  } = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema(t)),
   });
 
-  const onSubmit: SubmitHandler<SignInInputs> = async (data) => {
+  const onSubmit: SubmitHandler<ForgotPasswordInput> = async (data) => {
     await processSubmission(
       data,
       setProcessing,
       setResponseErrors,
-      setIsFinished
+      setIsFinished,
+      setMessage
     );
   };
 
@@ -62,12 +64,12 @@ export default function ForgotPasswordCard() {
 
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
-      {isFinished && getCompletedContent()}
+      {isFinished && getCompletedContent(message)}
 
       {!isFinished && (
         <Card className="identity-form-card">
           <Typography component="h4" variant="h4" className="card-title">
-            Request Password Reset
+            Password Reset Request
           </Typography>
           {responseErrors && <ErrorDisplay errors={responseErrors} />}
           <Box
@@ -122,23 +124,23 @@ function getButtonContent(processing: boolean): JSX.Element | string {
   if (processing) {
     return <CircularProgress size={22} sx={{ color: "#fff" }} />;
   }
-  return "Sign In";
+  return "Submit Request";
 }
 
-function getCompletedContent(): JSX.Element {
+function getCompletedContent(message: string): JSX.Element {
   return (
     <>
       <Confetti />
       <Alert sx={{ p: 5 }} severity="success">
         <AlertTitle>
-          <h1>Welcome to Metton!</h1>
+          <h1>Password Reset Request</h1>
         </AlertTitle>
         <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          Your account has been successfully created.
+          {message}
         </Typography>
         <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          A confirmation link has just been sent to your email address. <br />
-          Click on the confirmation link to get started.
+          You should receive a reset link shortly. Click on the link to get
+          started.
         </Typography>
       </Alert>
     </>
@@ -146,26 +148,31 @@ function getCompletedContent(): JSX.Element {
 }
 
 async function processSubmission(
-  data: SignInInputs,
+  data: ForgotPasswordInput,
   setProcessing: Dispatch<SetStateAction<boolean>>,
   setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>,
-  setIsFinished: Dispatch<SetStateAction<boolean>>
+  setIsFinished: Dispatch<SetStateAction<boolean>>,
+  setMessage: Dispatch<SetStateAction<string>>
 ) {
   setProcessing(true);
 
-  const request = await fetch("/api/identity/signup", {
+  const request = await fetch("/api/identity/forgot-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       email: data.email,
-      password: data.password,
     }),
   });
 
   const response = await request.json();
   setProcessing(false);
 
-  !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
+  if (response.code !== 200) {
+    return setResponseErrors(response.errors);
+  }
+
+  setIsFinished(true);
+  setMessage(response.message);
 }
