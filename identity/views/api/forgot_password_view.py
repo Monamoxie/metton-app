@@ -21,40 +21,39 @@ class ForgotPasswordView(APIView):
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
             user = UserService().get_user_by_email(serializer.validated_data["email"])
 
-            if not user:
-                return Response(
-                    {"user_error": MessageBag.DATA_NOT_FOUND.format(data="User")},
-                    status=status.HTTP_404_NOT_FOUND,
+            if user:
+                v_type = VerificationTypes.FORGOT_PASSWORD_VERIFICATION.value
+
+                vt_service = VerificationTokenService(v_type)
+                token = vt_service.generate_token(user)
+
+                if not isinstance(token, str):
+                    return Response(
+                        {
+                            "user_error": MessageBag.UNABLE_TO_GENERATE_DATA.format(
+                                data="token"
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                verification_link = (
+                    vt_service.generate_reset_password_verification_link(token)
                 )
+                context = {"verification_link": verification_link}
 
-            v_type = VerificationTypes.FORGOT_PASSWORD_VERIFICATION.value
-
-            vt_service = VerificationTokenService(v_type)
-            token = vt_service.generate_token(user)
-
-            if not isinstance(token, str):
-                return Response(
-                    {
-                        "user_error": MessageBag.UNABLE_TO_GENERATE_DATA.format(
-                            data="token"
-                        )
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
+                template = os.path.join(
+                    settings.BASE_DIR,
+                    "identity/templates/identity/emails/password_reset.email.html",
                 )
-
-            verification_link = vt_service.generate_reset_password_verification_link(
-                token
-            )
-            context = {"verification_link": verification_link}
-
-            template = os.path.join(
-                settings.BASE_DIR,
-                "identity/templates/identity/emails/password_reset.email.html",
-            )
-            email_sender.delay("Password Reset", [user.email], template, context)
+                email_sender.delay("Password Reset", [user.email], template, context)
 
             return Response(
-                {"_message": MessageBag.SENT_SUCCESSFULLY.format(data="Reset link")},
+                {
+                    "_message": MessageBag.SENT_SUCCESSFULLY_IF.format(
+                        data="Reset Link", channel="email"
+                    )
+                },
                 status=status.HTTP_200_OK,
             )
 

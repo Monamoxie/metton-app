@@ -17,6 +17,9 @@ class MessageBag:
     UPDATED_SUCCESSFULLY = _("{data} updated successfully")
     DELETED_SUCCESSFULLY = _("{data} deleted successfully")
     SENT_SUCCESSFULLY = _("{data} has been sent successfully")
+    SENT_SUCCESSFULLY_IF = _(
+        SENT_SUCCESSFULLY + ", if the {channel} is valid and available"
+    )
 
     # Retrieval based messages
     DATA_RETURNED_SUCCESSFULLY = _("Data returned successfully")
