@@ -19,7 +19,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { forgotPasswordSchema } from "@/schemas/identity";
+import { forgotPasswordSchema } from "@/schemas/identity-schemas";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";

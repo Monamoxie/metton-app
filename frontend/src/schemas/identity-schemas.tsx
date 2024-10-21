@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { useTranslations } from "next-intl";
 
+// ************ SIGN UP SCHEMA ****************/
 export const signupSchema = (t: ReturnType<typeof useTranslations>) => {
   return z
     .object({
@@ -18,6 +19,7 @@ export const signupSchema = (t: ReturnType<typeof useTranslations>) => {
     });
 };
 
+// ************ SIGN IN SCHEMA ****************/
 export const signInSchema = (t: ReturnType<typeof useTranslations>) => {
   return z.object({
     email: z
@@ -29,10 +31,21 @@ export const signInSchema = (t: ReturnType<typeof useTranslations>) => {
   });
 };
 
+// ************ FORGOT PASSWORD SCHEMA ****************/
 export const forgotPasswordSchema = (t: ReturnType<typeof useTranslations>) => {
   return z.object({
     email: z
       .string()
       .email(t("errors.FIELD_IS_INVALID", { field: "email address" })),
+  });
+};
+
+// ************ PASSWORD RESET SCHEMA ****************/
+export const passwordResetSchema = (t: ReturnType<typeof useTranslations>) => {
+  return z.object({
+    password: z
+      .string()
+      .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
+    password_conf: z.string(),
   });
 };

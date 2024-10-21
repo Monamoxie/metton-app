@@ -17,7 +17,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { signupSchema } from "@/schemas/identity";
+import { signupSchema } from "@/schemas/identity-schemas";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -100,7 +100,7 @@ export default function SignUpCard() {
                 placeholder="••••••"
                 type="password"
                 id="password"
-                autoComplete="current-password" 
+                autoComplete="current-password"
                 required
                 sx={{ ariaLabel: "password" }}
               />

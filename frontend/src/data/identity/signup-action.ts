@@ -1,5 +1,5 @@
 "use server";
-import { signupSchema } from "@/schemas/identity";
+import { signupSchema } from "@/schemas/identity-schemas";
 import * as z from "zod";
 
 type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
