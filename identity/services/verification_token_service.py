@@ -73,6 +73,10 @@ class VerificationTokenService:
 
         return verification_token
 
+    # TODO VE_003
+    # TODO ::: CONVERT this method into mark_email_verified()
+    # TODO ::: View should directly call verify_email_token, and if successfull,
+    # TODO ::: view should then call mark_email_verified which should handle the necessary logic for marking the email as valid
     def verify_email_token(self, token: str) -> str:
         """Verify email token"""
         verification_token = self.validate(token)
