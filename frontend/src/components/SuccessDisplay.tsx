@@ -1,4 +1,4 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { AlertTitle, Box, Button, Link, Typography } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
 interface ctaButtonProps {
@@ -14,11 +14,15 @@ interface SuccessDisplayProps extends ctaButtonProps {
 export default function SuccessDisplay(props: SuccessDisplayProps) {
   return (
     <Box sx={{ p: 4 }}>
-      <Alert severity="success">
-        <Typography variant="h6" component="h6">
-          {props.title}
+      <Alert severity="success" sx={{ p: 5 }}>
+        <AlertTitle>
+          <Typography variant="h6" component="h6">
+            {props.title}
+          </Typography>
+        </AlertTitle>
+        <Typography sx={{ pt: 2, pb: 4 }} variant="subtitle1" component="p">
+          {props.message}
         </Typography>
-        <Box sx={{ mb: 4 }}>{props.message}</Box>
         <CTAButton ctaUrl={props.ctaUrl} ctaMessage={props.ctaMessage} />
       </Alert>
     </Box>
