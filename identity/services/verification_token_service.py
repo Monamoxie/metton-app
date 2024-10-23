@@ -14,9 +14,9 @@ from django.contrib.auth.models import AbstractUser
 
 
 class VerificationTokenService:
-    EXPIRED_STATUS = MessageBag.DATA_IS_EXPIRED.format(data="token")
+    EXPIRED_MESSAGE = MessageBag.DATA_IS_EXPIRED.format(data="token")
     SUCCESS_STATUS = MessageBag.SUCCESSFUL_DATA_VALIDATION.format(data="Token")
-    NOT_FOUND_STATUS = MessageBag.DATA_IS_INVALID.format(data="token")
+    INVALID_MESSAGE = MessageBag.DATA_IS_INVALID.format(data="token")
     NO_USER_FOUND_STATUS = MessageBag.DATA_NOT_FOUND.format(data="User")
     UNABLE_TO_GENERATE_TOKEN_STATUS = MessageBag.UNABLE_TO_GENERATE_DATA
 
@@ -63,13 +63,13 @@ class VerificationTokenService:
         ).first()
 
         if not verification_token:
-            return self.NOT_FOUND_STATUS
+            return self.INVALID_MESSAGE
 
         if (
             verification_token.expires_at
             and timezone.now() > verification_token.expires_at
         ):
-            return self.EXPIRED_STATUS
+            return self.EXPIRED_MESSAGE
 
         return verification_token
 

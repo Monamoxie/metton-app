@@ -50,3 +50,9 @@ class UserService:
     @staticmethod
     def get_user_by_email(email: str) -> Union[User, None]:
         return User.objects.filter(email=email).first()
+
+    @staticmethod
+    def update_password(user: User, password: str) -> User:
+        user.set_password(password)
+        user.save()
+        return user
