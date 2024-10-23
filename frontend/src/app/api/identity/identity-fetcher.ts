@@ -1,14 +1,7 @@
-import { ApiResponse } from "@/types/api";
+import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 
-type VerifyTokenProps = string | undefined;
-
-interface PasswordResetProps {
-  token: string;
-  password: string;
-  password_confirmation: string;
-}
-
+// ********** VERIFY EMAIL FETCHER ********** //
 export async function verifyToken(
   token: VerifyTokenProps
 ): Promise<ApiResponse> {
@@ -82,7 +75,7 @@ export async function passwordReset({
     const request = await fetch(
       process.env.API_BASE_URL + "/identity/password-reset",
       {
-        method: "POST",
+        method: "PATCH",
         headers: getDefaultApiHeader(),
         body: JSON.stringify({
           token,

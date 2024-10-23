@@ -8,3 +8,11 @@ export interface ApiResponse {
   errors: Null | ErrorsField;
   code: Integer;
 }
+
+export interface PasswordResetProps {
+  token: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export type VerifyTokenProps = string | undefined;
