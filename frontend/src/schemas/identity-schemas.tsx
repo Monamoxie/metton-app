@@ -46,6 +46,6 @@ export const passwordResetSchema = (t: ReturnType<typeof useTranslations>) => {
     password: z
       .string()
       .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
-    password_conf: z.string(),
+    password_confirmation: z.string(),
   });
 };

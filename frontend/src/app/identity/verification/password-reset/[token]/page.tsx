@@ -13,17 +13,14 @@ type PageProps = {
 export default async function PasswordResetPage({ params }: PageProps) {
   const token = params.token;
   const response = await verifyPasswordResetToken(token);
-  console.log(response);
 
   return (
     <Container sx={{ pt: 30 }}>
       <Card>
         {response.code !== 200 && <ErrorDisplay errors={response.errors} />}
 
-        {response.code === 200 && <PasswordResetCard />}
+        {response.code === 200 && <PasswordResetCard token={token} />}
       </Card>
     </Container>
   );
 }
-
-function passwordResetCard() {}
