@@ -18,10 +18,7 @@ class PasswordResetVerificationView(APIView):
 
     def post(self, request):
         serializer = PasswordResetVerificationSerializer(data=request.data)
-        return Response(
-            {"token": MessageBag.DATA_IS_VALID.format(data="Token")},
-            status=status.HTTP_200_OK,
-        )
+
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
             token = serializer.validated_data["token"]
 
