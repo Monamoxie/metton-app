@@ -43,40 +43,29 @@ export async function localApiRequest<T>({
   setResponseErrors,
   setIsFinished,
   setMessage,
-}: localApiRequestProps): Promise<T | null> {
+}: localApiRequestProps): Promise<T | null | void> {
   setProcessing(true);
-  console.log(body);
 
   try {
-    const response = await fetch(url, {
+    const request = await fetch(url, {
       method,
       headers: getDefaultApiHeader(),
       body: body ? JSON.stringify(body) : null,
     });
 
-    const data = await response.json();
+    const response = await request.json();
     setProcessing(false);
 
-    if (response.ok) {
-      setIsFinished(true);
-      if (setMessage && data.message) {
-        setMessage(data.message);
-      }
-      return data;
+    if (response.code !== 200) {
+      return setResponseErrors(response.errors);
     }
 
-    setResponseErrors(
-      data.errors || {
-        generic: [
-          "Something went wrong. Could not contact the outbound server",
-        ],
-      }
-    );
-    return null;
+    setIsFinished(true);
+    if (setMessage && response.message) {
+      return setMessage(response.message);
+    }
   } catch (error) {
     setProcessing(false);
-    console.log(error);
-    setResponseErrors({ generic: ["Network error"] });
-    return null;
+    return setResponseErrors({ generic: ["Network error"] });
   }
 }
