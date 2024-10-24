@@ -18,7 +18,7 @@ export default function SignupPage() {
             open={true}
             sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
           >
-            <IdentityDisplayBanner />
+            <IdentityDisplayBanner message="Do Great Things.Together" />
           </Backdrop>
         </Grid>
         <Grid size={{ xs: 12, md: 5 }} sx={{ padding: "12" }}>

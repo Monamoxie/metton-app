@@ -24,7 +24,7 @@ class SignupView(APIView):
                         "user": user_data,
                         "_message": MessageBag.CREATED_SUCCESSFULLY.format(data="User"),
                     },
-                    status=status.HTTP_201_CREATED,
+                    status=status.HTTP_200_OK,
                 )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

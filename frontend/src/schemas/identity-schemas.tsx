@@ -8,14 +8,14 @@ export const signupSchema = (t: ReturnType<typeof useTranslations>) => {
       email: z
         .string()
         .email(t("errors.FIELD_IS_INVALID", { field: "email address" })),
-      password: z
+      password1: z
         .string()
         .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
-      password_conf: z.string(),
+      password2: z.string(),
     })
-    .refine((data) => data.password === data.password_conf, {
+    .refine((data) => data.password1 === data.password2, {
       message: t("errors.DATA_DO_NOT_MATCH", { data: "Passwords" }),
-      path: ["password_conf"],
+      path: ["password2"],
     });
 };
 

@@ -26,8 +26,8 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
-
-export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
+import { SignupInputs } from "@/types/identity";
+import { localApiRequest } from "@/utils/utils";
 
 export default function SignUpCard() {
   const t = useTranslations();
@@ -48,12 +48,14 @@ export default function SignUpCard() {
   });
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    await processSubmission(
-      data,
+    await localApiRequest({
+      url: "/api/identity/signup",
+      method: "POST",
+      body: data,
       setProcessing,
       setResponseErrors,
-      setIsFinished
-    );
+      setIsFinished,
+    });
   };
 
   return (
@@ -94,31 +96,29 @@ export default function SignUpCard() {
                 <FormLabel htmlFor="password">Password</FormLabel>
               </Box>
               <TextField
-                {...register("password")}
-                error={!!errors.password}
-                helperText={(errors.password?.message as string) || ""}
-                placeholder="••••••"
+                {...register("password1")}
+                error={!!errors.password1}
+                helperText={(errors.password1?.message as string) || ""}
+                placeholder="*******"
                 type="password"
-                id="password"
-                autoComplete="current-password"
+                id="password1"
                 required
-                sx={{ ariaLabel: "password" }}
+                sx={{ ariaLabel: "password1" }}
               />
             </FormControl>
 
             <FormControl>
-              <FormLabel htmlFor="password-conf">Re-enter Password</FormLabel>
+              <FormLabel htmlFor="password2">Re-enter Password</FormLabel>
               <TextField
-                {...register("password_conf")}
-                error={!!errors.password_conf}
-                helperText={(errors.password_conf?.message as string) || ""}
-                name="password_conf"
-                placeholder="••••••"
+                {...register("password2")}
+                error={!!errors.password2}
+                helperText={(errors.password2?.message as string) || ""}
+                name="password2"
+                placeholder="*******"
                 type="password"
-                id="password-conf"
-                autoComplete="confirm-password"
+                id="password2"
                 required
-                sx={{ ariaLabel: "password-conf" }}
+                sx={{ ariaLabel: "password2" }}
               />
             </FormControl>
 
@@ -182,8 +182,8 @@ async function processSubmission(
     },
     body: JSON.stringify({
       email: data.email,
-      password: data.password,
-      password_conf: data.password_conf,
+      password1: data.password1,
+      password2: data.password2,
     }),
   });
 
@@ -192,12 +192,3 @@ async function processSubmission(
 
   !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
 }
-// {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
-//  <FormControlLabel
-//    control={<Checkbox value="remember" color="primary" />}
-//    label="Remember me"
-//  />;
-
-/* <Link variant="body2" sx={{ alignSelf: "center" }}>
-  Have an account? Sign In
-</Link>; */
