@@ -2,7 +2,7 @@ import { verifyPasswordResetToken } from "@/app/api/identity/identity-fetcher";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PasswordResetCard from "@/components/identity/PasswordResetCard";
 import SuccessDisplay from "@/components/SuccessDisplay";
-import { Card, Container } from "@mui/material";
+import { Box, Card, Container } from "@mui/material";
 
 type PageProps = {
   params: {
@@ -15,12 +15,18 @@ export default async function PasswordResetPage({ params }: PageProps) {
   const response = await verifyPasswordResetToken(token);
 
   return (
-    <Container sx={{ p: 3 }}>
-      <Card>
-        {response.code !== 200 && <ErrorDisplay errors={response.errors} />}
+    <Container sx={{ mt: 15 }}>
+      {response.code !== 200 && (
+        <Box sx={{ mt: 25 }}>
+          <ErrorDisplay errors={response.errors} />
+        </Box>
+      )}
 
-        {response.code === 200 && <PasswordResetCard token={token} />}
-      </Card>
+      {response.code === 200 && (
+        <Card>
+          <PasswordResetCard token={token} />
+        </Card>
+      )}
     </Container>
   );
 }

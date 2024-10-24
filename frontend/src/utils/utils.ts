@@ -20,7 +20,7 @@ export function getDefaultApiHeader(): HeadersInit {
   return {
     Accept: "application/json",
     "Content-Type": "application/json",
-    "Cache-Control": "no-store, max-age=0",
+    "Cache-Control": "no-store,max-age=0",
   };
 }
 
