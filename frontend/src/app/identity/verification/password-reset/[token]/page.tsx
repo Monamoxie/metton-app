@@ -15,7 +15,7 @@ export default async function PasswordResetPage({ params }: PageProps) {
   const response = await verifyPasswordResetToken(token);
 
   return (
-    <Container sx={{ pt: 30 }}>
+    <Container sx={{ p: 3 }}>
       <Card>
         {response.code !== 200 && <ErrorDisplay errors={response.errors} />}
 

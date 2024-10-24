@@ -3,14 +3,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import {
-  Alert,
-  AlertTitle,
-  Card,
-  CircularProgress,
-  Link,
-  Stack,
-} from "@mui/material";
+import { Alert, AlertTitle, Card, Link, Stack } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -24,13 +17,18 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
-import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
 import ButtonContent from "../ButtonContent";
+import { localApiRequest } from "@/utils/utils";
+import SuccessDisplay from "../SuccessDisplay";
 
 type ResetPasswordInput = z.infer<ReturnType<typeof passwordResetSchema>>;
 
-export default function PasswordResetCard() {
+interface PasswordResetCardProps {
+  token?: string;
+}
+
+export default function PasswordResetCard({ token }: PasswordResetCardProps) {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
@@ -49,13 +47,20 @@ export default function PasswordResetCard() {
   });
 
   const onSubmit: SubmitHandler<ResetPasswordInput> = async (data) => {
-    await processSubmission(
-      data,
+    const body = {
+      ...data,
+      token,
+    };
+
+    await localApiRequest({
+      url: "/api/identity/password-reset",
+      method: "POST",
+      body,
       setProcessing,
       setResponseErrors,
       setIsFinished,
-      setMessage
-    );
+      setMessage,
+    });
   };
 
   return (
@@ -94,16 +99,18 @@ export default function PasswordResetCard() {
             <FormControl>
               <FormLabel htmlFor="password-conf">Re-enter Password</FormLabel>
               <TextField
-                {...register("password_conf")}
-                error={!!errors.password_conf}
-                helperText={(errors.password_conf?.message as string) || ""}
-                name="password_conf"
+                {...register("password_confirmation")}
+                error={!!errors.password_confirmation}
+                helperText={
+                  (errors.password_confirmation?.message as string) || ""
+                }
+                name="password_confirmation"
                 placeholder="••••••"
                 type="password"
-                id="password-conf"
+                id="password-confirmation"
                 autoComplete="confirm-password"
                 required
-                sx={{ ariaLabel: "password-conf" }}
+                sx={{ ariaLabel: "password-confirmation" }}
               />
             </FormControl>
 
@@ -140,49 +147,14 @@ function getCompletedContent(message: string): JSX.Element {
   return (
     <>
       <Confetti />
-      <Alert sx={{ p: 5 }} severity="success">
-        <AlertTitle>
-          <h1>Password Reset Request</h1>
-        </AlertTitle>
-        <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          {message}
-        </Typography>
-        <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          You should receive a reset link shortly. Click on the link to get
-          started.
-        </Typography>
-      </Alert>
+      <SuccessDisplay
+        title={"Password Reset"}
+        message={
+          "You have a new password. Sign In and continue from where you left off"
+        }
+        ctaMessage="Sign In"
+        ctaUrl="/signin"
+      />
     </>
   );
-}
-
-async function processSubmission(
-  data: ResetPasswordInput,
-  setProcessing: Dispatch<SetStateAction<boolean>>,
-  setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>,
-  setIsFinished: Dispatch<SetStateAction<boolean>>,
-  setMessage: Dispatch<SetStateAction<string>>
-) {
-  setProcessing(true);
-
-  const request = await fetch("/api/identity/password-reset", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      password: data.password,
-      password_conf: data.password_conf,
-    }),
-  });
-
-  const response = await request.json();
-  setProcessing(false);
-
-  if (response.code !== 200) {
-    return setResponseErrors(response.errors);
-  }
-
-  setIsFinished(true);
-  setMessage(response.message);
 }
