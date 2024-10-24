@@ -10,6 +10,7 @@ from identity.permissions import GuestOnlyPermission
 from identity.serializers import (
     PasswordResetSerializer,
 )
+from identity.services import UserService
 from identity.services.verification_token_service import VerificationTokenService
 
 
@@ -19,24 +20,26 @@ class PasswordResetView(APIView):
     def patch(self, request):
         serializer = PasswordResetSerializer(data=request.data)
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
-            token = serializer.validated_data["token"]
 
-            v_type = VerificationTypes.FORGOT_PASSWORD_VERIFICATION.value
-            vt_service = VerificationTokenService(type=v_type)
+            vt_service = VerificationTokenService(
+                type=VerificationTypes.FORGOT_PASSWORD_VERIFICATION.value
+            )
 
-            token_validation = vt_service.validate(token)
+            token_validation = vt_service.validate(serializer.validated_data["token"])
             if (
                 isinstance(token_validation, VerificationToken)
                 and token_validation.user
             ):
-                # todo ::: TBC
-                # todo ::: destroy token after validation
-                vt_service.destroy(token)
-                ...
-                # return Response(
-                #     {"token": MessageBag.DATA_IS_VALID.format(data="Token")},
-                #     status=status.HTTP_200_OK,
-                # )
+                vt_service.destroy(serializer.validated_data["token"])
+
+                UserService.update_password(
+                    user=token_validation.user,
+                    password=serializer.validated_data["password"],
+                )
+                return Response(
+                    {"reset": MessageBag.CREATED_SUCCESSFULLY.format(data="Password")},
+                    status=status.HTTP_200_OK,
+                )
 
             return Response(
                 {"token_error": token_validation},
