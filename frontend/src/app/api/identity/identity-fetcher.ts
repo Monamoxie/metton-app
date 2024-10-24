@@ -1,7 +1,31 @@
 import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
+import { SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 
-// ********** VERIFY EMAIL FETCHER ********** //
+//********** SIGN UP ********** //
+export async function signup({
+  email,
+  password1,
+  password2,
+}: SignupInputs): Promise<ApiResponse> {
+  try {
+    const request = await fetch(process.env.API_BASE_URL + "/identity/signup", {
+      method: "POST",
+      headers: getDefaultApiHeader(),
+      body: JSON.stringify({
+        email,
+        password1,
+        password2,
+      }),
+    });
+
+    return await request.json();
+  } catch (error: any) {
+    return ApiExceptionHandler(error.message);
+  }
+}
+
+// ********** VERIFY EMAIL ********** //
 export async function verifyToken(
   token: VerifyTokenProps
 ): Promise<ApiResponse> {
@@ -23,7 +47,7 @@ export async function verifyToken(
   }
 }
 
-// ********** FORGOT PASSWORD FETCHER ********** //
+// ********** FORGOT PASSWORD ********** //
 export async function forgotPassword(email: string): Promise<ApiResponse> {
   try {
     const request = await fetch(
@@ -43,7 +67,7 @@ export async function forgotPassword(email: string): Promise<ApiResponse> {
   }
 }
 
-// ********** VERIFY PASSWORD RESET TOKEN FETCHER ********** //
+// ********** VERIFY PASSWORD RESET TOKEN ********** //
 export async function verifyPasswordResetToken(
   token: string | undefined
 ): Promise<ApiResponse> {
@@ -65,7 +89,7 @@ export async function verifyPasswordResetToken(
   }
 }
 
-// ********** RESET PASSWORD FETCHER ********** //
+// **********  PASSWORD RESET ********** //
 export async function passwordReset({
   token,
   password,
