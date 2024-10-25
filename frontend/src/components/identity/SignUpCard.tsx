@@ -28,6 +28,8 @@ import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
 import { SignupInputs } from "@/types/identity";
 import { localApiRequest } from "@/utils/utils";
+import ButtonContent from "../ButtonContent";
+import SuccessDisplay from "../SuccessDisplay";
 
 export default function SignUpCard() {
   const t = useTranslations();
@@ -128,7 +130,10 @@ export default function SignUpCard() {
               variant="contained"
               disabled={processing}
             >
-              {getButtonContent(processing)}
+              <ButtonContent
+                processing={processing}
+                defaultText={"Create Account"}
+              />
             </Button>
           </Box>
           <Link href="/identity/signin" component={NextLink}>
@@ -140,55 +145,17 @@ export default function SignUpCard() {
   );
 }
 
-function getButtonContent(processing: boolean): JSX.Element | string {
-  if (processing) {
-    return <CircularProgress size={22} sx={{ color: "#fff" }} />;
-  }
-  return "Create Account";
-}
-
 function getCompletedContent(): JSX.Element {
   return (
     <>
       <Confetti />
-      <Alert sx={{ p: 5 }} severity="success">
-        <AlertTitle>
-          <h1>Welcome to Metton!</h1>
-        </AlertTitle>
-        <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          Your account has been successfully created.
-        </Typography>
-        <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          A confirmation link has just been sent to your email address. <br />
-          Click on the confirmation link to get started.
-        </Typography>
-      </Alert>
+      <SuccessDisplay
+        title={"Welcome to Metton!"}
+        message={"Your account has been successfully created!"}
+      >
+        A confirmation link has just been sent to your email address. Click on
+        the confirmation link to get started.
+      </SuccessDisplay>
     </>
   );
-}
-
-async function processSubmission(
-  data: SignupInputs,
-  setProcessing: Dispatch<SetStateAction<boolean>>,
-  setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>,
-  setIsFinished: Dispatch<SetStateAction<boolean>>
-) {
-  setProcessing(true);
-
-  const request = await fetch("/api/identity/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: data.email,
-      password1: data.password1,
-      password2: data.password2,
-    }),
-  });
-
-  const response = await request.json();
-  setProcessing(false);
-
-  !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
 }

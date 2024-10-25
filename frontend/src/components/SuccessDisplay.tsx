@@ -9,6 +9,7 @@ interface ctaButtonProps {
 interface SuccessDisplayProps extends ctaButtonProps {
   title?: string;
   message?: string;
+  children?: React.ReactNode;
 }
 
 export default function SuccessDisplay(props: SuccessDisplayProps) {
@@ -20,10 +21,18 @@ export default function SuccessDisplay(props: SuccessDisplayProps) {
             {props.title}
           </Typography>
         </AlertTitle>
-        <Typography sx={{ pt: 2, pb: 4 }} variant="subtitle1" component="p">
+
+        <Typography sx={{ pt: 2, pb: 4 }} variant="h5" component="h5">
           {props.message}
         </Typography>
-        <CTAButton ctaUrl={props.ctaUrl} ctaMessage={props.ctaMessage} />
+
+        {props.children && (
+          <Typography component="p">{props.children}</Typography>
+        )}
+
+        {props.ctaMessage && (
+          <CTAButton ctaUrl={props.ctaUrl} ctaMessage={props.ctaMessage} />
+        )}
       </Alert>
     </Box>
   );
