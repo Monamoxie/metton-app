@@ -3,16 +3,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import {
-  Alert,
-  AlertTitle,
-  Card,
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  Link,
-  Stack,
-} from "@mui/material";
+import { Card, Checkbox, FormControlLabel, Link, Stack } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -25,12 +16,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import Confetti from "../magicui/confetti";
-import { Dispatch, SetStateAction } from "react";
-import NextLink from "next/link";
-import { useRouter } from "next/navigation";
 
-type SignInInputs = z.infer<ReturnType<typeof signInSchema>>;
+import NextLink from "next/link";
+import { redirect, useRouter } from "next/navigation";
+import { localApiRequest } from "@/utils/utils";
+import ButtonContent from "../ButtonContent";
+import { SigninInputs } from "@/types/identity";
 
 export default function SignInCard() {
   const [responseErrors, setResponseErrors] = useState<{
@@ -45,24 +36,26 @@ export default function SignInCard() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInInputs>({
+  } = useForm<SigninInputs>({
     resolver: zodResolver(signInSchema(t)),
   });
 
-  const onSubmit: SubmitHandler<SignInInputs> = async (data) => {
-    await processSubmission(
-      data,
+  const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
+    await localApiRequest({
+      url: "/api/identity/signin",
+      method: "POST",
+      body: data,
       setProcessing,
       setResponseErrors,
-      setIsFinished
-    );
+      setIsFinished,
+    });
   };
 
   const router = useRouter();
 
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
-      {isFinished && getCompletedContent()}
+      {isFinished && redirect("/dashboard ")}
 
       {!isFinished && (
         <Card className="identity-form-card">
@@ -117,7 +110,9 @@ export default function SignInCard() {
                 sx={{ ariaLabel: "password" }}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={
+                  <Checkbox {...register("remember_me")} color="primary" />
+                }
                 label="Remember me"
               />
             </FormControl>
@@ -127,7 +122,7 @@ export default function SignInCard() {
               variant="contained"
               disabled={processing}
             >
-              {getButtonContent(processing)}
+              <ButtonContent processing={processing} defaultText="Sign In" />
             </Button>
 
             <Link
@@ -143,56 +138,4 @@ export default function SignInCard() {
       )}
     </Stack>
   );
-}
-
-function getButtonContent(processing: boolean): JSX.Element | string {
-  if (processing) {
-    return <CircularProgress size={22} sx={{ color: "#fff" }} />;
-  }
-  return "Sign In";
-}
-
-function getCompletedContent(): JSX.Element {
-  return (
-    <>
-      <Confetti />
-      <Alert sx={{ p: 5 }} severity="success">
-        <AlertTitle>
-          <h1>Welcome to Metton!</h1>
-        </AlertTitle>
-        <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          Your account has been successfully created.
-        </Typography>
-        <Typography sx={{ pt: 2 }} variant="subtitle1" component="p">
-          A confirmation link has just been sent to your email address. <br />
-          Click on the confirmation link to get started.
-        </Typography>
-      </Alert>
-    </>
-  );
-}
-
-async function processSubmission(
-  data: SignInInputs,
-  setProcessing: Dispatch<SetStateAction<boolean>>,
-  setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>,
-  setIsFinished: Dispatch<SetStateAction<boolean>>
-) {
-  setProcessing(true);
-
-  const request = await fetch("/api/identity/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: data.email,
-      password: data.password,
-    }),
-  });
-
-  const response = await request.json();
-  setProcessing(false);
-
-  !request.ok ? setResponseErrors(response.errors) : setIsFinished(true);
 }

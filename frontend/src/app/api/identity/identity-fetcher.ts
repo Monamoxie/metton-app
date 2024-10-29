@@ -2,7 +2,7 @@ import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
 import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 import "server-only";
-import { cookies } from "next/headers";
+import { storeToken } from "@/utils/data-access";
 
 //********** SIGN UP ********** //
 export async function signup({
@@ -46,19 +46,9 @@ export async function signin({
 
     const response = await request.json();
 
-    console.log(response, "AAAAAA");
-
-    if (response.code == 200) {
+    if (response.code === 200) {
       const { token, expiry } = response.data.token;
-
-      const expiresAt = new Date(expiry);
-      const session = await cookies().set("token", token, {
-        httpOnly: true,
-        secure: true,
-        expires: expiresAt,
-        sameSite: "lax",
-        path: "/",
-      });
+      await storeToken(token, expiry);
     }
 
     return response;
