@@ -1,6 +1,8 @@
 import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
-import { SignupInputs } from "@/types/identity";
+import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
+import "server-only";
+import { cookies } from "next/headers";
 
 //********** SIGN UP ********** //
 export async function signup({
@@ -20,6 +22,46 @@ export async function signup({
     });
 
     return await request.json();
+  } catch (error: any) {
+    return ApiExceptionHandler(error.message);
+  }
+}
+
+//********** SIGN IN ********** //
+export async function signin({
+  email,
+  password,
+  remember_me,
+}: SigninInputs): Promise<ApiResponse> {
+  try {
+    const request = await fetch(process.env.API_BASE_URL + "/identity/signin", {
+      method: "POST",
+      headers: getDefaultApiHeader(),
+      body: JSON.stringify({
+        email,
+        password,
+        remember_me,
+      }),
+    });
+
+    const response = await request.json();
+
+    console.log(response, "AAAAAA");
+
+    if (response.code == 200) {
+      const { token, expiry } = response.data.token;
+
+      const expiresAt = new Date(expiry);
+      const session = await cookies().set("token", token, {
+        httpOnly: true,
+        secure: true,
+        expires: expiresAt,
+        sameSite: "lax",
+        path: "/",
+      });
+    }
+
+    return response;
   } catch (error: any) {
     return ApiExceptionHandler(error.message);
   }
