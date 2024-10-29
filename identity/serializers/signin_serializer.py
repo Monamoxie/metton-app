@@ -22,7 +22,6 @@ class SignInSerializer(serializers.ModelSerializer):
         error_messages={
             "required": MessageBag.FIELD_IS_REQUIRED.format(field="password")
         },
-        validators=[validate_password],
     )
 
     remember_me = serializers.BooleanField(default=False, required=False)
