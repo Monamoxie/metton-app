@@ -2,6 +2,7 @@ import { ApiResponse } from "@/types/api";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Dispatch, SetStateAction } from "react";
+import { HttpMethods, LocalApiRequestProps } from "@/types/api";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,17 +25,6 @@ export function getDefaultApiHeader(): HeadersInit {
   };
 }
 
-type Method = "POST" | "GET" | "PATCH" | "PUT" | "DELETE";
-interface localApiRequestProps {
-  url: string;
-  method: Method;
-  body: object | null;
-  setProcessing: Dispatch<SetStateAction<boolean>>;
-  setResponseErrors: Dispatch<SetStateAction<{ [key: string]: string[] }>>;
-  setIsFinished: Dispatch<SetStateAction<boolean>>;
-  setMessage?: Dispatch<SetStateAction<string>>;
-}
-
 export async function localApiRequest<T>({
   url,
   method,
@@ -43,7 +33,7 @@ export async function localApiRequest<T>({
   setResponseErrors,
   setIsFinished,
   setMessage,
-}: localApiRequestProps): Promise<T | null | void> {
+}: LocalApiRequestProps): Promise<T | null | void> {
   setProcessing(true);
 
   try {
