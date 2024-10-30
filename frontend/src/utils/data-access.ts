@@ -8,18 +8,17 @@ export const verifyToken = cache(async () => {
   const token = (await cookies()).get("bearer_token")?.value;
 
   if (!token) {
-    redirect("/login");
+    redirect("/identity/signin");
   }
 
   return { isAuth: true, token };
 });
 
 export const storeToken = async (token: string, expiry: string) => {
-  const expiresAt = new Date(expiry);
   await cookies().set("bearer_token", token, {
     httpOnly: true,
     secure: true,
-    expires: expiresAt,
+    expires: new Date(expiry),
     sameSite: "lax",
     path: "/",
   });
