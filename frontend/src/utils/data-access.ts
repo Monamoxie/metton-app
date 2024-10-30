@@ -6,12 +6,8 @@ import { redirect } from "next/navigation";
 
 export const verifyToken = cache(async () => {
   const token = (await cookies()).get("bearer_token")?.value;
-
-  if (!token) {
-    redirect("/identity/signin");
-  }
-
-  return { isAuth: true, token };
+ 
+  return !!token;
 });
 
 export const storeToken = async (token: string, expiry: string) => {
