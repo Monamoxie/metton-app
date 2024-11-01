@@ -9,5 +9,11 @@ export default function defaultTheme(mode: PaletteMode): ThemeOptions {
       mode,
       ...(mode === "light" ? lightPalette : darkPalette),
     },
+    transitions: {
+      duration: {
+        enteringScreen: 225,
+        leavingScreen: 195,
+      },
+    },
   };
 }
