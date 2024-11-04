@@ -6,6 +6,7 @@ from identity.views.api import (
     ForgotPasswordView,
     PasswordResetVerificationView,
     PasswordResetView,
+    ResendEmailVerificationView,
 )
 
 
@@ -17,4 +18,9 @@ urlpatterns = [
     path("forgot-password", ForgotPasswordView.as_view()),
     path("verification/password-reset", PasswordResetVerificationView.as_view()),
     path("password-reset", PasswordResetView.as_view()),
+    path(
+        "verification/email/resend",
+        ResendEmailVerificationView().as_view(),
+        name="resend-email-verification",
+    ),
 ]
