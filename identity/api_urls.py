@@ -7,6 +7,7 @@ from identity.views.api import (
     PasswordResetVerificationView,
     PasswordResetView,
     ResendEmailVerificationView,
+    PasswordUpdateView,
 )
 from identity.views.api.user_profile_view import UserProfileView
 
@@ -29,6 +30,11 @@ urlpatterns = [
     path(
         "user/profile",
         UserProfileView().as_view(),
+        name="user",
+    ),
+    path(
+        "user/password-update",
+        PasswordUpdateView().as_view(),
         name="user",
     ),
 ]
