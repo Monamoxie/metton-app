@@ -1,3 +1,5 @@
+from functools import partial
+from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.response import Response
 
@@ -13,7 +15,9 @@ class UserProfileView(RetrieveUpdateAPIView):
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
 
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        self.perform_update(serializer)
         return Response(serializer.data)
