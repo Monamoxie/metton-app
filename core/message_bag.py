@@ -34,3 +34,4 @@ class MessageBag:
 
     # Authentication based messages
     INVALID_SIGNIN_CREDENTIALS = _("Invalid email or password")
+    INVALID_PASSWORD = _("Invalid password")
