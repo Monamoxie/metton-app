@@ -68,8 +68,8 @@ class User(AbstractUser):
     )
     public_id = models.CharField("public_id", max_length=190, blank=True, unique=True)
 
-    height_field = models.IntegerField(default=180)
-    width_field = models.IntegerField(default=180)
+    height_field = models.IntegerField(default=180, null=True, blank=True)
+    width_field = models.IntegerField(default=180, null=True, blank=True)
     email_verified = models.BooleanField(default=False, blank=False, null=False)
     email_verified_at = models.DateTimeField(blank=True, null=True)
 
