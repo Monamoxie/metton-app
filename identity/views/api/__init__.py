@@ -5,3 +5,4 @@ from .forgot_password_view import ForgotPasswordView
 from .password_reset_verification_view import PasswordResetVerificationView
 from .password_reset_view import PasswordResetView
 from .resend_email_verification_view import ResendEmailVerificationView
+from .password_update_view import PasswordUpdateView
