@@ -13,7 +13,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
+import useColorMode from "@/hooks/use-color-mode";
 
+import ToggleColorMode from "@/components/ToggleColorMode";
 interface TopBarProps {
   handleSidebarToggle: () => void;
 }
@@ -30,6 +32,8 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
   const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
     setNotificationAnchor(event.currentTarget);
   };
+
+  const { mode, toggleColorMode } = useColorMode();
 
   return (
     <AppBar
@@ -49,6 +53,12 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           My Portfolio
         </Typography>
+
+        <ToggleColorMode
+          data-screenshot="toggle-mode"
+          mode={mode}
+          toggleColorMode={toggleColorMode}
+        />
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton color="inherit" onClick={handleNotificationClick}>
