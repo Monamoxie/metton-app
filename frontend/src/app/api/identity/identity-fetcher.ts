@@ -2,7 +2,7 @@ import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
 import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 import "server-only";
-import { storeToken } from "@/utils/data-access";
+import { getAuthApiHeader, storeToken } from "@/utils/data-access";
 
 //********** SIGN UP ********** //
 export async function signup({
@@ -138,6 +138,23 @@ export async function passwordReset({
           password,
           password_confirmation,
         }),
+      }
+    );
+
+    return await request.json();
+  } catch (error: any) {
+    return ApiExceptionHandler(error.message);
+  }
+}
+
+// ********** GET USER PROFILE ********** //
+export async function getUserProfile(): Promise<ApiResponse> {
+  try {
+    const request = await fetch(
+      process.env.API_BASE_URL + "/identity/user/profile",
+      {
+        method: "GET",
+        headers: await getAuthApiHeader(),
       }
     );
 
