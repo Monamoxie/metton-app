@@ -2,7 +2,7 @@ import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
 import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 import "server-only";
-import { getAuthApiHeader, storeToken } from "@/utils/data-access";
+import { getAuthApiHeader, storeToken } from "@/data/cookie";
 
 //********** SIGN UP ********** //
 export async function signup({

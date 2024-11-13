@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { getDefaultApiHeader } from "./utils";
+import { getDefaultApiHeader } from "../utils/utils";
 
 export const verifyToken = async () => {
   const token = (await cookies()).get("bearer_token")?.value;
@@ -34,6 +34,6 @@ export async function getAuthApiHeader(): Promise<HeadersInit> {
 
   return {
     ...getDefaultApiHeader(),
-    Authorization: `Bearer ${authToken}`,
+    Authorization: `Token ${authToken}`,
   };
 }

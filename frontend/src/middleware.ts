@@ -1,4 +1,4 @@
-import { verifyToken } from "@/utils/data-access";
+import { verifyToken } from "@/data/cookie";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
