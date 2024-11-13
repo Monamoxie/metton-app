@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { forgotPassword } from "@/app/api/identity/identity-fetcher";
+import { forgotPassword } from "@/data/outbound/identity-fetcher";
 
 export async function POST(request: Request) {
   const body = await request.json();

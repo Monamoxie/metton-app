@@ -1,4 +1,4 @@
-import { verifyPasswordResetToken } from "@/app/api/identity/identity-fetcher";
+import { verifyPasswordResetToken } from "@/data/outbound/identity-fetcher";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PasswordResetCard from "@/components/identity/PasswordResetCard";
 import SuccessDisplay from "@/components/SuccessDisplay";

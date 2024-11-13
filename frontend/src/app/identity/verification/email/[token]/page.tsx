@@ -1,4 +1,4 @@
-import { verifyToken } from "@/app/api/identity/identity-fetcher";
+import { verifyToken } from "@/data/outbound/identity-fetcher";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import SuccessDisplay from "@/components/SuccessDisplay";
 import { Card, Container } from "@mui/material";

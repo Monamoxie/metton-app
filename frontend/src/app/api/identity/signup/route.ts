@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { setCookie } from "cookies-next";
 import { SignupInputs } from "@/types/identity";
-import { signup } from "@/app/api/identity/identity-fetcher";
+import { signup } from "@/data/outbound/identity-fetcher";
 
 export async function POST(request: Request) {
   const body: SignupInputs = await request.json();
