@@ -25,7 +25,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return NextResponse.next();
+  const headers = new Headers(request.headers);
+  headers.set("x-current-path", request.nextUrl.pathname);
+
+  return NextResponse.next({ headers });
 }
 
 export const config = {
