@@ -1,7 +1,9 @@
 import "server-only";
 
+import { AuthApiHeaderResponse } from "@/types/api";
 import { cookies } from "next/headers";
 import { getDefaultApiHeader } from "../utils/utils";
+import { AxiosHeaders } from "axios";
 
 export const verifyToken = async () => {
   const token = (await cookies()).get("bearer_token")?.value;
@@ -25,7 +27,7 @@ export const getToken = async (): Promise<string> => {
   return (await cookies()).get("bearer_token")?.value || "";
 };
 
-export async function getAuthApiHeader(): Promise<HeadersInit> {
+export async function getAuthApiHeader(): Promise<AuthApiHeaderResponse> {
   const authToken = await getToken();
 
   if (!authToken) {
@@ -33,7 +35,7 @@ export async function getAuthApiHeader(): Promise<HeadersInit> {
   }
 
   return {
-    ...getDefaultApiHeader(),
-    Authorization: `Token ${authToken}`,
+    ...(getDefaultApiHeader() as AuthApiHeaderResponse),
+    Authorization: `Tokenkjlk ${authToken}`,
   };
 }

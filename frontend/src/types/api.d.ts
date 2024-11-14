@@ -28,3 +28,7 @@ export interface LocalApiRequestProps {
   setIsFinished: Dispatch<SetStateAction<boolean>>;
   setMessage?: Dispatch<SetStateAction<string>>;
 }
+
+export interface AuthApiHeaderResponse {
+  [key: string]: string;  
+}

@@ -3,6 +3,7 @@ import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 import "server-only";
 import { getAuthApiHeader, storeToken } from "@/data/cookie";
+import api from "@/utils/axios";
 
 //********** SIGN UP ********** //
 export async function signup({
@@ -150,15 +151,11 @@ export async function passwordReset({
 // ********** GET USER PROFILE ********** //
 export async function getUserProfile(): Promise<ApiResponse> {
   try {
-    const request = await fetch(
-      process.env.API_BASE_URL + "/identity/user/profile",
-      {
-        method: "GET",
-        headers: await getAuthApiHeader(),
-      }
-    );
+    const response = await api.get("/identity/user/profile", {
+      headers: await getAuthApiHeader(),
+    });
 
-    return await request.json();
+    return response.data;
   } catch (error: any) {
     return ApiExceptionHandler(error.message);
   }
