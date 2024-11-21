@@ -4,7 +4,7 @@ type ErrorsField = {
 
 export interface ApiResponse {
   message?: string;
-  data: Null | Array;
+  data: Null | Array | object;
   errors: Null | ErrorsField;
   code: Integer;
 }
@@ -30,5 +30,5 @@ export interface LocalApiRequestProps {
 }
 
 export interface AuthApiHeaderResponse {
-  [key: string]: string;  
+  [key: string]: string;
 }
