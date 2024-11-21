@@ -36,6 +36,6 @@ export async function getAuthApiHeader(): Promise<AuthApiHeaderResponse> {
 
   return {
     ...(getDefaultApiHeader() as AuthApiHeaderResponse),
-    Authorization: `Tokenkjlk ${authToken}`,
+    Authorization: `Token ${authToken}`,
   };
 }
