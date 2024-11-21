@@ -2,15 +2,19 @@
 
 import React from "react";
 import { Box, Skeleton } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { PROFILE_CARD_CSS } from "@/styles/modules/identity.css";
 
 export default function ProfileCardSkeleton() {
+  const theme = useTheme();
+
   return (
-    <Box sx={(theme) => pageWrapper(theme)}>
+    <Box sx={PROFILE_CARD_CSS(theme)}>
       {/* Header Section */}
-      <Box sx={pageHeader}>
+      <Box className="pf-header">
         <Skeleton variant="circular" width={48} height={48} />
         <Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box className="pf-name">
             <Skeleton variant="text" width="70%" height={20} />
           </Box>
           <Skeleton variant="text" width="50%" height={16} />
@@ -118,21 +122,3 @@ export default function ProfileCardSkeleton() {
     </Box>
   );
 }
-
-// ********************* STYLES *********************
-const pageWrapper = (theme: any) =>
-  ({
-    width: "100%",
-    minHeight: "100vh",
-    color: "text.primary",
-    bgcolor: "background.default",
-    padding: { xs: 0, md: 4 },
-  }) as const;
-
-const pageHeader = {
-  display: "flex",
-  alignItems: "center",
-  gap: 2,
-  mb: 4,
-  p: 3,
-} as const;

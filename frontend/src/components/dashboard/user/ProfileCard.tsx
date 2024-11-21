@@ -4,18 +4,25 @@ import React from "react";
 import { Box, Typography, TextField, IconButton } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import { Theme } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { PROFILE_CARD_CSS } from "@/styles/modules/identity.css";
+import { UserProfile } from "@/types/identity";
 
-export default function ProfileCard() {
+export default function ProfileCard(user: UserProfile) {
+  const theme = useTheme();
   return (
-    <Box sx={(theme) => pageWrapper(theme)}>
+    <Box sx={PROFILE_CARD_CSS(theme)}>
       {/* Header Section */}
-      <Box sx={pageHeader}>
-        <Box component="img" src="/path-to-logo.png" sx={pageHeaderImg} />
+      <Box className="pf-header">
+        <Box
+          component="img"
+          src="/path-to-logo.png"
+          className="pf-header-img"
+        />
         <Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="h6">Sisyphus Ventures</Typography>
-            <VerifiedIcon sx={{ color: "#d6ff99", fontSize: 20 }} />
+          <Box className="pf-name">
+            <Typography variant="h6">{user.name}</Typography>
+            <VerifiedIcon className="pf-verified-icon" />
           </Box>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             untitledui.com/sisyphus
@@ -203,28 +210,3 @@ export default function ProfileCard() {
     </Box>
   );
 }
-
-// ********************* STYLES *********************
-const pageWrapper = (theme: Theme) =>
-  ({
-    width: "100%",
-    minHeight: "100vh",
-    color: "text.primary",
-    bgcolor: "background.default",
-    padding: { xs: 0, md: 4 },
-  }) as const;
-
-const pageHeader = {
-  display: "flex",
-  alignItems: "center",
-  gap: 2,
-  mb: 4,
-  p: 3,
-} as const;
-
-const pageHeaderImg = {
-  width: 48,
-  height: 48,
-  borderRadius: 2,
-  bgcolor: "#d6ff99",
-};
