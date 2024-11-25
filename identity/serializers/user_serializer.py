@@ -2,7 +2,7 @@ from rest_framework import serializers
 from core.message_bag import MessageBag
 from dashboard.models.user import User
 from dashboard.enums import ImageUploadTypes
-
+from core import settings
 
 class UserSerializer(serializers.ModelSerializer):
     name = serializers.CharField(
@@ -71,3 +71,8 @@ class UserSerializer(serializers.ModelSerializer):
             instance.save()
 
         return super().update(instance, validated_data)
+
+    def get_profile_photo(self, obj):
+        if obj.profile_photo:
+            return f"{settings.BASE_URL}{obj.profile_photo.url}"
+        return None
