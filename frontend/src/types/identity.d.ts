@@ -18,3 +18,8 @@ export interface UserProfile {
   height_field: null | Integer;
   width_field: null | Integer;
 }
+
+export interface UserProfileCardProps {
+  user: UserProfile;
+  base_url: string | null;
+}

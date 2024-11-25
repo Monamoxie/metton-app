@@ -59,3 +59,10 @@ export async function localApiRequest<T>({
     return setResponseErrors({ generic: ["Network error"] });
   }
 }
+
+export function getUserPublicProfileUrl(
+  public_id: string,
+  base_url: string | null
+) {
+  return base_url + "/meet/" + public_id;
+}
