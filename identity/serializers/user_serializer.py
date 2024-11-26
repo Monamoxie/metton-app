@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
     position = serializers.CharField(required=False)
     profile_summary = serializers.CharField(required=False)
     profile_photo = serializers.ImageField(
-        required=False, allow_null=True, use_url=True
+        required=False, allow_null=True, use_url=False
     )
     remove_profile_photo = serializers.BooleanField(required=False, write_only=True)
 
@@ -30,8 +30,6 @@ class UserSerializer(serializers.ModelSerializer):
             "profile_summary",
             "profile_photo",
             "date_joined",
-            "height_field",
-            "width_field",
         ]
         read_only_fields = [
             "id",
@@ -72,7 +70,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
-    def get_profile_photo(self, obj):
-        if obj.profile_photo:
-            return f"{settings.BASE_URL}{obj.profile_photo.url}"
-        return None
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if instance.profile_photo:
+            representation["profile_photo"] = (
+                f"{settings.MEDIA_URL}{instance.profile_photo.name}"
+            )
+        return representation
