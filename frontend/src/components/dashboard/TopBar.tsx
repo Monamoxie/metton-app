@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import useColorMode from "@/hooks/use-color-mode";
+import Link from "next/link";
 
 import ToggleColorMode from "@/components/ToggleColorMode";
 interface TopBarProps {
@@ -89,7 +90,9 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
           open={Boolean(anchorEl)}
           onClose={() => setAnchorEl(null)}
         >
-          <MenuItem>Update Profile</MenuItem>
+          <MenuItem>
+            <Link href="/dashboard/user/profile">Update Profile</Link>
+          </MenuItem>
           <MenuItem>Change Password</MenuItem>
           <MenuItem>Settings</MenuItem>
           <MenuItem sx={{ color: "error.main" }}>Logout</MenuItem>

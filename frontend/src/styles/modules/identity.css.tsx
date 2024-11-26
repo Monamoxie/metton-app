@@ -125,3 +125,61 @@ export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
     justifyContent: "space-between",
   },
 });
+
+export const PROFILE_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
+  width: "100%",
+  minHeight: "100vh",
+  color: "text.primary",
+  bgcolor: "background.default",
+  padding: { xs: 0, md: 4 },
+
+  "& .pf-header ": {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    mb: 4,
+    p: 3,
+  },
+
+  "& .pf-header-img": {
+    width: 48,
+    height: 48,
+    borderRadius: 2,
+    bgcolor: "#d6ff99",
+  },
+
+  "& .pf-name": {
+    display: "flex",
+    alignItems: "center",
+    gap: 1,
+  },
+
+  "& .pf-verified-icon": {
+    color: "#d6ff99",
+    fontSize: 20,
+  },
+
+  "& .pf-upload-profile-photo-wrapper": {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    mb: 2,
+  },
+
+  "& .pf-upload-profile-photo-preview": {
+    width: 48,
+    height: 48,
+    borderRadius: 2,
+    bgcolor: "#d6ff99",
+  },
+
+  "& .pf-upload-profile-photo-dropper": {
+    flex: 1,
+    p: 3,
+    border: "1px dashed",
+    borderColor: "divider",
+    borderRadius: 1,
+    textAlign: "center",
+    bgcolor: "background.paper",
+  },
+});

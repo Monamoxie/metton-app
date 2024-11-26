@@ -1,14 +1,16 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, TextField, IconButton } from "@mui/material";
+import { Box, Typography, TextField, IconButton, Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { useTheme } from "@mui/material";
 import { PROFILE_CARD_CSS } from "@/styles/modules/identity.css";
-import { UserProfile } from "@/types/identity";
+import { UserProfileCardProps } from "@/types/identity";
+import { getUserPublicProfileUrl } from "@/utils/utils";
+import ButtonContent from "@/components/ButtonContent";
 
-export default function ProfileCard(user: UserProfile) {
+export default function ProfileCard({ user, base_url }: UserProfileCardProps) {
   const theme = useTheme();
   return (
     <Box sx={PROFILE_CARD_CSS(theme)}>
@@ -16,7 +18,7 @@ export default function ProfileCard(user: UserProfile) {
       <Box className="pf-header">
         <Box
           component="img"
-          src="/path-to-logo.png"
+          src={user.profile_photo as string}
           className="pf-header-img"
         />
         <Box>
@@ -25,81 +27,44 @@ export default function ProfileCard(user: UserProfile) {
             <VerifiedIcon className="pf-verified-icon" />
           </Box>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            untitledui.com/sisyphus
+            {user.position}
           </Typography>
         </Box>
       </Box>
 
       {/* Main Content */}
       <Box sx={{ p: 3 }}>
-        <Typography variant="h6" gutterBottom>
-          Company profile
-        </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 4 }}>
-          Update your company photo and details here.
-        </Typography>
-
         {/* Public Profile */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="subtitle2" gutterBottom>
-            Public profile
-          </Typography>
-          <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}>
-            This will be displayed on your profile.
+            Profile Link
           </Typography>
           <TextField
             fullWidth
-            value="Sisyphus Ventures"
+            value={getUserPublicProfileUrl(user.public_id, base_url)}
             variant="outlined"
             size="small"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                bgcolor: "background.paper",
-                borderRadius: 1,
-              },
-            }}
+            disabled={true}
           />
         </Box>
 
-        {/* Company Logo */}
+        {/* Profile Photo */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="subtitle2" gutterBottom>
-            Company logo
+            Update Profile Photo
           </Typography>
-          <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
-            Update your company logo and then choose where you want it to
-            display.
-          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: "text.secondary", mb: 2 }}
+          ></Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              mb: 2,
-            }}
-          >
+          <Box className="pf-upload-profile-photo-wrapper">
             <Box
               component="img"
-              src="/path-to-logo.png"
-              sx={{
-                width: 48,
-                height: 48,
-                borderRadius: 2,
-                bgcolor: "#d6ff99",
-              }}
+              src={user.profile_photo as string}
+              className="pf-upload-profile-photo-preview"
             />
-            <Box
-              sx={{
-                flex: 1,
-                p: 3,
-                border: "1px dashed",
-                borderColor: "divider",
-                borderRadius: 1,
-                textAlign: "center",
-                bgcolor: "background.paper",
-              }}
-            >
+            <Box className="pf-upload-profile-photo-dropper">
               <IconButton>
                 <CloudUploadIcon />
               </IconButton>
@@ -113,100 +78,46 @@ export default function ProfileCard(user: UserProfile) {
           </Box>
         </Box>
 
-        {/* Branding */}
+        {/*  */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="subtitle2" gutterBottom>
-            Branding
+            Company
           </Typography>
-          <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}>
-            Add your logo to reports and emails.
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                p: 2,
-                borderRadius: 1,
-                bgcolor: "background.paper",
-              }}
-            >
-              <Box>
-                <Typography variant="body2">Reports</Typography>
-                <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                  Include my logo in summary reports.
-                </Typography>
-              </Box>
-              <input type="checkbox" checked />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                p: 2,
-                borderRadius: 1,
-                bgcolor: "background.paper",
-              }}
-            >
-              <Box>
-                <Typography variant="body2">Emails</Typography>
-                <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                  Include my logo in customer emails.
-                </Typography>
-              </Box>
-              <input type="checkbox" checked />
-            </Box>
-          </Box>
+          <TextField
+            fullWidth
+            value={user.company}
+            variant="outlined"
+            size="small"
+          />
         </Box>
 
-        {/* Social Profiles */}
-        <Box>
+        <Box sx={{ mb: 4 }}>
           <Typography variant="subtitle2" gutterBottom>
-            Social profiles
+            Position
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <TextField
-              fullWidth
-              placeholder="twitter.com/"
-              value="sisyphusvc"
-              variant="outlined"
-              size="small"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  bgcolor: "background.paper",
-                  borderRadius: 1,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              placeholder="linkedin.com/"
-              variant="outlined"
-              size="small"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  bgcolor: "background.paper",
-                  borderRadius: 1,
-                },
-              }}
-            />
-          </Box>
+          <TextField
+            fullWidth
+            value={user.position}
+            variant="outlined"
+            size="small"
+          />
+        </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="subtitle2" gutterBottom>
+            About
+          </Typography>
+          <TextField
+            fullWidth
+            value={user.profile_summary}
+            variant="outlined"
+          />
         </Box>
       </Box>
+
+      <Button type="submit" variant="contained" disabled={false}>
+        <ButtonContent processing={false} defaultText="Update Profile" />
+      </Button>
     </Box>
   );
 }
