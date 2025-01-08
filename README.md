@@ -51,6 +51,22 @@ This project is currently in alpha stage. More components are continuosly being 
 - `Python` and `Nginx` both share the same static volume
   <br>
 
+## AWS Setup with Terraform
+
+To use this Terraform configuration, you need to set up your AWS credentials and configuration files. Follow these steps:
+
+1. **Create a `terraform.tfvars` file** in .terraform directory of the project, if it doesn't already exist.
+
+2. **Define your AWS configuration and credentials paths** in the `terraform.tfvars` file. For example:
+
+   ```hcl
+   shared_config_files = ["/path/to/your/aws/config"]
+   shared_credentials_files = ["/path/to/your/aws/credentials"]
+   ```
+
+   Replace `/path/to/your/aws/config` and `/path/to/your/aws/credentials` with the actual paths to your AWS configuration and credentials files.
+
+3. **Run Terraform commands** as usual. The provider will automatically use the paths specified in your `terraform.tfvars` file.
 
 ## UI Components
 - Material UI
