@@ -9,8 +9,8 @@ terraform {
 }
 
 provider "aws" {
-  region                    = "us-east-1"
+  region                    = var.aws_region
   shared_config_files       = var.shared_config_files
   shared_credentials_files  = var.shared_credentials_files
-  profile                   = "metton_terraform"
+  profile                   = var.profile
 }
