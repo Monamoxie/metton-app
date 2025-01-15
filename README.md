@@ -62,6 +62,8 @@ To use this Terraform configuration, you need to set up your AWS credentials and
    ```hcl
    shared_config_files = ["/path/to/your/aws/config"]
    shared_credentials_files = ["/path/to/your/aws/credentials"]
+   aws_region = "your-aws-region"
+   profile = "your-credentials-profile-name"
    ```
 
    Replace `/path/to/your/aws/config` and `/path/to/your/aws/credentials` with the actual paths to your AWS configuration and credentials files.
