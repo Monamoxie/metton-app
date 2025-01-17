@@ -41,6 +41,11 @@ module "compute" {
   db_password = var.db_password
 }
 
+module "networking" {
+  source = "./networking"
+  vpc_id = aws_vpc.default.id
+}
+
 module "security" {
   source = "./security"
   vpc_id = aws_vpc.default.id
