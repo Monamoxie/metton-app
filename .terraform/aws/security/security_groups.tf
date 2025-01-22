@@ -132,3 +132,8 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_icmp" {
     cidr_ipv4         = "0.0.0.0/0"
     description       = "Allow ICMP (ping) from anywhere"
 }
+
+output "database_security_group_id" {
+  description = "ID of the database security group"
+  value       = aws_security_group.database.id
+}
