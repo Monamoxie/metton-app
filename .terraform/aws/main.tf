@@ -51,3 +51,18 @@ module "security" {
   vpc_id = aws_vpc.default.id
 }
 
+# Database module
+module "database" {
+  source = "./database"
+  
+  # Database configuration
+  db_name     = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
+  
+  # Network configuration
+  database_security_group_id = module.security.database_security_group_id
+  database_subnet_ids        = module.networking.private_subnet_ids
+  
+  environment = var.environment
+}
