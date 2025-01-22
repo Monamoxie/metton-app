@@ -36,7 +36,7 @@ module "compute" {
   source = "./compute"
   vpc_id = aws_vpc.default.id
   cidr_ipv4_block = aws_vpc.default.cidr_block
-  key_name = module.keypair.key_name
+  key_name = module.security.key_name
   db_username = var.db_username
   db_password = var.db_password
 }
