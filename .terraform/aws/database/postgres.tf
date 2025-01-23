@@ -5,10 +5,9 @@ resource "aws_db_instance" "default" {
     engine               = "postgres"
     engine_version       = "15.4"
     instance_class       = "db.t3.micro"
-    vpc_security_group_ids = [aws_security_group.default.id]
  
     vpc_security_group_ids = [var.security_group_id]
-    db_subnet_group_name   = aws_db_subnet_group.default.name
+    db_subnet_group_name   = var.db_subnet_group
   
     username             = var.db_username
     password             = var.db_password
