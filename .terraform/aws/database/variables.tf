@@ -15,7 +15,7 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "database_security_group_id" {
+variable "security_group_id" {
   description = "ID of the security group for the database"
   type        = string
 }

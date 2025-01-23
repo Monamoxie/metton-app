@@ -61,8 +61,5 @@ module "database" {
   db_password = var.db_password
   
   # Network configuration
-  database_security_group_id = module.security.database_security_group_id
-  database_subnet_ids        = module.networking.private_subnet_ids
-  
-  environment = var.environment
+  database_security_group_id = module.security.security_group_id
 }
