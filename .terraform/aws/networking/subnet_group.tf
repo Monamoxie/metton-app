@@ -10,3 +10,8 @@ resource "aws_db_subnet_group" "default" {
     Name = "db-subnet-group"
   }
 }
+
+output "db_subnet_group" {
+  description = "ID of the database security group"
+  value       = aws_db_subnet_group.default.name
+}
