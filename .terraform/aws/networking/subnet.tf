@@ -29,3 +29,12 @@ resource "aws_subnet" "default_3" {
     Name = "third-subnet"
   }
 }
+
+output "subnet_ids" {
+  description = "subnet IDs"
+  value       = [
+    aws_subnet.default.id,
+    aws_subnet.default_2.id,
+    aws_subnet.default_3.id,
+  ]
+}

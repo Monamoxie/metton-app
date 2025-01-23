@@ -44,6 +44,8 @@ module "compute" {
 module "networking" {
   source = "./networking"
   vpc_id = aws_vpc.default.id
+  security_group_id = module.security.security_group_id
+  subnet_ids = module.security.subnet_ids
 }
 
 module "security" {
