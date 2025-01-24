@@ -11,3 +11,8 @@ variable "subnet ids" {
   description = "subnet ids"
   type        = list(string)
 }
+
+variable "domain_name" {
+  description = "The domain name for Route53 records"
+  type        = string
+}
