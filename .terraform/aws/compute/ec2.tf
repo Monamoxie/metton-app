@@ -19,3 +19,7 @@ resource "aws_instance" "default" {
 output "instance_ip" {
   value = aws_instance.default.public_ip
 }
+
+output "ec2_instance_id" {
+  value = aws_instance.default.id
+}
