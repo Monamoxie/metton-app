@@ -70,3 +70,10 @@ module "database" {
   security_group_id = module.security.security_group_id
   db_subnet_group = module.networking.db_subnet_group
 }
+
+module "storage" {
+  source = "./storage"
+  
+  project_name = var.project_name
+  environment  = var.environment
+}
