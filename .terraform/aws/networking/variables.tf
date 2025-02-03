@@ -26,3 +26,8 @@ variable "ec2_instance_id" {
   description = "Ec2 instance id"
   type        = string
 }
+
+variable "aws_acm_certificate_arn" {
+  description = "ACM cert arn"
+  type = string
+}
