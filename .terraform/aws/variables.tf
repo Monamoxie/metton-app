@@ -38,3 +38,8 @@ variable "shared_credentials_files" {
   description = "Credentials file. Coule be /Users/admin/.aws/credentials or wherever you've created it. Should be grouped by aws profile, and this profile should contain the access key and secret required for terraform to authenticate and access the account"
   type = string
 }
+
+variable "ec2_key_pair_name" {
+  description = "Name of ec2 key pair public file"
+  type = string
+}

@@ -57,6 +57,7 @@ module "security" {
   vpc_id = aws_vpc.default.id
   domain_name = var.domain_name
   domain_alternative_names = var.domain_alternative_names
+  ec2_key_pair_name = var.ec2_key_pair_name
 }
 
 # Database module
