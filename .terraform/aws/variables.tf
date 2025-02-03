@@ -31,15 +31,25 @@ variable "project_name" {
 
 variable "shared_config_files" {
   description = "Path to aws config. Could be /Users/admin/.aws/config or wherever you've created it. Should contain the aws profile and the region"
-  type = string
+  type = list(string)
 }
 
 variable "shared_credentials_files" {
   description = "Credentials file. Coule be /Users/admin/.aws/credentials or wherever you've created it. Should be grouped by aws profile, and this profile should contain the access key and secret required for terraform to authenticate and access the account"
-  type = string
+  type = list(string)
 }
 
 variable "ec2_key_pair_name" {
   description = "Name of ec2 key pair public file"
+  type = string
+}
+
+variable "db_username" {
+  description = "DB username"
+  type = string
+}
+
+variable "db_password" {
+  description = "DB password"
   type = string
 }
