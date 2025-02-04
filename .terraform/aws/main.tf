@@ -39,6 +39,7 @@ module "compute" {
   key_name = module.security.key_name
   db_username = var.db_username
   db_password = var.db_password
+  security_group_id = module.security.security_group_id
 }
 
 module "networking" {
