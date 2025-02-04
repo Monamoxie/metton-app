@@ -38,6 +38,7 @@ module "compute" {
   cidr_ipv4_block = aws_vpc.default.cidr_block
   key_name = module.security.key_name
   security_group_id = module.security.security_group_id
+  subnet_ids = module.networking.subnet_ids
 }
 
 module "networking" {

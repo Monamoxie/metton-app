@@ -8,7 +8,7 @@ resource "aws_instance" "default" {
     instance_type = "t3.micro"
     vpc_security_group_ids = [var.security_group_id]
     key_name       = var.key_name
-    subnet_id      = aws_subnet.default.id
+    subnet_id      = var.subnet_ids[0]
     associate_public_ip_address = true
     
     tags = {

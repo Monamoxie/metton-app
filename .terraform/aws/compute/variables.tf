@@ -16,4 +16,9 @@ variable "key_name" {
 variable "security_group_id" {
   description = "Security group id"
   type = string
+} 
+
+variable "subnet_ids" {
+  description = "Subnet ids"
+  type = list(string)
 }
