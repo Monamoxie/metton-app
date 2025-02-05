@@ -69,16 +69,72 @@ resource "aws_security_group_rule" "inbound_https_ipv4" {
 
 /**
  * ****************************************************************************
- * INCOMING CONNECTION ::: PORT 3306 MYSQL
+ * INCOMING CONNECTION ::: PORT 5432 postgres
  * ****************************************************************************
 */
 
-resource "aws_security_group_rule" "inbound_mysql" {
+resource "aws_security_group_rule" "inbound_postgres" {
     type              = "ingress"
     security_group_id = aws_security_group.default.id
     cidr_blocks       = ["0.0.0.0/0"]
     from_port         = 5432
     to_port           = 5432
+    protocol          = "tcp"
+}
+
+/**
+ * ****************************************************************************
+ * INCOMING CONNECTION ::: PORT 5672 rabbitmq
+ * ****************************************************************************
+*/
+resource "aws_security_group_rule" "inbound_rabbitmq" {
+    type              = "ingress"
+    security_group_id = aws_security_group.default.id
+    cidr_blocks       = ["0.0.0.0/0"]
+    from_port         = 5672
+    to_port           = 5672
+    protocol          = "tcp"
+}
+
+/**
+ * ****************************************************************************
+ * INCOMING CONNECTION ::: PORT 5671 rabbitmq amqp
+ * ****************************************************************************
+*/
+resource "aws_security_group_rule" "inbound_rabbitmq_amqp" {
+    type              = "ingress"
+    security_group_id = aws_security_group.default.id
+    cidr_blocks       = ["0.0.0.0/0"]
+    from_port         = 5671
+    to_port           = 5671
+    protocol          = "tcp"
+}
+
+/**
+ * ****************************************************************************
+ * INCOMING CONNECTION ::: PORT 15672 rabbitmq mgt
+ * ****************************************************************************
+*/
+resource "aws_security_group_rule" "inbound_rabbitmq_mgt" {
+    type              = "ingress"
+    security_group_id = aws_security_group.default.id
+    cidr_blocks       = ["0.0.0.0/0"]
+    from_port         = 15672
+    to_port           = 15672
+    protocol          = "tcp"
+}
+
+/**
+ * ****************************************************************************
+ * INCOMING CONNECTION ::: PORT 2049 NFS
+ * ****************************************************************************
+*/
+resource "aws_security_group_rule" "inbound_nfs" {
+    type              = "ingress"
+    security_group_id = aws_security_group.default.id
+    cidr_blocks       = ["0.0.0.0/0"]
+    from_port         = 2049
+    to_port           = 2049
     protocol          = "tcp"
 }
 
