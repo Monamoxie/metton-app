@@ -42,7 +42,7 @@ resource "aws_vpc_security_group_egress_rule" "outbound_ipv6" {
  * INCOMING CONNECTION ::: PORT 80 IPV4
  * ****************************************************************************
 */
-resource "aws_vpc_security_group_inbound_rule" "inbound_http_ipv4" {
+resource "aws_security_group_rule" "inbound_http_ipv4" {
     security_group_id = aws_security_group.default.id
     cidr_ipv4         = "0.0.0.0/0"
     from_port         = 80
@@ -55,7 +55,7 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_http_ipv4" {
  * INCOMING CONNECTION ::: PORT 80 IPV6
  * ****************************************************************************
 */
-resource "aws_vpc_security_group_inbound_rule" "inbound_http_ipv6" {
+resource "aws_security_group_rule" "inbound_http_ipv6" {
   security_group_id = aws_security_group.default.id
   cidr_ipv6         = "::/0"
   from_port         = 80
@@ -69,7 +69,7 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_http_ipv6" {
  * INCOMING CONNECTION ::: PORT 443 IPV4
  * ****************************************************************************
 */
-resource "aws_vpc_security_group_inbound_rule" "inbound_https_ipv4" {
+resource "aws_security_group_rule" "inbound_https_ipv4" {
     security_group_id = aws_security_group.default.id
     cidr_ipv4         = "0.0.0.0/0"
     from_port         = 443
@@ -82,7 +82,7 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_https_ipv4" {
  * INCOMING CONNECTION ::: PORT 443 IPV6
  * ****************************************************************************
 */
-resource "aws_vpc_security_group_inbound_rule" "inbound_https_ipv6" {
+resource "aws_security_group_rule" "inbound_https_ipv6" {
     security_group_id = aws_security_group.default.id
     cidr_ipv6         = "::/0"
     from_port         = 443
@@ -96,7 +96,7 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_https_ipv6" {
  * ****************************************************************************
 */
 
-resource "aws_vpc_security_group_inbound_rule" "inbound_mysql" {
+resource "aws_security_group_rule" "inbound_mysql" {
     security_group_id = aws_security_group.default.id
     cidr_ipv4         = "0.0.0.0/0"
     from_port         = 3306
@@ -109,7 +109,7 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_mysql" {
  * INCOMING CONNECTION ::: PORT 22 SSH
  * ****************************************************************************
 */
-resource "aws_vpc_security_group_inbound_rule" "inbound_ssh" {
+resource "aws_security_group_rule" "inbound_ssh" {
     security_group_id = aws_security_group.default.id
     from_port         = 22
     to_port           = 22
@@ -124,7 +124,7 @@ resource "aws_vpc_security_group_inbound_rule" "inbound_ssh" {
  * INCOMING CONNECTION ::: PORT -1 ICMP
  * ****************************************************************************
 */
-resource "aws_vpc_security_group_inbound_rule" "inbound_icmp" {
+resource "aws_security_group_rule" "inbound_icmp" {
     security_group_id = aws_security_group.default.id
     from_port         = -1
     to_port           = -1
