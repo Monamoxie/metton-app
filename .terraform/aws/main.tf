@@ -45,7 +45,6 @@ module "networking" {
   source = "./networking"
   vpc_id = aws_vpc.default.id
   security_group_id = module.security.security_group_id
-  subnet_ids = module.security.subnet_ids
   aws_acm_certificate_arn = module.security.aws_acm_certificate_arn
   ec2_instance_id = module.compute.ec2_instance_id
   domain_name = var.domain_name

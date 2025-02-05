@@ -7,10 +7,6 @@ variable "security_group_id" {
   type        = string
 }
 
-variable "subnet_ids" {
-  description = "subnet ids"
-  type        = list(string)
-}
 
 variable "domain_name" {
   description = "The domain name for Route53 records"

@@ -23,7 +23,11 @@ resource "aws_lb" "default" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.security_group_id]
-  subnets            = var.subnet_ids
+  subnets            = [
+    aws_subnet.default.id,
+    aws_subnet.default_2.id,
+    aws_subnet.default_3.id,
+  ]
 }
 
 
