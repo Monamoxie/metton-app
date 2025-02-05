@@ -70,6 +70,17 @@ To use this Terraform configuration, you need to set up your AWS credentials and
 
 3. **Run Terraform commands** as usual. The provider will automatically use the paths specified in your `terraform.tfvars` file.
 
+### AWS - TERRAFORM MODULES
+```
+.terraform/aws 
+├── compute/          # EC2, ECR
+├── database/         # PostgreSQL
+├── messaging/        # RabbitMQ
+├── networking/       # Internet Gateway, Load Balancers, Route Table, Route 53, Subnet Group, Subnet, Cloud Map
+├── storage/          # S3, EFS
+├── security/         # SSL Cert Manager,, Security Groups, Key Pairs, 
+```
+
 ## UI Components
 - Material UI
 - Magic UI
