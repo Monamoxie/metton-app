@@ -16,3 +16,8 @@ variable "domain_alternative_names" {
   description = "The alternative domain names"
   type        = list(string)
 }
+
+variable "zone_id" {
+  description = "Route 53 zone id"
+  type        = string
+}

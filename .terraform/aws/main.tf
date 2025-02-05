@@ -58,6 +58,7 @@ module "security" {
   domain_name = var.domain_name
   domain_alternative_names = var.domain_alternative_names
   ec2_key_pair_name = var.ec2_key_pair_name
+  zone_id = module.networking.zone_id
 }
 
 # Database module
