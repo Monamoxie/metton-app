@@ -39,6 +39,7 @@ module "compute" {
   key_name = module.security.key_name
   security_group_id = module.security.security_group_id
   subnet_ids = module.networking.subnet_ids
+  service_discovery_arn = module.networking.service_discovery_arn
 }
 
 module "networking" {
@@ -79,4 +80,10 @@ module "storage" {
   
   project_name = var.project_name
   environment  = var.environment
+}
+
+module "messaging" {
+  source = "./messaging"
+  rabbitmq_username = var.rabbitmq_username
+  rabbitmq_password = var.rabbitmq_password
 }
