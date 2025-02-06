@@ -22,3 +22,8 @@ variable "subnet_ids" {
   description = "Subnet ids"
   type = list(string)
 }
+
+variable "service_discovery_arn" {
+  description = "Service discovery arn"
+  type = string
+}

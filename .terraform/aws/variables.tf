@@ -58,3 +58,13 @@ variable "db_name" {
   description = "DB name"
   type = string
 }
+
+variable "rabbitmq_username" {
+  description = "RabbitMQ Username"
+  type = string
+}
+
+variable "rabbitmq_password" {
+  description = "RabbitMQ Password"
+  type = string
+}
