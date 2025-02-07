@@ -89,3 +89,7 @@ module "messaging" {
   rabbitmq_username = var.rabbitmq_username
   rabbitmq_password = var.rabbitmq_password
 }
+
+module "monitoring" {
+  source = "./monitoring"
+}
