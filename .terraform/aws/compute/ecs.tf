@@ -8,9 +8,13 @@ resource "aws_ecs_service" "default" {
   desired_count   = 2
   launch_type     = "FARGATE"
 
-  service_registries {
+  network_configuration {
     subnets         = var.subnet_ids
+    security_groups = [var.security_group_id]
+    assign_public_ip = true
+  }
+
+  service_registries {
     registry_arn    = var.service_discovery_arn
-    security_groups = var.security_group_id
   }
 }
