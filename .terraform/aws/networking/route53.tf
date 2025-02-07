@@ -26,6 +26,35 @@ resource "aws_route53_record" "subdomains" {
 }
 
 
+# DMARC (TXT Record)
+resource "aws_route53_record" "dmarc" {
+  zone_id = aws_route53_zone.default.zone_id
+  name    = "_dmarc.${var.domain_name}"
+  type    = "TXT"
+  ttl     = 300
+
+  records = ["\"v=DMARC1; p=none;\""]
+}
+
+# SENDGRID
+resource "aws_route53_record" "sendgrid_dkim_s1" {
+  zone_id = aws_route53_zone.default.zone_id
+  name    = "s1._domainkey.${var.domain_name}"
+  type    = "CNAME"
+  ttl     = 10
+  records = [var.sendgrid_dkim_s1]
+}
+
+resource "aws_route53_record" "sendgrid_dkim_s2" {
+  zone_id = aws_route53_zone.default.zone_id
+  name    = "s2._domainkey.${var.domain_name}"
+  type    = "CNAME"
+  ttl     = 10
+  records = [var.sendgrid_dkim_s2]
+}
+
+
+
 output "nameservers" {
   description = "Nameservers for the Route53 zone"
   value       = aws_route53_zone.default.name_servers
