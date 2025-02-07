@@ -80,6 +80,8 @@ module "storage" {
   
   project_name = var.project_name
   environment  = var.environment
+  kms_efs_arn = module.security.kms_efs_arn
+  subnet_ids = module.networking.subnet_ids
 }
 
 module "messaging" {
