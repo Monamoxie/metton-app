@@ -1,7 +1,7 @@
 resource "aws_service_discovery_service" "default" {
   name = "ecs-discovery-service"
   dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.example.id
+    namespace_id = aws_service_discovery_private_dns_namespace.default.id
     
     dns_records {
       type = "A"
