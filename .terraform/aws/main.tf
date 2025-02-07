@@ -50,6 +50,8 @@ module "networking" {
   ec2_instance_id = module.compute.ec2_instance_id
   domain_name = var.domain_name
   domain_alternative_names = var.domain_alternative_names
+  sendgrid_dkim_s1 = var.sendgrid_dkim_s1
+  sendgrid_dkim_s2 = var.sendgrid_dkim_s2
 }
 
 module "security" {

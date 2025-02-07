@@ -68,3 +68,12 @@ variable "rabbitmq_password" {
   description = "RabbitMQ Password"
   type = string
 }
+
+variable "sendgrid_dkim_s1" {
+  description = "Sendgrid DKIM S1"
+  type = string
+}
+variable "sendgrid_dkim_s2" {
+  description = "Sendgrid DKIM S2"
+  type = string
+}
