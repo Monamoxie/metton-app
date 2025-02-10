@@ -68,7 +68,8 @@ To use this Terraform configuration, you need to set up your AWS credentials and
 
    Replace `/path/to/your/aws/config` and `/path/to/your/aws/credentials` with the actual paths to your AWS configuration and credentials files.
 
-3. **Run Terraform commands** as usual. The provider will automatically use the paths specified in your `terraform.tfvars` file.
+3. All sensitive credentials are to be stored in `.terraform/aws/terraform.tfvars`
+4. For a list of what credentials are to be stored, please check `.terraform/aws/variables.tf`
 
 ### AWS - TERRAFORM MODULES
 ```
@@ -78,8 +79,14 @@ To use this Terraform configuration, you need to set up your AWS credentials and
 ├── messaging/        # RabbitMQ
 ├── networking/       # Internet Gateway, Load Balancers, Route Table, Route 53, Subnet Group, Subnet, Cloud Map
 ├── storage/          # S3, EFS
-├── security/         # SSL Cert Manager,, Security Groups, Key Pairs, 
+├── security/         # SSL Cert Manager, Security Groups, Key Pairs, KMS, Parameter store, IAM
+├── monitoring/        # Cloudwatch
 ```
+
+### BOOTSTRAPPING TERRAFORM ON AWS
+- After creating an aws account, you will have to manually create a user role for terraform
+- Next, create an access policy for terraform as well as SECRET KEY AND ACCESS ID. 
+- A more detailed, step by step instructions coming soon! 
 
 ## UI Components
 - Material UI
