@@ -33,7 +33,8 @@ resource "aws_route53_record" "dmarc" {
   type    = "TXT"
   ttl     = 300
 
-  records = ["\"v=DMARC1; p=none;\""]
+  records = ["v=DMARC1; p=none;"]
+
 }
 
 # SENDGRID
