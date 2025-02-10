@@ -4,12 +4,12 @@
  * ****************************************************************************
 */
 resource "aws_security_group" "custom_default" {
-  name        = "default"
+  name        = "custom-default"
   description = "Allow TLS inbound traffic and all outbound traffic"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "default"
+    Name = "custom-default"
   }
 }
 
