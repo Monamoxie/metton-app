@@ -40,6 +40,8 @@ module "compute" {
   security_group_id = module.security.security_group_id
   subnet_ids = module.networking.subnet_ids
   service_discovery_arn = module.networking.service_discovery_arn
+  static_root_id = module.storage.static_root_id
+  media_root_id = module.storage.media_root_id
 }
 
 module "networking" {
