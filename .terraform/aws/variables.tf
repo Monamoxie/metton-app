@@ -24,11 +24,6 @@ variable "aws_region" {
   type = string
 }
 
-variable "project_name" {
-  description = "Project name"
-  type = string
-}
-
 variable "shared_config_files" {
   description = "Path to aws config. Could be /Users/admin/.aws/config or wherever you've created it. Should contain the aws profile and the region"
   type = list(string)
@@ -49,15 +44,6 @@ variable "db_username" {
   type = string
 }
 
-variable "db_password" {
-  description = "DB password"
-  type = string
-}
-
-variable "db_name" {
-  description = "DB name"
-  type = string
-}
 
 variable "rabbitmq_username" {
   description = "RabbitMQ Username"
