@@ -3,7 +3,7 @@ variable "db_name" {
   type        = string
 }
 
-variable "db_username" {
+variable "db_user" {
   description = "Username for the database"
   type        = string
   sensitive   = true

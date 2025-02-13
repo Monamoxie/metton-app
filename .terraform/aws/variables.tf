@@ -39,11 +39,6 @@ variable "ec2_key_pair_name" {
   type = string
 }
 
-variable "db_username" {
-  description = "DB username"
-  type = string
-}
-
 
 variable "rabbitmq_username" {
   description = "RabbitMQ Username"

@@ -56,6 +56,7 @@ module "networking" {
   sendgrid_dkim_s2 = var.sendgrid_dkim_s2
 }
 
+# Security module module
 module "security" {
   source = "./security"
   vpc_id = aws_vpc.default.id
@@ -63,6 +64,40 @@ module "security" {
   domain_alternative_names = var.domain_alternative_names
   ec2_key_pair_name = var.ec2_key_pair_name
   zone_id = module.networking.zone_id
+
+  access_secret = var.access_secret
+  access_key_id = var.access_key_id
+  base_url = var.base_url
+  db_host = var.db_host
+  db_host_port = var.db_host_port
+  db_port = var.db_port
+  debug = var.debug
+  email_port = var.email_port
+  rabbitmq_default_pass = var.rabbitmq_default_pass
+  rabbitmq_mgt_port = var.rabbitmq_mgt_port
+  upstream_server=var.upstream_server
+  db_name=var.db_name
+  db_root_password=var.db_root_password
+  db_user=var.db_user
+  default_from_email=var.default_from_email
+  email_backend=var.email_backend
+  email_host_user=var.email_host_user
+  project_env=var.project_env
+  project_name=var.project_name
+  rabbitmq_port=var.rabbitmq_port
+  server_name=var.server_name
+  allowed_hosts=var.allowed_hosts
+  csrf_trusted_origins=var.csrf_trusted_origins
+  db_engine=var.db_engine
+  email_host=var.email_host
+  email_host_password=var.email_host_password
+  rabbitmq_default_user=var.rabbitmq_default_user
+  secret_key=var.secret_key
+  server_email=var.server_email
+  server_port=var.server_port
+  celery_broker_url=var.celery_broker_url
+  db_password=var.db_password
+  default_from_name=var.default_from_name
 }
 
 # Database module
@@ -71,7 +106,7 @@ module "database" {
   
   # Database configuration
   db_name     = var.db_name
-  db_username = var.db_username
+  db_user = var.db_user
   db_password = var.db_password
   
   # Network configuration
