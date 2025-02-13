@@ -1,6 +1,6 @@
 
 resource "aws_s3_bucket" "default" {
-  bucket = "${var.project_name}-${var.environment}-storage"
+  bucket = "default-bucket"
 }
 
 resource "aws_s3_bucket_versioning" "default" {
