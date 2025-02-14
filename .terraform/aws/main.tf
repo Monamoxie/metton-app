@@ -133,3 +133,8 @@ module "messaging" {
 module "monitoring" {
   source = "./monitoring"
 }
+
+
+output "github_secrets_message" {
+  value = module.security.github_secrets_message
+}
