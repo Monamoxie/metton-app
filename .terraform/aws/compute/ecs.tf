@@ -13,13 +13,133 @@ resource "aws_ecs_task_definition" "default" {
   network_mode             = "awsvpc"
   cpu                      = "512"
   memory                   = "1024"
+  
+  volume {
+    name = "static_root"
 
-  container_definitions = templatefile("${path.module}/ecs-task-definition.json.tpl", {
-    AWS_ACCOUNT_ID =  data.aws_caller_identity.current.account_id
-    AWS_REGION     =  data.aws_region.current.name 
-    MEDIA_ROOT_ID  =  var.media_root_id
-    STATIC_ROOT_ID =  var.static_root_id
-  })
+    efs_volume_configuration {
+      file_system_id = var.static_root_id
+    }
+  }
+
+  volume {
+    name = "media_root"
+
+    efs_volume_configuration {
+      file_system_id = var.media_root_id
+    }
+  }
+
+  container_definitions = jsonencode([
+    # Python Container
+    {
+      name              = "python_container"
+      image            = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/python:latest"
+      memoryReservation = 512
+      cpu               = 256
+      essential         = true
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group        = "/ecs/default-fargate-task/python"
+          awslogs-region       = data.aws_region.current.name
+          awslogs-stream-prefix = "python"
+        }
+      }
+
+      portMappings = []
+
+      secrets = [
+        for name in [
+          "PROJECT_ENV", "PROJECT_NAME", "SECRET_KEY", "DEBUG", "ALLOWED_HOSTS",
+          "BASE_URL", "CELERY_BROKER_URL", "CSRF_TRUSTED_ORIGINS", "DB_ENGINE",
+          "DB_HOST", "DB_HOST_PORT", "DB_NAME", "DB_PASSWORD", "DB_PORT", "DB_USER",
+          "DEFAULT_FROM_EMAIL", "DEFAULT_FROM_NAME", "EMAIL_BACKEND", "EMAIL_HOST",
+          "EMAIL_HOST_PASSWORD", "EMAIL_HOST_USER", "EMAIL_PORT",
+          "RABBITMQ_DEFAULT_PASS", "RABBITMQ_DEFAULT_USER", "RABBITMQ_MGT_PORT",
+          "RABBITMQ_PORT", "SERVER_EMAIL", "SERVER_PORT", "SERVER_NAME"
+        ] :
+        {
+          name      = name
+          valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${name}"
+        }
+      ]
+
+      environment = [
+        {
+          name  = "UPSTREAM_SERVER"
+          value = "127.0.0.1"
+        }
+      ]
+
+      mountPoints = [
+        {
+          sourceVolume  = "media_root"
+          containerPath = "/app/core/media"
+        },
+        {
+          sourceVolume  = "static_root"
+          containerPath = "/var/www/static"
+        }
+      ]
+    },
+
+    # Nginx Container
+    {
+      name              = "nginx_container"
+      image            = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/nginx:latest"
+      memoryReservation = 512
+      cpu               = 256
+      essential         = true
+
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+
+      environment = [
+        {
+          name  = "UPSTREAM_SERVER"
+          value = "127.0.0.1"
+        }
+      ]
+
+      secrets = [
+        {
+          name      = "SERVER_PORT"
+          valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/SERVER_PORT"
+        },
+        {
+          name      = "SERVER_NAME"
+          valueFrom = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/SERVER_NAME"
+        }
+      ]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group        = "/ecs/default-fargate-task/nginx"
+          awslogs-region       = data.aws_region.current.name
+          awslogs-stream-prefix = "nginx"
+        }
+      }
+
+      volumesFrom = [
+        {
+          sourceContainer = "python_container"
+          readOnly        = true
+        }
+      ]
+    }
+
+  ])
+  tags = {
+    Name = "fargate-task"
+  }
+  
 }
 
 resource "aws_ecs_service" "default" {
