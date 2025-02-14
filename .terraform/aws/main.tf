@@ -121,6 +121,7 @@ module "storage" {
   environment  = var.environment
   kms_efs_arn = module.security.kms_efs_arn
   subnet_ids = module.networking.subnet_ids
+  region     = var.aws_region
 }
 
 module "messaging" {
