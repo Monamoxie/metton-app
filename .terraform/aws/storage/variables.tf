@@ -17,3 +17,8 @@ variable "kms_efs_arn" {
   description = "KMS EFS ARN"
   type = string
 }
+
+variable "region" {
+  description = "AWS region"
+  type = string
+}

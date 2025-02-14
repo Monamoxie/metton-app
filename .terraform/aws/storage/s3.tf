@@ -1,6 +1,5 @@
-
 resource "aws_s3_bucket" "default" {
-  bucket = "default-bucket"
+  bucket = "bucket-${random_string.random.result}"
 }
 
 resource "aws_s3_bucket_versioning" "default" {
@@ -27,6 +26,12 @@ resource "aws_s3_bucket_public_access_block" "default" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+resource "random_string" "random" {
+  length  = 8
+  special = false
+  upper   = false
 }
 
 output "bucket_id" {
