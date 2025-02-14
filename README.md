@@ -52,10 +52,11 @@ This project is currently in alpha stage. More components are continuosly being 
   <br>
 
 ## AWS Setup with Terraform
+I've designed the follwing guidelines with AWS's Free Tier in mind. However, you're free to scale up the resources as needed depending on usage and requirements.
 
 To use this Terraform configuration, you need to set up your AWS credentials and configuration files. Follow these steps:
 
-1. **Create a `terraform.tfvars` file** in .terraform directory of the project, if it doesn't already exist.
+1. **Create a `terraform.tfvars` file** in `.terraform` directory of this project, if it doesn't already exist.
 
 2. **Define your AWS configuration and credentials paths** in the `terraform.tfvars` file. For example:
 
@@ -64,15 +65,51 @@ To use this Terraform configuration, you need to set up your AWS credentials and
    shared_credentials_files = ["/path/to/your/aws/credentials"]
    aws_region = "your-aws-region"
    profile = "your-credentials-profile-name"
+
+   // add as many more credentials and variables in this file. 
+   // please check .terraform/aws/variables.tf for a list of variables and credentials you MUST set up in this file. Without these values, terraform may not be able to create the required aws infrastructure
    ```
 
    Replace `/path/to/your/aws/config` and `/path/to/your/aws/credentials` with the actual paths to your AWS configuration and credentials files.
 
-3. All sensitive credentials are to be stored in `.terraform/aws/terraform.tfvars`
-4. For a list of what credentials are to be stored, please check `.terraform/aws/variables.tf`
+3. Store sensitive credentials stored in `.terraform/aws/terraform.tfvars`
+4. For a list of required credentials, please check `.terraform/aws/variables.tf`
 
-### AWS - TERRAFORM MODULES
+### BOOTSTRAPPING TERRAFORM ON AWS
+###### 1. Create an AWS Account
+  - Go to the AWS sign-up page and create a new account.
+
+###### 2. Create a User for Terraform
+- After logging into your AWS console, navigate to the IAM (Identity and Access Management) service.
+- Go to Users and click on Add user.
+- Enter a username for Terraform (e.g., terraform-user), and select Programmatic access.
+- For Permissions, choose Attach existing policies directly, and select AdministratorAccess (you can refine scale down this permission later if needed). This grants Terraform the necessary permissions to create and manage AWS resources.
+
+###### 3. Create Access Key and Secret
+- Create access credentials (Access Key ID and Secret Access Key).
+- Download and store these credentials securely on your machine (this is important as you won’t be able to retrieve the Secret Access Key again).
+- Store them in a secure location (e.g., a password manager or encrypted file).
+
+###### 4. Create an SSH Keypair for EC2 Access
+- On your local machine, open a terminal and generate a new SSH keypair:
+  ```
+  ssh-keygen -t rsa -b 2048 -f ~/.ssh/metton_ec2
+  ```
+- Follow the prompts to set a passphrase (or leave it empty if you prefer).
+- This will generate two files:
 ```
+  metton_ec2 (private key)
+  metton_ec2.pub (public key)
+```
+- Important: Store the private key securely, and make sure it is not shared or exposed.
+
+###### 5. Reference the Public Key in Terraform Configuration
+- In your terraform.tfvars, reference the public key for EC2:
+```
+ec2_key_pair_name = "~/.ssh/metton_ec2.pub"
+```
+##### LIST OF AWS RESOURCES & TERRFORM MODULES
+```hcl
 .terraform/aws 
 ├── compute/          # EC2, ECR
 ├── database/         # PostgreSQL
@@ -83,10 +120,18 @@ To use this Terraform configuration, you need to set up your AWS credentials and
 ├── monitoring/        # Cloudwatch
 ```
 
-### BOOTSTRAPPING TERRAFORM ON AWS
-- After creating an aws account, you will have to manually create a user role for terraform
-- Next, create an access policy for terraform as well as SECRET KEY AND ACCESS ID. 
-- A more detailed, step by step instructions coming soon! 
+### DELAYS & PROPAGATION 
+##### Important Note:
+
+When applying this Terraform configuration, you may experience delays during resource validation or propagation, especially with resources like ACM certificates and DNS updates. 
+
+These processes may take some time to complete and may not immediately reflect in the Terraform output.
+
+##### What to do:
+
+If the validation fails or takes longer than expected, try running the process again after some time (waiting a few hours can sometimes help).
+
+In case of recurring issues, verify that DNS records have been properly updated and propagated before retrying. I recommend being patient during these steps, as AWS and DNS updates can take time to fully propagate.
 
 ## UI Components
 - Material UI
