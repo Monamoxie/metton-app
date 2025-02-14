@@ -12,7 +12,6 @@ resource "aws_db_instance" "default" {
     username             = var.db_user
     password             = var.db_password
 
-  parameter_group_name = "default.postgres15"
   skip_final_snapshot  = true
   publicly_accessible  = false
 }
