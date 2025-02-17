@@ -42,7 +42,8 @@ resource "aws_iam_policy" "github_actions_policy" {
           "ecs:DescribeTaskDefinition",
           "ecs:ListClusters",
           "ecs:ListServices",
-          "ecs:ListTaskDefinitions"
+          "ecs:ListTaskDefinitions",
+          "ecs:TagResource"
         ]
         Resource = "*"
       },
@@ -54,7 +55,9 @@ resource "aws_iam_policy" "github_actions_policy" {
           "ecr:PutImage",
           "ecr:InitiateLayerUpload",
           "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload"
+          "ecr:CompleteLayerUpload",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer"
         ]
         Resource = "*"
       },
