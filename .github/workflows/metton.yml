@@ -67,7 +67,7 @@ jobs:
              --arg ssm_parameter_arn "${{ env.SSM_PARAMETER_ARN }}" \
              --arg aws_region "${{ vars.AWS_REGION }}" \
              --arg aws_static_root_id "${{ vars.AWS_STATIC_ROOT_ID }}" \
-             --arg aws_media_root_it "${{ vars.AWS_MEDIA_ROOT_ID }}" \
+             --arg aws_media_root_id "${{ vars.AWS_MEDIA_ROOT_ID }}" \
              '.executionRoleArn |= "arn:aws:iam::\($aws_account_id):role/ecsTaskExecutionRole" |
               .taskRoleArn |= "arn:aws:iam::\($aws_account_id):role/ecsTaskExecutionRole" |
               .containerDefinitions[0].logConfiguration.options["awslogs-region"] |= $aws_region  |
