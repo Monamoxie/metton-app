@@ -12,7 +12,6 @@ env:
   ECS_CLUSTER: default
   ECS_SERVICE: ecs-service
   ECR_REPOSITORY: default
-  AWS_REGION: ${{ vars.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
 
 jobs:
@@ -40,7 +39,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: $AWS_REGION
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Login to AWS ECR
         id: login-ecr
@@ -65,7 +64,7 @@ jobs:
         run: |
           jq --arg aws_account_id "${{ env.AWS_ACCOUNT_ID }}" \
              --arg ssm_parameter_arn "${{ env.SSM_PARAMETER_ARN }}" \
-             --arg aws_region "$AWS_REGION" \
+             --arg aws_region "${{ vars.AWS_REGION }}" \
              --arg efs_static_id "${{ env.EFS_STATIC_ID }}" \
              --arg efs_media_id "${{ env.EFS_MEDIA_ID }}" \
              '.executionRoleArn |= "arn:aws:iam::\($aws_account_id):role/ecsTaskExecutionRole" |
