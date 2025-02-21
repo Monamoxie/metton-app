@@ -67,12 +67,12 @@ jobs:
              --arg ssm_parameter_arn "${{ env.SSM_PARAMETER_ARN }}" \
              --arg aws_region "${{ vars.AWS_REGION }}" \
              --arg aws_static_root_id "${{ vars.AWS_STATIC_ROOT_ID }}" \
-             --arg aws_media_root_id "${{ vars.AWS_MEDIA_ROOT_ID }}" \
+             --arg aws_media_root_id "${{ vars.AWS_MEDIA_ROOT_ID }}" \   
              '.executionRoleArn |= "arn:aws:iam::\($aws_account_id):role/ecsTaskExecutionRole" |
               .taskRoleArn |= "arn:aws:iam::\($aws_account_id):role/ecsTaskExecutionRole" |
               .containerDefinitions[0].logConfiguration.options["awslogs-region"] |= $aws_region  |
-              .volumes[0].efsVolumeConfiguration.fileSystemId |= $efs_static_id |
-              .volumes[1].efsVolumeConfiguration.fileSystemId |= $efs_media_id' ./.aws/ecs-task-template.json > ecs-task-definition.json
+              .volumes[0].efsVolumeConfiguration.fileSystemId |= $aws_static_root_id |
+              .volumes[1].efsVolumeConfiguration.fileSystemId |= $aws_media_root_id' ./.aws/ecs-task-template.json > ecs-task-definition.json
 
       - name: Python ECS task definition
         id: python-task-def
