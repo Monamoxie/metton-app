@@ -81,7 +81,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.PROJECT_NAME }}_python_container
+          container-name: python_container
           image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:python-${{ env.IMAGE_TAG }}
 
       - name: Nginx ECS task definition
@@ -89,7 +89,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
         with:
           task-definition: ${{ steps.python-task-def.outputs.task-definition }}
-          container-name: ${{ env.PROJECT_NAME }}_nginx_container
+          container-name: nginx_container
           image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:nginx-${{ env.IMAGE_TAG }}
 
       - name: Deploy ECS
