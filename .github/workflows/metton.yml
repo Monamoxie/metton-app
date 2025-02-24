@@ -62,8 +62,10 @@ jobs:
           done
       
       - name: Generate ECS Task Definition from Template
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
-          jq --arg aws_account_id "${{ secrets.AWS_ACCOUNT_ID }}" \
+          jq --arg aws_account_id "${{ env.AWS_ACCOUNT_ID }}" \
              --arg aws_region "${{ vars.AWS_REGION }}" \
              --arg aws_static_root_id "${{ vars.AWS_STATIC_ROOT_ID }}" \
              --arg aws_media_root_id "${{ vars.AWS_MEDIA_ROOT_ID }}" 
