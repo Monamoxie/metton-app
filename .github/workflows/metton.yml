@@ -75,6 +75,8 @@ jobs:
               .containerDefinitions[1].logConfiguration.options["awslogs-region"] |= $aws_region  |
               .volumes[0].efsVolumeConfiguration.fileSystemId |= $aws_static_root_id |
               .volumes[1].efsVolumeConfiguration.fileSystemId |= $aws_media_root_id |
+              (.containerDefinitions[0].secrets[] |= (.valueFrom |= gsub("\\$\\{AWS_REGION\\}"; $aws_region))) |
+              (.containerDefinitions[0].secrets[] |= (.valueFrom |= gsub("\\$\\{AWS_REGION\\}"; $aws_region))) |
               (.containerDefinitions[0].secrets[] |= (.valueFrom |= gsub("\\$\\{AWS_ACCOUNT_ID\\}"; $aws_account_id))) |
               (.containerDefinitions[1].secrets[] |= (.valueFrom |= gsub("\\$\\{AWS_ACCOUNT_ID\\}"; $aws_account_id)))' \
               ./.aws/ecs-task-template.json > ./.aws/ecs-task-definition.json
