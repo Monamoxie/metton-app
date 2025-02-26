@@ -98,6 +98,10 @@ module "security" {
   celery_broker_url=var.celery_broker_url
   db_password=var.db_password
   default_from_name=var.default_from_name
+  aws_region     = var.aws_region
+  aws_account_id = var.aws_account_id
+  static_root_id = module.storage.static_root_id
+  media_root_id = module.storage.media_root_id
 }
 
 # Database module
@@ -122,6 +126,7 @@ module "storage" {
   kms_efs_arn = module.security.kms_efs_arn
   subnet_ids = module.networking.subnet_ids
   region     = var.aws_region
+  security_group_id = module.security.security_group_id
 }
 
 module "messaging" {
