@@ -158,4 +158,10 @@ resource "aws_ecs_service" "default" {
   service_registries {
     registry_arn    = var.service_discovery_arn
   }
+
+  load_balancer {
+    target_group_arn = var.load_balancer_arn  
+    container_name   = "nginx_container"
+    container_port   = 80
+  }
 }

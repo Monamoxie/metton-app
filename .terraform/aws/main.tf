@@ -42,6 +42,7 @@ module "compute" {
   service_discovery_arn = module.networking.service_discovery_arn
   static_root_id = module.storage.static_root_id
   media_root_id = module.storage.media_root_id
+  load_balancer_arn = module.networking.load_balancer_arn
 }
 
 module "networking" {

@@ -7,14 +7,14 @@ resource "aws_lb_target_group" "default" {
 
   health_check {
     path                = "/"
-    protocol            = "HTTPS"
+    protocol            = "HTTP"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 3
     unhealthy_threshold = 3
   }
 
-  target_type = "instance"
+  target_type = "ip"
 }
 
 
@@ -65,10 +65,12 @@ resource "aws_lb_listener" "default" {
 
 
 
-resource "aws_lb_target_group_attachment" "default" {
-  target_group_arn = aws_lb_target_group.default.arn
-  target_id        = var.ec2_instance_id
-  port             = 80
-}
+# resource "aws_lb_target_group_attachment" "default" {
+#   target_group_arn = aws_lb_target_group.default.arn
+#   target_id        = var.ec2_instance_id
+#   port             = 80
+# }
 
- 
+output "load_balancer_arn" {
+  value = aws_lb_target_group.default.arn
+}

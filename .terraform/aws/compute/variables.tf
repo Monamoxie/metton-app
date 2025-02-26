@@ -30,3 +30,4 @@ variable "service_discovery_arn" {
 
 variable "static_root_id" {}
 variable "media_root_id" {}
+variable "load_balancer_arn" {}
