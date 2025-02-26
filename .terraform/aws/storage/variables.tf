@@ -22,3 +22,5 @@ variable "region" {
   description = "AWS region"
   type = string
 }
+
+variable "security_group_id" {}

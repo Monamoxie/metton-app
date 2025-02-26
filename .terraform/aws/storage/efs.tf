@@ -25,13 +25,15 @@ resource "aws_efs_file_system" "media_root" {
 resource "aws_efs_mount_target" "static_root" {
   count = length(var.subnet_ids) 
   file_system_id = aws_efs_file_system.static_root.id
-  subnet_id = var.subnet_ids[count.index]   
+  subnet_id = var.subnet_ids[count.index]
+  security_groups = [var.security_group_id]
 }
 
 resource "aws_efs_mount_target" "media_root" {
   count = length(var.subnet_ids) 
   file_system_id = aws_efs_file_system.media_root.id
   subnet_id = var.subnet_ids[count.index]   
+  security_groups = [var.security_group_id]
 }
 
 resource "random_string" "efs_suffix" {
