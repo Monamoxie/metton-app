@@ -57,3 +57,9 @@ variable "server_port" {}
 variable "celery_broker_url" {}
 variable "db_password" {}
 variable "default_from_name" {}
+
+variable "aws_account_id" {}
+variable "aws_region" {}
+
+variable "static_root_id" {}
+variable "media_root_id" {}
