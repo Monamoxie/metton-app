@@ -18,6 +18,85 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# SSM Parameter Store
+resource "aws_iam_policy" "ecs_task_execution_policy" {
+  name        = "ecsTaskExecutionPolicy"
+  description = "Policy to allow ECS tasks to access necessary resources"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameters",
+          "ssm:GetParameter",
+          "ssm:DescribeParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = [
+          "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/*",
+        ]
+      },
+
+      {
+        Effect = "Allow"
+        Action = [
+          "elasticfilesystem:ClientMount",
+          "elasticfilesystem:ClientWrite",
+          "elasticfilesystem:DescribeFileSystems",
+          "elasticfilesystem:DescribeAccessPoints"
+        ]
+        Resource = [
+          "arn:aws:elasticfilesystem:${var.aws_region}:${var.aws_account_id}:file-system/${var.static_root_id}",
+          "arn:aws:elasticfilesystem:${var.aws_region}:${var.aws_account_id}:file-system/${var.media_root_id}"
+        ]
+      },
+
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:GetLogEvents"
+        ],
+        "Resource": "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/ecs/default-fargate-task:*:log-stream:*"
+      },
+
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ssm:GetParameters",
+          "ssm:GetParameter",
+          "ssm:DescribeParameters",
+        ]
+        Resource = [
+          "arn:aws:ssm:us-east-1:${var.aws_account_id}:parameter/*",
+        ]
+      },
+
+      {
+        "Effect": "Allow",
+        "Action": ["ecs:ExecuteCommand", "ecs:DescribeTasks"],
+        "Resource": [
+          "arn:aws:${var.aws_region}:${var.aws_account_id}:cluster/default",
+          "arn:aws:${var.aws_region}:${var.aws_account_id}:task/*"
+        ]
+      },
+
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.ecs_task_execution_policy.arn
+}
+
+
+
+
+
 # Start Github actions
 resource "aws_iam_user" "github_actions" {
   name = "github-actions"
