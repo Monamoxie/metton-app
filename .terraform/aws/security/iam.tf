@@ -76,9 +76,9 @@ resource "aws_iam_policy" "ecs_task_execution_policy" {
       },
 
       {
-        "Effect": "Allow",
-        "Action": ["ecs:ExecuteCommand", "ecs:DescribeTasks"],
-        "Resource": [
+        Effect: "Allow"
+        Action: ["ecs:ExecuteCommand", "ecs:DescribeTasks"]
+        Resource = [
           "arn:aws:${var.aws_region}:${var.aws_account_id}:cluster/default",
           "arn:aws:${var.aws_region}:${var.aws_account_id}:task/*"
         ]
