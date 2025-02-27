@@ -71,16 +71,19 @@ resource "aws_iam_policy" "ecs_task_execution_policy" {
           "ssm:DescribeParameters",
         ]
         Resource = [
-          "arn:aws:ssm:us-east-1:${var.aws_account_id}:parameter/*",
+          "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/*",
         ]
       },
 
       {
-        Effect: "Allow"
-        Action: ["ecs:ExecuteCommand", "ecs:DescribeTasks"]
+        Effect = "Allow"
+        Action = [
+          "ecs:ExecuteCommand", 
+          "ecs:DescribeTasks"
+        ]
         Resource = [
-          "arn:aws:${var.aws_region}:${var.aws_account_id}:cluster/default",
-          "arn:aws:${var.aws_region}:${var.aws_account_id}:task/*"
+          "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:cluster/default",
+          "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:task/*"
         ]
       },
 
