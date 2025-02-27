@@ -98,7 +98,7 @@ jobs:
           image: ${{ secrets.AWS_ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:nginx-${{ env.IMAGE_TAG }}
 
       - name: Deploy ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
