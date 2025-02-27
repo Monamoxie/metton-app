@@ -44,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = [
     for origin in os.environ.get("CSRF_TRUSTED_ORIGINS").split(",")
     if origin.strip()
 ]
+CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CSRF_COOKIE_HTTPONLY = True
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 
@@ -221,11 +222,6 @@ REST_FRAMEWORK = {
 REST_KNOX = {
     "TOKEN_TTL": timedelta(hours=1),
 }
-
-
-CORS_ALLOWED_ORIGINS = [
-    host.strip() for host in os.environ.get("ALLOWED_HOSTS").split(",") if host.strip()
-]
 
 CORS_ALLOW_METHODS = [
     "GET",
