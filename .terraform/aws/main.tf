@@ -103,7 +103,12 @@ module "security" {
   aws_account_id = var.aws_account_id
   static_root_id = module.storage.static_root_id
   media_root_id = module.storage.media_root_id
-}
+
+  has_privacy_policy=var.has_privacy_policy
+  privacy_policy_url=var.privacy_policy_url
+  has_terms_of_service=var.has_terms_of_service
+  terms_of_service_url=var.terms_of_service_url
+  }
 
 # Database module
 module "database" {

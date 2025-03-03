@@ -63,3 +63,8 @@ variable "aws_region" {}
 
 variable "static_root_id" {}
 variable "media_root_id" {}
+
+variable "has_privacy_policy" {}
+variable "privacy_policy_url" {}
+variable "has_terms_of_service" {}
+variable "terms_of_service_url" {}

@@ -96,3 +96,8 @@ variable "db_password" {}
 variable "default_from_name" {}
 
 variable "aws_account_id" {}
+
+variable "has_privacy_policy" {}
+variable "privacy_policy_url" {}
+variable "has_terms_of_service" {}
+variable "terms_of_service_url" {}
