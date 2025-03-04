@@ -58,6 +58,10 @@ variable "sendgrid_dkim_s2" {
   description = "Sendgrid DKIM S2"
   type = string
 }
+variable "my_ip_address" {
+  description = "IP address of your machine, PC or workstation"
+  type = string
+}
 
 
 # Parameter store

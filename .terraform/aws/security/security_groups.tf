@@ -13,6 +13,26 @@ resource "aws_security_group" "custom_default" {
   }
 }
 
+resource "aws_security_group" "alb_security_group" {
+    name        = "default-alb"
+    description = "Security group for the load balancer"
+    vpc_id      = var.vpc_id
+
+    ingress {
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
 /**
  * ****************************************************************************
  * OUTGOING CONNECTION ::: IPV4 
@@ -46,7 +66,7 @@ resource "aws_security_group_rule" "inbound_http_ipv4" {
     type              = "ingress"
     protocol          = "tcp"
     security_group_id = aws_security_group.custom_default.id
-    cidr_blocks       = ["0.0.0.0/0"]
+    source_security_group_id = aws_security_group.alb_security_group.id
     from_port         = 80
     to_port           = 80
 }
@@ -60,7 +80,7 @@ resource "aws_security_group_rule" "inbound_http_ipv4" {
 resource "aws_security_group_rule" "inbound_https_ipv4" {
     security_group_id = aws_security_group.custom_default.id
     type              = "ingress"
-    cidr_blocks       = ["0.0.0.0/0"]
+    source_security_group_id = aws_security_group.alb_security_group.id
     from_port         = 443
     to_port           = 443
     protocol       = "tcp"
@@ -76,7 +96,7 @@ resource "aws_security_group_rule" "inbound_https_ipv4" {
 resource "aws_security_group_rule" "inbound_postgres" {
     type              = "ingress"
     security_group_id = aws_security_group.custom_default.id
-    cidr_blocks       = ["0.0.0.0/0"]
+    source_security_group_id = aws_security_group.custom_default.id
     from_port         = 5432
     to_port           = 5432
     protocol          = "tcp"
@@ -90,7 +110,7 @@ resource "aws_security_group_rule" "inbound_postgres" {
 resource "aws_security_group_rule" "inbound_rabbitmq" {
     type              = "ingress"
     security_group_id = aws_security_group.custom_default.id
-    cidr_blocks       = ["0.0.0.0/0"]
+    source_security_group_id = aws_security_group.custom_default.id
     from_port         = 5672
     to_port           = 5672
     protocol          = "tcp"
@@ -104,7 +124,7 @@ resource "aws_security_group_rule" "inbound_rabbitmq" {
 resource "aws_security_group_rule" "inbound_rabbitmq_amqp" {
     type              = "ingress"
     security_group_id = aws_security_group.custom_default.id
-    cidr_blocks       = ["0.0.0.0/0"]
+    source_security_group_id = aws_security_group.custom_default.id
     from_port         = 5671
     to_port           = 5671
     protocol          = "tcp"
@@ -132,7 +152,7 @@ resource "aws_security_group_rule" "inbound_rabbitmq_mgt" {
 resource "aws_security_group_rule" "inbound_nfs" {
     type              = "ingress"
     security_group_id = aws_security_group.custom_default.id
-    cidr_blocks       = ["0.0.0.0/0"]
+    source_security_group_id = aws_security_group.custom_default.id
     from_port         = 2049
     to_port           = 2049
     protocol          = "tcp"
@@ -149,7 +169,7 @@ resource "aws_security_group_rule" "inbound_ssh" {
     from_port         = 22
     to_port           = 22
     protocol       = "tcp"
-    cidr_blocks       = ["0.0.0.0/0"]
+    cidr_blocks       = ["${var.my_ip_address}/32"]
 }
 
 
@@ -165,11 +185,16 @@ resource "aws_security_group_rule" "inbound_icmp" {
     from_port         = -1
     to_port           = -1
     protocol       = "icmp"
-    cidr_blocks       = ["0.0.0.0/0"]
+    cidr_blocks       = ["${var.my_ip_address}/32"]
     description       = "Allow ICMP (ping) from anywhere"
 }
 
 output "security_group_id" {
-  description = "ID of the database security group"
+  description = "ID of the custom default security group"
   value       = aws_security_group.custom_default.id
+}
+
+output "alb_security_group_id" {
+   description = "ID of the alb security group"
+  value       = aws_security_group.alb_security_group.id
 }

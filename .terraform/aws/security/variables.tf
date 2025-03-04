@@ -68,3 +68,8 @@ variable "has_privacy_policy" {}
 variable "privacy_policy_url" {}
 variable "has_terms_of_service" {}
 variable "terms_of_service_url" {}
+
+variable "my_ip_address" {
+  description = "IP address of your machine, PC or workstation"
+  type = string
+}

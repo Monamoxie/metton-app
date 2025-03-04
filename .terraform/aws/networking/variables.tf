@@ -7,6 +7,11 @@ variable "security_group_id" {
   type        = string
 }
 
+variable "alb_security_group_id" {
+  description = "ALB Security group id"
+  type        = string
+}
+
 
 variable "domain_name" {
   description = "The domain name for Route53 records"

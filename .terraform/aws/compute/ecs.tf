@@ -1,5 +1,9 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
+data "aws_ecs_task_definition" "latest" {
+  task_definition = "default-fargate-task"
+}
+
 
 resource "aws_ecs_cluster" "default" {
   name = "default"
@@ -145,7 +149,10 @@ resource "aws_ecs_task_definition" "default" {
 resource "aws_ecs_service" "default" {
   name            = "ecs-service"
   cluster         = aws_ecs_cluster.default.id
-  task_definition  = aws_ecs_task_definition.default.arn
+  task_definition  = try(
+    data.aws_ecs_task_definition.latest.arn,
+    aws_ecs_task_definition.default.arn
+  )
   desired_count   = 1
   launch_type     = "FARGATE"
   enable_execute_command = true
@@ -153,7 +160,7 @@ resource "aws_ecs_service" "default" {
   network_configuration {
     subnets         = var.subnet_ids
     security_groups = [var.security_group_id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   service_registries {

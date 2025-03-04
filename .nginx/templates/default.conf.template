@@ -17,6 +17,12 @@ server {
         alias /app/core/media/;
     }
 
+    location ~* \.(env|gitignore|bak|log|git)$ {
+        deny all;
+        return 404;
+    }
+
+
     location / {
         proxy_pass http://core;
         proxy_set_header Host $http_host;

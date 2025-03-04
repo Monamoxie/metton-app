@@ -22,11 +22,20 @@ resource "aws_lb" "default" {
   name               = "default-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [var.security_group_id]
+  security_groups    = [var.alb_security_group_id]
   subnets            = [
     aws_subnet.default.id,
-    aws_subnet.default_2.id,
-    aws_subnet.default_3.id,
+    aws_subnet.default_2.id
+
+    # todo @note ::: 
+    # You can add as many available subnets as you wish but note that:
+    # AWS, from 1 Feb 2024, charges $0.005 per IP address per hour whether attached to a service or not
+    # Every subnet assigned to a public-facing load balancer gets it's own unique network interface and 
+    # these network interface could have a public IP, which is chargeable
+    # If on free tier, the public IP attached to your EC2 is free for up to 750 hrs / month
+    # But any other assigned public IPs would be charged for. 
+
+    # aws_subnet.default_3.id,
   ]
 }
 

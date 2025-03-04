@@ -55,6 +55,7 @@ module "networking" {
   domain_alternative_names = var.domain_alternative_names
   sendgrid_dkim_s1 = var.sendgrid_dkim_s1
   sendgrid_dkim_s2 = var.sendgrid_dkim_s2
+  alb_security_group_id = module.security.alb_security_group_id
 }
 
 # Security module module
@@ -65,6 +66,7 @@ module "security" {
   domain_alternative_names = var.domain_alternative_names
   ec2_key_pair_name = var.ec2_key_pair_name
   zone_id = module.networking.zone_id
+  my_ip_address = var.my_ip_address
 
   access_secret = var.access_secret
   access_key_id = var.access_key_id
