@@ -60,7 +60,7 @@ resource "aws_iam_policy" "ecs_task_execution_policy" {
           "logs:PutLogEvents",
           "logs:GetLogEvents"
         ],
-        "Resource": "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/ecs/default-fargate-task:*:log-stream:*"
+        "Resource": "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/ecs/default-fargate-task/*:*"
       },
 
       {
@@ -73,6 +73,14 @@ resource "aws_iam_policy" "ecs_task_execution_policy" {
         Resource = [
           "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/*",
         ]
+      },
+
+      {
+        Effect = "Allow",
+        Action =  [
+          "kms:Decrypt"
+        ],
+        Resource =  "arn:aws:kms:${var.aws_region}:${var.aws_account_id}:key/*"
       },
 
       {
