@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "default" {
   vpc_id   = var.vpc_id
 
   health_check {
-    path                = "/"
+    path                = "/elb/healthcheck"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 5

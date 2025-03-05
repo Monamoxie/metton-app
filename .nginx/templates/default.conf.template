@@ -35,3 +35,10 @@ server {
     }
 
 }
+server {
+  location /elb/healthcheck {
+    access_log off;
+    return 200;
+    add_header Content-Type text/plain;
+  }
+}
