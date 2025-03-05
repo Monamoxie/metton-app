@@ -192,31 +192,31 @@ resource "aws_ssm_parameter" "db_password" {
 
 resource "aws_ssm_parameter" "default_from_name" {
   name  = "/DEFAULT_FROM_NAME"
-  type  = "String"
+  type  = "SecureString"
   value = var.default_from_name
 }
 
 resource "aws_ssm_parameter" "has_privacy_policy" {
   name  = "/HAS_PRIVACY_POLICY"
-  type  = "String"
+  type  = "SecureString"
   value = var.has_privacy_policy
 }
 
 resource "aws_ssm_parameter" "privacy_policy_url" {
   name  = "/PRIVACY_POLICY_URL"
-  type  = "String"
+  type  = "SecureString"
   value = var.privacy_policy_url
 }
 
 resource "aws_ssm_parameter" "has_terms_of_service" {
   name  = "/HAS_TERMS_OF_SERVICE"
-  type  = "String"
+  type  = "SecureString"
   value = var.has_terms_of_service
 }
 
 resource "aws_ssm_parameter" "terms_of_service_url" {
   name  = "/TERMS_OF_SERVICE_URL"
-  type  = "String"
+  type  = "SecureString"
   value = var.terms_of_service_url
 }
 

@@ -158,9 +158,16 @@ resource "aws_ecs_service" "default" {
   enable_execute_command = true
 
   network_configuration {
-    subnets         = var.subnet_ids
+    # todo @note: We are setting only 2 subnets because our Load balancer was setup to use only 2 of the available 3 subnets
+
+    subnets         = [var.subnet_ids[0], var.subnet_ids[1]]
     security_groups = [var.security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
+  }
+
+  deployment_circuit_breaker {
+    enable = true
+    rollback = true 
   }
 
   service_registries {

@@ -72,14 +72,6 @@ resource "aws_lb_listener" "default" {
   }
 }
 
-
-
-# resource "aws_lb_target_group_attachment" "default" {
-#   target_group_arn = aws_lb_target_group.default.arn
-#   target_id        = var.ec2_instance_id
-#   port             = 80
-# }
-
 output "load_balancer_arn" {
   value = aws_lb_target_group.default.arn
 }
