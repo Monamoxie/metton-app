@@ -2,16 +2,6 @@ upstream core {
     server ${UPSTREAM_SERVER}:8000;
 }
 server {
-    listen 80;
-    server_name _;  
-
-    location /elb/healthcheck {
-        access_log off;
-        return 200;
-        add_header Content-Type text/plain;
-    }
-}
-server {
     listen 80 default_server;
     server_name ${SERVER_NAME};
 
