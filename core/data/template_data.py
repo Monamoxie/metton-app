@@ -11,4 +11,3 @@ class TemplateData:
         self.privacy_policy_url = settings.PRIVACY_POLICY_URL
         self.has_terms_of_service = settings.HAS_TERMS_OF_SERVICE
         self.terms_of_service_url = settings.TERMS_OF_SERVICE_URL
-        print(settings.HAS_PRIVACY_POLICY, type(settings.HAS_PRIVACY_POLICY))
