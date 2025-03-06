@@ -15,6 +15,12 @@ server {
     listen 80 default_server;
     server_name ${SERVER_NAME};
 
+    location /elb/healthcheck {
+        access_log off;
+        return 200;
+        add_header Content-Type text/plain;
+    }
+
     location /assets/ {
         alias /var/www/static/;
     }
