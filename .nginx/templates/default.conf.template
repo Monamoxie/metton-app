@@ -3,6 +3,16 @@ upstream core {
 }
 server {
     listen 80;
+    server_name _;  
+
+    location /elb/healthcheck {
+        access_log off;
+        return 200;
+        add_header Content-Type text/plain;
+    }
+}
+server {
+    listen 80 default_server;
     server_name ${SERVER_NAME};
 
     location /assets/ {
@@ -34,14 +44,4 @@ server {
         proxy_set_header Cookie $http_cookie;
     }
 
-}
-server {
-    listen 80;
-    server_name _;  
-
-    location /elb/healthcheck {
-        access_log off;
-        return 200;
-        add_header Content-Type text/plain;
-    }
 }
