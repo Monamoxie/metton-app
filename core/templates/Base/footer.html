@@ -1,19 +1,22 @@
 {% block footer %}
-    <section class="footer">
-        <div class="copyright">
-            <div class="container">
-                <ul class="footer-links">
-                    {% if template_data.has_privacy_policy %}
-                        <li> <a href="{{ template_data.privacy_policy_url }}" target="_blank">Privacy</a> </li>
-                    {% endif %}
-
-                    {% if template_data.has_terms_of_service %}
-                        <li> <a href="{{ template_data.terms_of_service_url }}" target="_blank">Terms</a> </li>
-                    {% endif %}
-                </ul>
-                <p class="">&copy; {{ template_data.curr_year }} {{ template_data.project_name  }}. All rights reserved. </p>
-                <p>Developed by Mona Moxie </p>
-            </div>
-        </div>
-    </section>
+  <section class="footer">
+    <div class="copyright">
+      <div class="container">
+        <ul class="footer-links">
+          {% if template_data.has_privacy_policy %}
+            <li>
+              <a href="{% url 'privacy' %}">Privacy</a>
+            </li>
+          {% endif %}
+          {% if template_data.has_terms_of_service %}
+            <li>
+              <a href="{% url 'terms' %}">Terms</a>
+            </li>
+          {% endif %}
+        </ul>
+        <p class="">&copy; {{ template_data.curr_year }} {{ template_data.project_name }}. All rights reserved.</p>
+        <p>Developed by Mona Moxie</p>
+      </div>
+    </div>
+  </section>
 {% endblock %}

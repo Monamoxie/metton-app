@@ -865,22 +865,24 @@ button.dropdown-item {
 .footer .copyright {
     border-top: 1px solid #f8f5f3;
     margin-top: 0px;
-    color: #fff;
+    color: #ccc;
     background-color: #7f6438;
     padding: 50px 0;
 }
 .footer .footer-links {
-    display: flex; 
-    justify-content: flex-end; 
+    display: flex;  
+    justify-content: flex-start; 
     list-style: none; 
     padding: 0; 
     margin: 0;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
-footer .footer-links li {
+.footer .footer-links li {
     margin-left: 15px; 
 }
-
+.footer .footer-links li a {
+    color: #ccc;
+}
 
 /* calendar */
 .fc .fc-bg-event {
