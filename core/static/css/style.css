@@ -591,7 +591,9 @@ button.dropdown-item {
     width: 100%;
     width: 100vw;
 }
-
+.home-writeup iframe { 
+    min-height: 1000px;
+}
 .banner-box {
     border-radius: 150px;
     background: var(--skin);
