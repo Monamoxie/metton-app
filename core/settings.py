@@ -54,6 +54,14 @@ PRIVACY_POLICY_URL = os.environ.get("PRIVACY_POLICY_URL", None)
 HAS_TERMS_OF_SERVICE = bool(os.environ.get("HAS_TERMS_OF_SERVICE", False)) == True
 TERMS_OF_SERVICE_URL = os.environ.get("TERMS_OF_SERVICE_URL", None)
 
+HAS_GOOGLE_TAG_MANAGER = bool(os.environ.get("HAS_GOOGLE_TAG_MANAGER", False)) == True
+GOOGLE_TAG_MANAGER_HEAD_SNIPPET = os.environ.get(
+    "GOOGLE_TAG_MANAGER_HEAD_SNIPPET", None
+)
+GOOGLE_TAG_MANAGER_BODY_SNIPPET = os.environ.get(
+    "GOOGLE_TAG_MANAGER_BODY_SNIPPET", None
+)
+
 # Application definition
 INSTALLED_APPS = [
     "tempus_dominus",
