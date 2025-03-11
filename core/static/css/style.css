@@ -124,6 +124,10 @@ a {
     font-size: 21px;
 }
 
+.navbar-brand .badge-warning {
+    background-color: #900;
+}
+
 
 .dropdown-menu {
     background-color: var(--skin);
@@ -886,7 +890,8 @@ button.dropdown-item {
 .footer .footer-links li {
     margin-left: 15px; 
 }
-.footer .footer-links li a {
+.footer .footer-links li a,
+.footer p a {
     color: #ccc;
 }
 
