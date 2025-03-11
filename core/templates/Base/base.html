@@ -13,9 +13,24 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <title>Metton - Free Scheduler and Calendar Manager </title>
+    
+    {% if template_data.has_cookies_consent_mode %}
+      <script id="klaro" src="{% static 'js/klaro.js' %}" 
+        data-has-google-tag-manager="{{ template_data.has_google_tag_manager }}">
+      </script>
+      <script src="https://cdn.kiprotect.com/klaro/v0.7.18/klaro.js"></script>
+    {% endif %}
+
+    {% if template_data.has_google_tag_manager and template.google_tag_manager_head_script %}
+      {{ template.google_tag_manager_head_script }}
+    {% endif %}
+
     {% block head_content %}{% endblock %}
   </head>
   <body>
+    {% if template_data.has_google_tag_manager and template.google_tag_manager_body_script %}
+      {{ template.google_tag_manager_body_script }}
+    {% endif %}
     {% include './nav.html' %}
     
     {% block message %}
