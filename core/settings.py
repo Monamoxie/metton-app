@@ -59,8 +59,11 @@ HAS_COOKIES_CONSENT_MODE = (
 )
 
 HAS_GOOGLE_TAG_MANAGER = bool(os.environ.get("HAS_GOOGLE_TAG_MANAGER", False)) == True
-GOOGLE_TAG_MANAGER_HEAD_SCRIPT = os.environ.get("GOOGLE_TAG_MANAGER_HEAD_SCRIPT", None)
-GOOGLE_TAG_MANAGER_BODY_SCRIPT = os.environ.get("GOOGLE_TAG_MANAGER_BODY_SCRIPT", None)
+GOOGLE_TAG_MANAGER_ID = os.environ.get("GOOGLE_TAG_MANAGER_ID", None)
+
+HAS_GOOGLE_RECAPTCHA = bool(os.environ.get("HAS_GOOGLE_RECAPTCHA", False)) == True
+GOOGLE_RECAPTCHA_SITE_KEY = os.environ.get("GOOGLE_RECAPTCHA_SITE_KEY", None)
+GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get("GOOGLE_RECAPTCHA_SECRET_KEY", None)
 
 # Application definition
 INSTALLED_APPS = [
@@ -79,6 +82,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "corsheaders",
+    "django_recaptcha",
 ]
 
 AUTH_USER_MODEL = "dashboard.User"

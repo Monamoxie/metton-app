@@ -17,5 +17,8 @@ class TemplateData:
         self.has_cookies_consent_mode = settings.HAS_COOKIES_CONSENT_MODE
 
         self.has_google_tag_manager = settings.HAS_GOOGLE_TAG_MANAGER
-        self.google_tag_manager_head_script = settings.GOOGLE_TAG_MANAGER_HEAD_SCRIPT
-        self.google_tag_manager_body_script = settings.GOOGLE_TAG_MANAGER_BODY_SCRIPT
+        self.google_tag_manager_id = settings.GOOGLE_TAG_MANAGER_ID
+
+        self.has_google_recaptcha = settings.HAS_GOOGLE_RECAPTCHA
+        self.google_recaptcha_site_key = settings.GOOGLE_RECAPTCHA_SITE_KEY
+        self.google_recaptcha_secret_key = settings.GOOGLE_RECAPTCHA_SECRET_KEY

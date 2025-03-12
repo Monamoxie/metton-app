@@ -13,6 +13,7 @@ Django==5.0.10
 django-cors-headers==4.4.0
 django-dotenv==1.4.2
 django-dump-die==0.1.5
+django-recaptcha==4.0.0
 django-rest-knox==5.0.1
 django-stubs-ext==5.0.2
 django-tempus-dominus==5.1.2.17
