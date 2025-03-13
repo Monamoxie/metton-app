@@ -73,3 +73,12 @@ variable "my_ip_address" {
   description = "IP address of your machine, PC or workstation"
   type = string
 }
+
+variable "HAS_COOKIES_CONSENT_MODE" {}
+
+variable "HAS_GOOGLE_TAG_MANAGER" {}
+variable "GOOGLE_TAG_MANAGER_ID" {}
+
+variable "HAS_GOOGLE_RECAPTCHA" {}
+variable "GOOGLE_RECAPTCHA_SITE_KEY" {}
+variable "GOOGLE_RECAPTCHA_SECRET_KEY" {}

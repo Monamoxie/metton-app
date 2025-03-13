@@ -220,4 +220,40 @@ resource "aws_ssm_parameter" "terms_of_service_url" {
   value = var.terms_of_service_url
 }
 
+resource "aws_ssm_parameter" "has_cookies_consent_mode" {
+  name  = "/HAS_COOKIES_CONSENT_MODE"
+  type  = "SecureString"
+  value = var.HAS_COOKIES_CONSENT_MODE
+}
+
+resource "aws_ssm_parameter" "has_google_tag_manager" {
+  name  = "/HAS_GOOGLE_TAG_MANAGER"
+  type  = "SecureString"
+  value = var.HAS_GOOGLE_TAG_MANAGER
+}
+
+resource "aws_ssm_parameter" "google_tag_manager_id" {
+  name  = "/GOOGLE_TAG_MANAGER_ID"
+  type  = "SecureString"
+  value = var.GOOGLE_TAG_MANAGER_ID
+}
+
+resource "aws_ssm_parameter" "has_google_recaptcha" {
+  name  = "/HAS_GOOGLE_RECAPTCHA"
+  type  = "SecureString"
+  value = var.HAS_GOOGLE_RECAPTCHA
+}
+
+resource "aws_ssm_parameter" "google_recaptcha_site_key" {
+  name  = "/GOOGLE_RECAPTCHA_SITE_KEY"
+  type  = "SecureString"
+  value = var.GOOGLE_RECAPTCHA_SITE_KEY
+}
+
+resource "aws_ssm_parameter" "google_recaptcha_secret_key" {
+  name  = "/GOOGLE_RECAPTCHA_SECRET_KEY"
+  type  = "SecureString"
+  value = var.GOOGLE_RECAPTCHA_SECRET_KEY
+}
+
 

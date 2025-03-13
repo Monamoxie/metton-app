@@ -110,6 +110,15 @@ module "security" {
   privacy_policy_url=var.privacy_policy_url
   has_terms_of_service=var.has_terms_of_service
   terms_of_service_url=var.terms_of_service_url
+
+  HAS_COOKIES_CONSENT_MODE=var.HAS_COOKIES_CONSENT_MODE
+
+  HAS_GOOGLE_TAG_MANAGER=var.HAS_GOOGLE_TAG_MANAGER
+  GOOGLE_TAG_MANAGER_ID=var.GOOGLE_TAG_MANAGER_ID
+
+  HAS_GOOGLE_RECAPTCHA=var.HAS_GOOGLE_RECAPTCHA
+  GOOGLE_RECAPTCHA_SITE_KEY=var.GOOGLE_RECAPTCHA_SITE_KEY
+  GOOGLE_RECAPTCHA_SECRET_KEY=var.GOOGLE_RECAPTCHA_SECRET_KEY
   }
 
 # Database module

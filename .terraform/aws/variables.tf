@@ -105,3 +105,12 @@ variable "has_privacy_policy" {}
 variable "privacy_policy_url" {}
 variable "has_terms_of_service" {}
 variable "terms_of_service_url" {}
+
+variable "HAS_COOKIES_CONSENT_MODE" {}
+
+variable "HAS_GOOGLE_TAG_MANAGER" {}
+variable "GOOGLE_TAG_MANAGER_ID" {}
+
+variable "HAS_GOOGLE_RECAPTCHA" {}
+variable "GOOGLE_RECAPTCHA_SITE_KEY" {}
+variable "GOOGLE_RECAPTCHA_SECRET_KEY" {}
