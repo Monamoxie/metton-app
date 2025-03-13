@@ -1,5 +1,5 @@
 from django.forms import BaseModelForm
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from identity.forms import SignupForm
@@ -16,6 +16,10 @@ class SignupView(GuestOnlyMixin, CreateView):
     success_url = reverse_lazy("dashboard")
 
     def form_valid(self, form):
+        if self.request.POST.get("source"):
+            # spam detected
+            return HttpResponseBadRequest("")
+
         form.save()
 
         user_email = form.cleaned_data["email"]

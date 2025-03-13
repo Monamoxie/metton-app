@@ -20,5 +20,3 @@ class TemplateData:
         self.google_tag_manager_id = settings.GOOGLE_TAG_MANAGER_ID
 
         self.has_google_recaptcha = settings.HAS_GOOGLE_RECAPTCHA
-        self.google_recaptcha_site_key = settings.GOOGLE_RECAPTCHA_SITE_KEY
-        self.google_recaptcha_secret_key = settings.GOOGLE_RECAPTCHA_SECRET_KEY

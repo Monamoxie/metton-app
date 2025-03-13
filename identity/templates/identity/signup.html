@@ -6,17 +6,26 @@
         <form action="{% url 'signup' %}" method="post">
             {% csrf_token %}
             {% for field in form %}
-                <div class="form-row mt-3">
-                    <label for="" class="col-form-label">{{ field.label }}</label>
-                    <div class="col-md-12">
-                        {{ field|add_class:"form-control" }}
+                {% if field.name != 'source' and field.name != 'captcha' %}
+                    <div class="form-row mt-3">
+                        <label for="" class="col-form-label">{{ field.label }}</label>
+                        <div class="col-md-12">
+                            {{ field|add_class:"form-control" }} 
+                        </div>
+                        {% if field.help_text %}
+                            <p class="muted">{{ field.help_text }}</p>
+                        {% endif %}
                     </div>
-                    {% if field.help_text %}
-                        <p class="muted">{{ field.help_text }}</p>
-                    {% endif %}
-                </div>
+                {% else %}
+                     <div class="form-row">
+                        <label for="" class="col-form-label"></label>
+                        <div class="col-md-12">
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
-            <div class="form-row mt-4">
+            <div class="form-row">
                 <button type="submit" class="btn btn-theme">Submit</button>
             </div>
         </form>
