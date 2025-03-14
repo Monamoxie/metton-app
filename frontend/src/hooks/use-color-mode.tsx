@@ -1,5 +1,5 @@
+import { AppModeContext } from "@/contexts/base";
 import { useContext } from "react";
-import { AppModeContext } from "@/providers/AppProvider";
 
 export default function useColorMode() {
   const context = useContext(AppModeContext);

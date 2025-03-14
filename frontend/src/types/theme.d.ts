@@ -1,4 +1,5 @@
 import { IconButtonProps } from "@mui/material/IconButton";
+import { string } from "zod";
 
 export interface ToggleCustomThemeProps {
   showCustomTheme: Boolean;
@@ -14,3 +15,13 @@ export interface ToggleColorModeProps extends IconButtonProps {
   mode: PaletteMode;
   toggleColorMode: () => void;
 }
+
+export enum ColorMode {
+  Light = "light",
+  Dark = "dark",
+}
+
+export type PlatformSettingsContextProps =
+  | Record<string, any>
+  | null
+  | undefined;
