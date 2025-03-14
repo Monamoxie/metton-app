@@ -3,7 +3,7 @@ import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 import "server-only";
 import { getAuthApiHeader, storeToken } from "@/data/cookie";
-import api from "@/utils/axios";
+import api from "@/utils/axios-client";
 
 //********** SIGN UP ********** //
 export async function signup({

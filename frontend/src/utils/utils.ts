@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Dispatch, SetStateAction } from "react";
 import { HttpMethods, LocalApiRequestProps } from "@/types/api";
+import { RawAxiosRequestHeaders } from "axios";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,7 +18,7 @@ export function ApiExceptionHandler(message: string): ApiResponse {
   };
 }
 
-export function getDefaultApiHeader(): HeadersInit {
+export function getDefaultApiHeader(): Record<string, string> {
   return {
     Accept: "application/json",
     "Content-Type": "application/json",

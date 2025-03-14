@@ -50,3 +50,14 @@ export const passwordResetSchema = (t: ReturnType<typeof useTranslations>) => {
     password_confirmation: z.string(),
   });
 };
+
+// ************ PROFILE UPDATE ****************/
+export const profileUpdateSchema = (t: ReturnType<typeof useTranslations>) => {
+  return z.object({
+    name: z.string().min(1, t("errors.FIELD_IS_INVALID", { field: "Name" })),
+    company: z.string().optional(),
+    position: z.string().optional(),
+    profile_summary: z.string().optional(),
+    profile_photo: z.string().optional(),
+  });
+};

@@ -1,4 +1,8 @@
-import { signInSchema, signupSchema } from "@/schemas/identity-schemas";
+import {
+  profileUpdateSchema,
+  signInSchema,
+  signupSchema,
+} from "@/schemas/identity-schemas";
 import * as z from "zod";
 
 export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
@@ -23,3 +27,7 @@ export interface UserProfileCardProps {
   user: UserProfile;
   base_url: string | null;
 }
+
+export type ProfileUpdateInputs = z.infer<
+  ReturnType<typeof profileUpdateSchema>
+>;

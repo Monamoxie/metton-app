@@ -2,7 +2,7 @@ import axios from "axios";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-const api = axios.create({
+const axiosClient = axios.create({
   baseURL: process.env.API_BASE_URL,
 });
 
@@ -26,4 +26,4 @@ const api = axios.create({
 //   NextResponse.redirect(new URL("/"));
 // }
 
-export default api;
+export default axiosClient;
