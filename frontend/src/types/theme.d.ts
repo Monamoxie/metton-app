@@ -16,11 +16,6 @@ export interface ToggleColorModeProps extends IconButtonProps {
   toggleColorMode: () => void;
 }
 
-export enum ColorMode {
-  Light = "light",
-  Dark = "dark",
-}
-
 export type PlatformSettingsContextProps =
   | Record<string, any>
   | null
