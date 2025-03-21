@@ -31,6 +31,7 @@ urlpatterns = [
 
 urlpatterns += [
     path("api/v1/identity/", include("identity.api_urls")),
+    path("api/v1/platform/", include("home.api_urls")),
 ]
 
 # Serve static files during development
