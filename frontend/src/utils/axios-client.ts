@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 const axiosClient = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 });
 
 // Add a response interceptor
