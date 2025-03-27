@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-} from "react";
+import { useState, useEffect, useRef } from "react";
 import { LayoutProps } from "@/types/layout-props";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
@@ -60,7 +57,7 @@ const loadPlatformSettings = async (
   }
 
   try {
-    const response = await axiosClient.get("/bash", {
+    const response = await axiosClient.get("/platform/settings", {
       headers: getDefaultApiHeader(),
     });
     setPlatformSettings(response.data);
@@ -79,8 +76,11 @@ const loadPlatformSettings = async (
 const usePlatformSettings = () => {
   const [platformSettings, setPlatformSettings] =
     useState<PlatformSettingsContextProps>(undefined);
+  const isMounted = useRef(false);
 
   useEffect(() => {
+    if (isMounted.current) return;
+    isMounted.current = true;
     loadPlatformSettings(setPlatformSettings);
   }, []);
 
