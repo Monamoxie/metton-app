@@ -39,15 +39,28 @@ class SignupSerializer(serializers.ModelSerializer):
         },
     )
 
+    source = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
+
     class Meta:
         model = User
-        fields = ["email", "password1", "password2"]
+        fields = ["email", "password1", "password2", "source"]
 
     def validate(self, data):
         if data["password1"] != data["password2"]:
             raise serializers.ValidationError(
                 MessageBag.FIELDS_DO_NOT_MATCH.format(field="Passwords")
             )
+ 
+        # - Hidden input meant to trick bots. Equivalent to a honeypot
+        # - If filled, assume request is from a bot and immediately deny request
+        if "source" in data and data["source"]:
+            raise serializers.ValidationError(
+                {"source": MessageBag.INVALID_REQUEST}
+            )
+
         return data
 
     def create(self, validated_data) -> User:

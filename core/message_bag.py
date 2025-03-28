@@ -12,6 +12,7 @@ class MessageBag:
     DATA_IS_EXPIRED = _("The {data} is expired")
     SUCCESSFUL_DATA_VALIDATION = _("{data} has been successfully validated")
     DATA_ALREADY_VERIFIED = _("{data} is already verified")
+    INVALID_REQUEST = _("Invalid request")
 
     # action based messages
     CREATED_SUCCESSFULLY = _("{data} created successfully")

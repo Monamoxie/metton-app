@@ -10,6 +10,7 @@ export async function signup({
   email,
   password1,
   password2,
+  source,
 }: SignupInputs): Promise<ApiResponse> {
   try {
     const request = await fetch(process.env.API_BASE_URL + "/identity/signup", {
@@ -19,6 +20,7 @@ export async function signup({
         email,
         password1,
         password2,
+        source,
       }),
     });
 

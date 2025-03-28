@@ -49,6 +49,9 @@ export default function SignUpCard() {
     formState: { errors },
   } = useForm<SignupInputs>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      // source: "",
+    },
   });
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
@@ -97,7 +100,7 @@ export default function SignUpCard() {
             </FormControl>
             <FormControl>
               <Box className="password-label-wrap">
-                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormLabel htmlFor="password1">Password</FormLabel>
               </Box>
               <TextField
                 {...register("password1")}
@@ -123,6 +126,17 @@ export default function SignUpCard() {
                 id="password2"
                 required
                 sx={{ ariaLabel: "password2" }}
+              />
+            </FormControl>
+            <FormControl sx={{ display: "none" }}>
+              <FormLabel htmlFor="source">Source</FormLabel>
+              <TextField
+                {...register("source")}
+                name="source"
+                type="hidden"
+                id="source"
+                required
+                sx={{ ariaLabel: "source" }}
               />
             </FormControl>
 
