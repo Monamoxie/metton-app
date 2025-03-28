@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from django.contrib.messages import constants as messages
 from datetime import timedelta
-
+from corsheaders.defaults import default_headers
 # from django.contrib.auth import get_user_model
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,6 +45,18 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    "cache-control",
+)
 CSRF_COOKIE_HTTPONLY = True
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 
@@ -248,13 +260,6 @@ CORS_ALLOW_METHODS = [
     "PATCH",
     "DELETE",
     "OPTIONS",
-]
-
-CORS_ALLOW_HEADERS = [
-    "content-type",
-    "authorization",
-    "x-csrftoken",
-    "x-requested-with",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
