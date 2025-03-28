@@ -21,7 +21,7 @@ import { signupSchema } from "@/schemas/identity-schemas";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
@@ -30,6 +30,8 @@ import { SignupInputs } from "@/types/identity";
 import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import SuccessDisplay from "../SuccessDisplay";
+import { PlatformSettingsContext } from "@/contexts/base";
+import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
 
 export default function SignUpCard() {
   const t = useTranslations();
@@ -62,7 +64,7 @@ export default function SignUpCard() {
 
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
-      {isFinished && getCompletedContent()}
+      {isFinished && GetCompletedContent()}
 
       {!isFinished && (
         <Card className="identity-form-card">
@@ -139,13 +141,15 @@ export default function SignUpCard() {
           <Link href="/identity/signin" component={NextLink}>
             Have an account? Sign In
           </Link>
+
+          <GetTermsAndPrivacyPolicyLinks />
         </Card>
       )}
     </Stack>
   );
 }
 
-function getCompletedContent(): JSX.Element {
+function GetCompletedContent(): JSX.Element {
   return (
     <>
       <Confetti />
@@ -157,5 +161,21 @@ function getCompletedContent(): JSX.Element {
         the confirmation link to get started.
       </SuccessDisplay>
     </>
+  );
+}
+
+function GetTermsAndPrivacyPolicyLinks(): JSX.Element | null {
+  const { termsOfService, privacyPolicy } = useTermsAndPrivacyPolicy();
+
+  if (!termsOfService && !privacyPolicy) return null;
+
+  return (
+    (termsOfService || privacyPolicy) && (
+      <Typography variant="body2" sx={{ marginTop: 2 }}>
+        By signing up, you agree to our {termsOfService}
+        {termsOfService && privacyPolicy && " and "}
+        {privacyPolicy}.
+      </Typography>
+    )
   );
 }
