@@ -60,11 +60,13 @@ const loadPlatformSettings = async (
     const response = await axiosClient.get("/platform/settings", {
       headers: getDefaultApiHeader(),
     });
-    setPlatformSettings(response.data);
-    sessionStorage.setItem(
-      "metton_platform_settings",
-      JSON.stringify(response.data)
-    );
+
+    const data: PlatformSettingsContextProps = response.data.data;
+
+    if (data !== null && data !== undefined) {
+      setPlatformSettings(data);
+      sessionStorage.setItem("metton__platform_settings", JSON.stringify(data));
+    }
   } catch (error) {
     console.error("Failed to fetch platform settings:", error);
   }
