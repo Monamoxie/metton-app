@@ -10,4 +10,4 @@ class PlatformSettingsView(RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         serializer = PlatformSettingsSerializer(instance={})
         
-        return Response({'data': serializer.data, '_message': "This is a message"})
+        return Response(serializer.data)
