@@ -1,3 +1,3 @@
 export interface PairOfStrings {
-  [key: string]: string[];
+  [key: string]: string | string[];
 }
