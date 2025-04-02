@@ -22,7 +22,11 @@ def send_signup_email(user: Union[User, AbstractUser]) -> bool:
             settings.BASE_DIR,
             "identity/templates/identity/emails/email_verification.email.html",
         )
-        email_sender.delay("Email Verification", [user.email], template, context)
+        try:
+            email_sender.delay("Email Verification", [user.email], template, context)
+        except:
+            # log exception 
+            return False
         return True
 
     return False
