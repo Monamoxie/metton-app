@@ -13,6 +13,7 @@ class MessageBag:
     SUCCESSFUL_DATA_VALIDATION = _("{data} has been successfully validated")
     DATA_ALREADY_VERIFIED = _("{data} is already verified")
     INVALID_REQUEST = _("Invalid request")
+    DATA_NOT_ACTIVATED = _("{data} has not been activated or one of it's properties has not been provided")
 
     # action based messages
     CREATED_SUCCESSFULLY = _("{data} created successfully")

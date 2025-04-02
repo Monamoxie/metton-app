@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from core import settings
+from core.utils import CoreUtils
 from dashboard.models.user import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
@@ -44,9 +46,14 @@ class SignupSerializer(serializers.ModelSerializer):
         allow_blank=True
     )
 
+    recaptcha = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
+
     class Meta:
         model = User
-        fields = ["email", "password1", "password2", "source"]
+        fields = ["email", "password1", "password2", "source", "recaptcha"]
 
     def validate(self, data):
         if data["password1"] != data["password2"]:
@@ -60,7 +67,15 @@ class SignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"source": MessageBag.INVALID_REQUEST}
             )
-
+        
+        if "recaptcha" in data and data["recaptcha"]:
+            try:
+                validation = CoreUtils.validate_recaptcha(data["recaptcha"])
+                if validation == None:
+                    raise serializers.ValidationError({"recaptcha": MessageBag.DATA_NOT_ACTIVATED.format(data="reCaptcha")})
+            except Exception as e:
+                raise serializers.ValidationError({"recaptcha": str(e)})
+        
         return data
 
     def create(self, validated_data) -> User:

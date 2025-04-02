@@ -7,7 +7,7 @@ from dashboard.tasks import email_sender
 from identity.enums import VerificationTypes
 from identity.services import VerificationTokenService
 
-
+# TODO ::: convert to IdentityUtils and switch methods to @staticmethod
 def send_signup_email(user: Union[User, AbstractUser]) -> bool:
     """Trigger an email verification event to Celery/RabbitMQ"""
     type = VerificationTypes.EMAIL_VERIFICATION.value
