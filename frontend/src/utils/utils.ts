@@ -67,3 +67,10 @@ export function getUserPublicProfileUrl(
 ) {
   return base_url + "/meet/" + public_id;
 }
+
+export function hasRecaptcha() {
+  return (
+    process.env.NEXT_PUBLIC_HAS_GOOGLE_RECAPTCHA &&
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+  );
+}

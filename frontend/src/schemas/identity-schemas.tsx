@@ -13,6 +13,7 @@ export const signupSchema = (t: ReturnType<typeof useTranslations>) => {
         .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
       password2: z.string(),
       source: z.string().optional(),
+      recaptcha: z.string().optional(),
     })
     .refine((data) => data.password1 === data.password2, {
       message: t("errors.DATA_DO_NOT_MATCH", { data: "Passwords" }),

@@ -7,6 +7,9 @@ import { IDENTITY_DOUBLE_COLUMNS_CSS } from "@/styles/modules/identity.css";
 import Grid from "@mui/material/Grid2";
 import IdentityDisplayBanner from "@/components/identity/IdentityDisplayBanner";
 import { Backdrop } from "@mui/material";
+import {
+  GoogleReCaptchaProvider,
+} from "react-google-recaptcha-v3";
 
 export default function SignupPage() {
   return (
@@ -22,9 +25,27 @@ export default function SignupPage() {
           </Backdrop>
         </Grid>
         <Grid size={{ xs: 12, md: 5 }} sx={{ padding: "12" }}>
-          <SignUpCard />
+          {renderSignUpCard()}
         </Grid>
       </Grid>
     </Stack>
   );
 }
+
+const renderSignUpCard = () => {
+  const hasRecaptcha =
+    process.env.NEXT_PUBLIC_HAS_GOOGLE_RECAPTCHA &&
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  if (hasRecaptcha) {
+    const reCaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string;
+
+    return (
+      <GoogleReCaptchaProvider reCaptchaKey={reCaptchaKey}>
+        <SignUpCard />
+      </GoogleReCaptchaProvider>
+    );
+  }
+
+  return <SignUpCard />;
+};

@@ -11,6 +11,7 @@ export async function signup({
   password1,
   password2,
   source,
+  recaptcha,
 }: SignupInputs): Promise<ApiResponse> {
   try {
     const request = await fetch(process.env.API_BASE_URL + "/identity/signup", {
@@ -21,6 +22,7 @@ export async function signup({
         password1,
         password2,
         source,
+        recaptcha,
       }),
     });
 

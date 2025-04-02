@@ -27,21 +27,23 @@ import Confetti from "../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
 import { SignupInputs } from "@/types/identity";
-import { localApiRequest } from "@/utils/utils";
+import { localApiRequest, hasRecaptcha } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import SuccessDisplay from "../SuccessDisplay";
 import { PlatformSettingsContext } from "@/contexts/base";
 import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
+import { PairOfStrings, HandleRecaptchaProps } from "@/types/core";
+import useRecaptcha from "@/hooks/use-recaptcha";
 
 export default function SignUpCard() {
   const t = useTranslations();
   const schema = signupSchema(t);
 
-  const [responseErrors, setResponseErrors] = useState<{
-    [key: string]: string[];
-  }>({});
+  const [responseErrors, setResponseErrors] = useState<PairOfStrings>({});
   const [isFinished, setIsFinished] = useState(false);
   const [processing, setProcessing] = useState(false);
+
+  const { handleRecaptcha } = useRecaptcha();
 
   const {
     register,
@@ -55,14 +57,30 @@ export default function SignUpCard() {
   });
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    await localApiRequest({
-      url: "/api/identity/signup",
-      method: "POST",
-      body: data,
-      setProcessing,
-      setResponseErrors,
-      setIsFinished,
-    });
+    // Recaptcha block
+    try {
+      const recaptchaToken = await handleRecaptcha();
+
+      if (recaptchaToken) {
+        data.recaptcha = recaptchaToken;
+      }
+
+
+      // todo ::: move to direct api call
+      await localApiRequest({
+        url: "/api/identity/signup",
+        method: "POST",
+        body: data,
+        setProcessing,
+        setResponseErrors,
+        setIsFinished,
+      });
+    } catch (error: any) {
+      setResponseErrors({
+        recaptcha: error.message,
+      });
+      setProcessing(false);
+    }
   };
 
   return (
@@ -113,7 +131,6 @@ export default function SignUpCard() {
                 sx={{ ariaLabel: "password1" }}
               />
             </FormControl>
-
             <FormControl>
               <FormLabel htmlFor="password2">Re-enter Password</FormLabel>
               <TextField

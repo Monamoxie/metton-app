@@ -5,13 +5,14 @@ import { signup } from "@/data/outbound/identity-fetcher";
 
 export async function POST(request: Request) {
   const body: SignupInputs = await request.json();
-  const { email, password1, password2, source } = body;
+  const { email, password1, password2, source, recaptcha } = body;
 
   const response = await signup({
     email,
     password1,
     password2,
     source,
+    recaptcha,
   });
 
   return NextResponse.json(response);
