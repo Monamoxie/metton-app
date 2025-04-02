@@ -4,6 +4,8 @@ from core import settings
 from core.data.template_data import TemplateData
 import requests
 
+from core.message_bag import MessageBag
+
 def template_data(request):
     return {"template_data": TemplateData()}
 
@@ -28,9 +30,9 @@ class CoreUtils:
             print(response)
 
             if not response.get("success"):
-                raise Exception("Invalid token")
+                raise Exception(MessageBag.DATA_IS_INVALID.format(data="reCaptcha token"))
             elif response.get("score", 0) < 0.6:
-                raise Exception("reCaptcha validation failed")
+                raise Exception(MessageBag.DATA_VALIDATION_FAILURE.format(data="reCaptcha. Please refresh the page and re-try to proof you're human!"))
             
             return True
 

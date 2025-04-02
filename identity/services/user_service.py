@@ -11,7 +11,7 @@ from identity.serializers import UserSerializer
 
 class UserService:
     TOKEN_NOT_GENERATED_STATUS = MessageBag.UNABLE_TO_GENERATE_DATA.format(data="Token")
-    CANNOT_VALIDATE_TOKEN_STATUS = MessageBag.UNABLE_TO_VALIDATE_DATA.format(
+    CANNOT_VALIDATE_TOKEN_STATUS = MessageBag.DATA_VALIDATION_FAILURE.format(
         data="Token"
     )
 
