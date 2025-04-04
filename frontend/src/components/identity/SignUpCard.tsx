@@ -21,26 +21,38 @@ import { signupSchema } from "@/schemas/identity-schemas";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
-import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
 import { SignupInputs } from "@/types/identity";
 import { localApiRequest, hasRecaptcha } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import SuccessDisplay from "../SuccessDisplay";
-import { PlatformSettingsContext } from "@/contexts/base";
 import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
-import { PairOfStrings, HandleRecaptchaProps } from "@/types/core";
+import { PairOfStrings } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
 
 export default function SignUpCard() {
+  const [isFinished, setIsFinished] = useState(false);
+
+  return (
+    <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
+      {isFinished ? (
+        <SignUpSuccessCard />
+      ) : (
+        <SignUpFormCard setIsFinished={setIsFinished} />
+      )}
+    </Stack>
+  );
+}
+
+// Form
+const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
   const t = useTranslations();
   const schema = signupSchema(t);
 
   const [responseErrors, setResponseErrors] = useState<PairOfStrings>({});
-  const [isFinished, setIsFinished] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   const { handleRecaptcha } = useRecaptcha();
@@ -65,7 +77,6 @@ export default function SignUpCard() {
         data.recaptcha = recaptchaToken;
       }
 
-
       // todo ::: move to direct api call
       await localApiRequest({
         url: "/api/identity/signup",
@@ -84,103 +95,98 @@ export default function SignUpCard() {
   };
 
   return (
-    <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
-      {isFinished && GetCompletedContent()}
-
-      {!isFinished && (
-        <Card className="identity-form-card">
-          <Typography component="h1" variant="h4" className="card-title">
-            Create Account
-          </Typography>
-          {responseErrors && <ErrorDisplay errors={responseErrors} />}
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            className="card-content"
-          >
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                {...register("email")}
-                error={!!errors.email}
-                helperText={(errors.email?.message as string) || ""}
-                id="email"
-                type="email"
-                placeholder={t("prompts.ENTER_YOUR_DATA", {
-                  data: "email address",
-                })}
-                autoComplete="true"
-                autoFocus
-                required
-                sx={{ ariaLabel: "email" }}
-              />
-            </FormControl>
-            <FormControl>
-              <Box className="password-label-wrap">
-                <FormLabel htmlFor="password1">Password</FormLabel>
-              </Box>
-              <TextField
-                {...register("password1")}
-                error={!!errors.password1}
-                helperText={(errors.password1?.message as string) || ""}
-                placeholder="*******"
-                type="password"
-                id="password1"
-                required
-                sx={{ ariaLabel: "password1" }}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password2">Re-enter Password</FormLabel>
-              <TextField
-                {...register("password2")}
-                error={!!errors.password2}
-                helperText={(errors.password2?.message as string) || ""}
-                name="password2"
-                placeholder="*******"
-                type="password"
-                id="password2"
-                required
-                sx={{ ariaLabel: "password2" }}
-              />
-            </FormControl>
-            <FormControl sx={{ display: "none" }}>
-              <FormLabel htmlFor="source">Source</FormLabel>
-              <TextField
-                {...register("source")}
-                name="source"
-                type="hidden"
-                id="source"
-                required
-                sx={{ ariaLabel: "source" }}
-              />
-            </FormControl>
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={processing}
-            >
-              <ButtonContent
-                processing={processing}
-                defaultText={"Create Account"}
-              />
-            </Button>
+    <Card className="identity-form-card">
+      <Typography component="h1" variant="h4" className="card-title">
+        Create Account
+      </Typography>
+      {responseErrors && <ErrorDisplay errors={responseErrors} />}
+      <Box
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="card-content"
+      >
+        <FormControl>
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <TextField
+            {...register("email")}
+            error={!!errors.email}
+            helperText={(errors.email?.message as string) || ""}
+            id="email"
+            type="email"
+            placeholder={t("prompts.ENTER_YOUR_DATA", {
+              data: "email address",
+            })}
+            autoComplete="true"
+            autoFocus
+            required
+            sx={{ ariaLabel: "email" }}
+          />
+        </FormControl>
+        <FormControl>
+          <Box className="password-label-wrap">
+            <FormLabel htmlFor="password1">Password</FormLabel>
           </Box>
-          <Link href="/identity/signin" component={NextLink}>
-            Have an account? Sign In
-          </Link>
+          <TextField
+            {...register("password1")}
+            error={!!errors.password1}
+            helperText={(errors.password1?.message as string) || ""}
+            placeholder="*******"
+            type="password"
+            id="password1"
+            required
+            sx={{ ariaLabel: "password1" }}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="password2">Re-enter Password</FormLabel>
+          <TextField
+            {...register("password2")}
+            error={!!errors.password2}
+            helperText={(errors.password2?.message as string) || ""}
+            name="password2"
+            placeholder="*******"
+            type="password"
+            id="password2"
+            required
+            sx={{ ariaLabel: "password2" }}
+          />
+        </FormControl>
+        <FormControl sx={{ display: "none" }}>
+          <FormLabel htmlFor="source">Source</FormLabel>
+          <TextField
+            {...register("source")}
+            name="source"
+            type="hidden"
+            id="source"
+            required
+            sx={{ ariaLabel: "source" }}
+          />
+        </FormControl>
 
-          <GetTermsAndPrivacyPolicyLinks />
-        </Card>
-      )}
-    </Stack>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          disabled={processing}
+        >
+          <ButtonContent
+            processing={processing}
+            defaultText={"Create Account"}
+          />
+        </Button>
+      </Box>
+      <Link href="/identity/signin" component={NextLink}>
+        Have an account? Sign In
+      </Link>
+
+      <TermsAndPrivacyPolicyLinksCard />
+    </Card>
   );
-}
+};
 
-function GetCompletedContent(): JSX.Element {
+// On completion
+function SignUpSuccessCard(): JSX.Element {
   return (
     <>
       <Confetti />
@@ -195,7 +201,8 @@ function GetCompletedContent(): JSX.Element {
   );
 }
 
-function GetTermsAndPrivacyPolicyLinks(): JSX.Element | null {
+// Form terms and privacy policy notification and link
+function TermsAndPrivacyPolicyLinksCard(): JSX.Element | null {
   const { termsOfService, privacyPolicy } = useTermsAndPrivacyPolicy();
 
   if (!termsOfService && !privacyPolicy) return null;
@@ -209,4 +216,9 @@ function GetTermsAndPrivacyPolicyLinks(): JSX.Element | null {
       </Typography>
     )
   );
+}
+
+// Component Interfaces
+interface SignUpFormCardProps {
+  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
 }
