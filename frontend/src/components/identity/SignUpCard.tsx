@@ -186,7 +186,7 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
 };
 
 // On completion
-function SignUpSuccessCard(): JSX.Element {
+const SignUpSuccessCard = (): JSX.Element => {
   return (
     <>
       <Confetti />
@@ -199,26 +199,24 @@ function SignUpSuccessCard(): JSX.Element {
       </SuccessDisplay>
     </>
   );
-}
+};
 
 // Form terms and privacy policy notification and link
-function TermsAndPrivacyPolicyLinksCard(): JSX.Element | null {
+const TermsAndPrivacyPolicyLinksCard = (): JSX.Element | null => {
   const { termsOfService, privacyPolicy } = useTermsAndPrivacyPolicy();
 
   if (!termsOfService && !privacyPolicy) return null;
 
   return (
-    (termsOfService || privacyPolicy) && (
-      <Typography variant="body2" sx={{ marginTop: 2 }}>
-        By signing up, you agree to our {termsOfService}
-        {termsOfService && privacyPolicy && " and "}
-        {privacyPolicy}.
-      </Typography>
-    )
+    <Typography variant="body2" sx={{ marginTop: 2 }}>
+      By signing up, you agree to our {termsOfService}
+      {termsOfService && privacyPolicy && " and "}
+      {privacyPolicy}.
+    </Typography>
   );
-}
+};
 
-// Component Interfaces
+// --- Component Interfaces ---
 interface SignUpFormCardProps {
   setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
 }
