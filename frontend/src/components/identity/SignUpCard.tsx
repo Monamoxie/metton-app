@@ -26,12 +26,17 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import NextLink from "next/link";
 import { SignupInputs } from "@/types/identity";
-import { localApiRequest, hasRecaptcha } from "@/utils/utils";
+import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import SuccessDisplay from "../SuccessDisplay";
 import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
 import { PairOfStrings } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
+import axiosClient from "@/utils/axios-client";
+import * as Utils from "@/utils/utils";
+import { error } from "console";
+import { ApiResponse } from "@/types/api";
+import { AxiosError } from "axios";
 
 export default function SignUpCard() {
   const [isFinished, setIsFinished] = useState(false);
@@ -69,7 +74,6 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
   });
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    // Recaptcha block
     try {
       const recaptchaToken = await handleRecaptcha();
 
@@ -77,19 +81,24 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
         data.recaptcha = recaptchaToken;
       }
 
+      const signup = createAccount(data);
+
       // todo ::: move to direct api call
-      await localApiRequest({
-        url: "/api/identity/signup",
-        method: "POST",
-        body: data,
-        setProcessing,
-        setResponseErrors,
-        setIsFinished,
-      });
+      // await localApiRequest({
+      //   url: "/api/identity/signup",
+      //   method: "POST",
+      //   body: data,
+      //   setProcessing,
+      //   setResponseErrors,
+      //   setIsFinished,
+      // });
+
+      if (signup.code !== 200) {
+        setResponseErrors({ error: signup.message });
+      }
+      // Additional logic can go here
     } catch (error: any) {
-      setResponseErrors({
-        recaptcha: error.message,
-      });
+      setResponseErrors({ error: error.message });
       setProcessing(false);
     }
   };
@@ -183,6 +192,20 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
       <TermsAndPrivacyPolicyLinksCard />
     </Card>
   );
+};
+
+const createAccount = async (payload: SignupInputs): Promise<ApiResponse> => {
+  return axiosClient
+    .post("/identity/signup", payload, {
+      headers: Utils.getDefaultApiHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error: any) => {
+      console.log(error);
+      return error.response.data;
+    });
 };
 
 // On completion
