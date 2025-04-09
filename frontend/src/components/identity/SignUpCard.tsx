@@ -32,12 +32,14 @@ import SuccessDisplay from "../SuccessDisplay";
 import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
 import { PairOfStrings } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
-import axiosClient from "@/utils/axios-client";
-import * as Utils from "@/utils/utils";
-import { error } from "console";
-import { ApiResponse } from "@/types/api";
-import { AxiosError } from "axios";
+import * as AuthService from "@/services/auth-service";
 
+// --- Interfaces ---
+interface SignUpFormCardProps {
+  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+// --- Default ---
 export default function SignUpCard() {
   const [isFinished, setIsFinished] = useState(false);
 
@@ -75,30 +77,23 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
     try {
-      const recaptchaToken = await handleRecaptcha();
+      setProcessing(true);
 
+      const recaptchaToken = await handleRecaptcha();
       if (recaptchaToken) {
         data.recaptcha = recaptchaToken;
       }
 
-      const signup = createAccount(data);
-
-      // todo ::: move to direct api call
-      // await localApiRequest({
-      //   url: "/api/identity/signup",
-      //   method: "POST",
-      //   body: data,
-      //   setProcessing,
-      //   setResponseErrors,
-      //   setIsFinished,
-      // });
-
-      if (signup.code !== 200) {
-        setResponseErrors({ error: signup.message });
+      const response = await AuthService.createAccount(data);
+      if (response.code === 200) {
+        return setIsFinished(true);
       }
-      // Additional logic can go here
+      console.log(response);
+
+      return setResponseErrors(response.errors);
     } catch (error: any) {
       setResponseErrors({ error: error.message });
+    } finally {
       setProcessing(false);
     }
   };
@@ -194,20 +189,6 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
   );
 };
 
-const createAccount = async (payload: SignupInputs): Promise<ApiResponse> => {
-  return axiosClient
-    .post("/identity/signup", payload, {
-      headers: Utils.getDefaultApiHeader(),
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error: any) => {
-      console.log(error);
-      return error.response.data;
-    });
-};
-
 // On completion
 const SignUpSuccessCard = (): JSX.Element => {
   return (
@@ -238,8 +219,3 @@ const TermsAndPrivacyPolicyLinksCard = (): JSX.Element | null => {
     </Typography>
   );
 };
-
-// --- Component Interfaces ---
-interface SignUpFormCardProps {
-  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
-}

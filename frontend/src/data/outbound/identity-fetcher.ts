@@ -5,33 +5,6 @@ import "server-only";
 import { getAuthApiHeader, storeToken } from "@/data/cookie";
 import api from "@/utils/axios-client";
 
-//********** SIGN UP ********** //
-export async function signup({
-  email,
-  password1,
-  password2,
-  source,
-  recaptcha,
-}: SignupInputs): Promise<ApiResponse> {
-  try {
-    const request = await fetch(process.env.API_BASE_URL + "/identity/signup", {
-      method: "POST",
-      headers: getDefaultApiHeader(),
-      body: JSON.stringify({
-        email,
-        password1,
-        password2,
-        source,
-        recaptcha,
-      }),
-    });
-
-    return await request.json();
-  } catch (error: any) {
-    return ApiExceptionHandler(error.message);
-  }
-}
-
 //********** SIGN IN ********** //
 export async function signin({
   email,
