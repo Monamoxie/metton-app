@@ -3,6 +3,7 @@ import { ApiResponse } from "@/types/api";
 import * as Utils from "@/utils/utils";
 import { SignupInputs } from "@/types/identity";
 
+// --- Create Account ---
 export const createAccount = async (
   payload: SignupInputs
 ): Promise<ApiResponse> => {

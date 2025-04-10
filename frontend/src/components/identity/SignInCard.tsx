@@ -22,15 +22,31 @@ import { redirect, useRouter } from "next/navigation";
 import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import { SigninInputs } from "@/types/identity";
+import { SetFinishedProps } from "@/types/core";
 
+// --- Default ---
 export default function SignInCard() {
+  const [isFinished, setIsFinished] = useState(false);
+
+  return (
+    <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
+      {isFinished ? (
+        redirect("/dashboard ")
+      ) : (
+        <SignInFormCard setIsFinished={setIsFinished} />
+      )}
+    </Stack>
+  );
+}
+
+// --- Form ---
+const SignInFormCard: React.FC<SetFinishedProps> = ({ setIsFinished }) => {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
-  const [isFinished, setIsFinished] = useState(false);
-  const [processing, setProcessing] = useState(false);
 
   const t = useTranslations();
+  const router = useRouter();
 
   const {
     register,
@@ -39,6 +55,7 @@ export default function SignInCard() {
   } = useForm<SigninInputs>({
     resolver: zodResolver(signInSchema(t)),
   });
+  const [processing, setProcessing] = useState(false);
 
   const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
     await localApiRequest({
@@ -51,91 +68,81 @@ export default function SignInCard() {
     });
   };
 
-  const router = useRouter();
-
   return (
-    <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
-      {isFinished && redirect("/dashboard ")}
-
-      {!isFinished && (
-        <Card className="identity-form-card">
-          <Typography component="h4" variant="h4" className="card-title">
-            Sign In
-          </Typography>
-          {responseErrors && <ErrorDisplay errors={responseErrors} />}
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            className="card-content"
-          >
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                {...register("email")}
-                error={!!errors.email}
-                helperText={(errors.email?.message as string) || ""}
-                id="email"
-                type="email"
-                placeholder={t("prompts.ENTER_YOUR_DATA", {
-                  data: "email address",
-                })}
-                autoComplete="true"
-                autoFocus
-                required
-                sx={{ ariaLabel: "email" }}
-              />
-            </FormControl>
-            <FormControl>
-              <Box className="password-label-wrap">
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Link
-                  component="span"
-                  onClick={() => router.push("/identity/forgot-password")}
-                  variant="body2"
-                  sx={{ alignSelf: "baseline", cursor: "pointer" }}
-                >
-                  Forgot your password?
-                </Link>
-              </Box>
-              <TextField
-                {...register("password")}
-                error={!!errors.password}
-                helperText={(errors.password?.message as string) || ""}
-                placeholder="••••••"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                required
-                sx={{ ariaLabel: "password" }}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox {...register("remember_me")} color="primary" />
-                }
-                label="Remember me"
-              />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={processing}
-            >
-              <ButtonContent processing={processing} defaultText="Sign In" />
-            </Button>
-
+    <Card className="identity-form-card">
+      <Typography component="h4" variant="h4" className="card-title">
+        Sign In
+      </Typography>
+      {responseErrors && <ErrorDisplay errors={responseErrors} />}
+      <Box
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="card-content"
+      >
+        <FormControl>
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <TextField
+            {...register("email")}
+            error={!!errors.email}
+            helperText={(errors.email?.message as string) || ""}
+            id="email"
+            type="email"
+            placeholder={t("prompts.ENTER_YOUR_DATA", {
+              data: "email address",
+            })}
+            autoComplete="true"
+            autoFocus
+            required
+            sx={{ ariaLabel: "email" }}
+          />
+        </FormControl>
+        <FormControl>
+          <Box className="password-label-wrap">
+            <FormLabel htmlFor="password">Password</FormLabel>
             <Link
-              href="/identity/signup"
-              component={NextLink}
-              variant="body1"
-              sx={{ mt: 2 }}
+              component="span"
+              onClick={() => router.push("/identity/forgot-password")}
+              variant="body2"
+              sx={{ alignSelf: "baseline", cursor: "pointer" }}
             >
-              No account? Create One. It&apos;s Free
+              Forgot your password?
             </Link>
           </Box>
-        </Card>
-      )}
-    </Stack>
+          <TextField
+            {...register("password")}
+            error={!!errors.password}
+            helperText={(errors.password?.message as string) || ""}
+            placeholder="••••••"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            required
+            sx={{ ariaLabel: "password" }}
+          />
+          <FormControlLabel
+            control={<Checkbox {...register("remember_me")} color="primary" />}
+            label="Remember me"
+          />
+        </FormControl>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          disabled={processing}
+        >
+          <ButtonContent processing={processing} defaultText="Sign In" />
+        </Button>
+
+        <Link
+          href="/identity/signup"
+          component={NextLink}
+          variant="body1"
+          sx={{ mt: 2 }}
+        >
+          No account? Create One. It&apos;s Free
+        </Link>
+      </Box>
+    </Card>
   );
-}
+};

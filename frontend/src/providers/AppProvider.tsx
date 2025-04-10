@@ -12,7 +12,7 @@ import axiosClient from "@/utils/axios-client";
 import { getDefaultApiHeader } from "@/utils/utils";
 
 export default function AppProvider({ children }: LayoutProps) {
-  const { mode, toggleColorMode } = useColorMode();
+  const { mode, toggleColorMode } = useColorModeToggler();
   const { platformSettings } = usePlatformSettings();
   const theme = createTheme(defaultTheme(mode));
 
@@ -31,7 +31,7 @@ export default function AppProvider({ children }: LayoutProps) {
 /**
  * Manages theme mode and provides a toggle function.
  */
-const useColorMode = () => {
+const useColorModeToggler = () => {
   const [mode, setMode] = useState<ColorMode>(ColorMode.Dark);
 
   const toggleColorMode = () => {

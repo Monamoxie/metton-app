@@ -26,18 +26,12 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import Confetti from "../magicui/confetti";
 import NextLink from "next/link";
 import { SignupInputs } from "@/types/identity";
-import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import SuccessDisplay from "../SuccessDisplay";
 import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
-import { PairOfStrings } from "@/types/core";
+import { PairOfStrings, SetFinishedProps } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
 import * as AuthService from "@/services/auth-service";
-
-// --- Interfaces ---
-interface SignUpFormCardProps {
-  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 // --- Default ---
 export default function SignUpCard() {
@@ -55,7 +49,7 @@ export default function SignUpCard() {
 }
 
 // Form
-const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
+const SignUpFormCard: React.FC<SetFinishedProps> = ({ setIsFinished }) => {
   const t = useTranslations();
   const schema = signupSchema(t);
 
