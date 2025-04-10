@@ -88,7 +88,6 @@ const SignUpFormCard: React.FC<SignUpFormCardProps> = ({ setIsFinished }) => {
       if (response.code === 200) {
         return setIsFinished(true);
       }
-      console.log(response);
 
       return setResponseErrors(response.errors);
     } catch (error: any) {
