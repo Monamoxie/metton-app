@@ -29,7 +29,7 @@ import { SignupInputs } from "@/types/identity";
 import ButtonContent from "../ButtonContent";
 import SuccessDisplay from "../SuccessDisplay";
 import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
-import { PairOfStrings, SetFinishedProps } from "@/types/core";
+import { PairOfStrings, SetIsFinishedProps } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
 import * as AuthService from "@/services/auth-service";
 
@@ -49,7 +49,7 @@ export default function SignUpCard() {
 }
 
 // Form
-const SignUpFormCard: React.FC<SetFinishedProps> = ({ setIsFinished }) => {
+const SignUpFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
   const t = useTranslations();
   const schema = signupSchema(t);
 

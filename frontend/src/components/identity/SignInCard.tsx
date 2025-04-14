@@ -22,7 +22,7 @@ import { redirect, useRouter } from "next/navigation";
 import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import { SigninInputs } from "@/types/identity";
-import { SetFinishedProps } from "@/types/core";
+import { SetIsFinishedProps } from "@/types/core";
 
 // --- Default ---
 export default function SignInCard() {
@@ -31,7 +31,7 @@ export default function SignInCard() {
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
       {isFinished ? (
-        redirect("/dashboard ")
+        redirect("/dashboard")
       ) : (
         <SignInFormCard setIsFinished={setIsFinished} />
       )}
@@ -40,7 +40,7 @@ export default function SignInCard() {
 }
 
 // --- Form ---
-const SignInFormCard: React.FC<SetFinishedProps> = ({ setIsFinished }) => {
+const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});

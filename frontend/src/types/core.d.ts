@@ -6,6 +6,6 @@ export interface ReactSetStateActionProps<T> {
   [key: string | number]: React.Dispatch<React.SetStateAction<T>>;
 }
 
-export interface SetFinishedProps {
+export interface SetIsFinishedProps {
   setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
 }
