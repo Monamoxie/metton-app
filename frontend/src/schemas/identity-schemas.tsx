@@ -31,6 +31,8 @@ export const signInSchema = (t: ReturnType<typeof useTranslations>) => {
       .string()
       .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
     remember_me: z.boolean().optional(),
+    source: z.string().optional(),
+    recaptcha: z.string().optional(),
   });
 };
 

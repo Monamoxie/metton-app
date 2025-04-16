@@ -23,6 +23,8 @@ import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../ButtonContent";
 import { SigninInputs } from "@/types/identity";
 import { SetIsFinishedProps } from "@/types/core";
+import useRecaptcha from "@/hooks/use-recaptcha";
+import * as AuthService from "@/services/auth-service";
 
 // --- Default ---
 export default function SignInCard() {
@@ -57,15 +59,29 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
   });
   const [processing, setProcessing] = useState(false);
 
+  const { handleRecaptcha } = useRecaptcha();
+
   const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
-    await localApiRequest({
-      url: "/api/identity/signin",
-      method: "POST",
-      body: data,
-      setProcessing,
-      setResponseErrors,
-      setIsFinished,
-    });
+    try {
+      setProcessing(true);
+
+      const recaptchaToken = await handleRecaptcha();
+      if (recaptchaToken) {
+        data.recaptcha = recaptchaToken;
+      }
+
+      const response = await AuthService.signIn(data);
+      if (response.code === 200) {
+        AuthService.createUserStore(response.data.token, response.data.user, data.remember_me);
+        return setIsFinished(true);
+      }
+
+      return setResponseErrors(response.errors);
+    } catch (error: any) {
+      setResponseErrors({ error: error.message });
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -123,6 +139,17 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
           <FormControlLabel
             control={<Checkbox {...register("remember_me")} color="primary" />}
             label="Remember me"
+          />
+        </FormControl>
+        <FormControl sx={{ display: "none" }}>
+          <FormLabel htmlFor="source">Source</FormLabel>
+          <TextField
+            {...register("source")}
+            name="source"
+            type="hidden"
+            id="source"
+            required
+            sx={{ ariaLabel: "source" }}
           />
         </FormControl>
         <Button

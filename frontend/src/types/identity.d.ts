@@ -9,6 +9,11 @@ export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
 
 export type SigninInputs = z.infer<ReturnType<typeof signInSchema>>;
 
+export interface UserToken {
+  token: string | null;
+  expiry: Date | null;
+}
+
 export interface UserProfile {
   public_id: string;
   email: string;
@@ -19,8 +24,6 @@ export interface UserProfile {
   profile_summary: null | string;
   profile_photo: null | string;
   date_joined: Date;
-  height_field: null | Integer;
-  width_field: null | Integer;
 }
 
 export interface UserProfileCardProps {
