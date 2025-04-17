@@ -7,7 +7,7 @@ import {
   UserToken,
   UserProfile,
 } from "@/types/identity";
-import useAuthStore from "@/stores/auth-store";
+import { authStore } from "@/stores/auth-store";
 
 // --- Create Account ---
 export const createAccount = async (
@@ -47,12 +47,24 @@ export const createUserStore = (
   user: UserProfile,
   rememberMe: boolean = false
 ) => {
-  const authStore = useAuthStore.getState();
-  authStore.setAuth(token, user, rememberMe);
+  const auth = authStore.getState();
+  auth.setAuth(token, user, rememberMe);
 };
 
-// -- Clear token and user basic info --
+// -- Clear token and user's basic info --
 export const clearUserStore = () => {
-  const authStore = useAuthStore.getState();
-  authStore.clearAuth();
+  const auth = authStore.getState();
+  auth.clearAuth();
+};
+
+// -- // --
+export const isAuthenticated = (): boolean => {
+  const { token, user } = authStore.getState();
+  return !!token?.token && !!user && !isTokenExpired(token);
+};
+
+// -- // --
+export const isTokenExpired = (token: UserToken | null): boolean => {
+  if (!token?.expiry) return true;
+  return new Date(token.expiry).getTime() <= Date.now();
 };

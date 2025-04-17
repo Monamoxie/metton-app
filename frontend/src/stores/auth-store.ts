@@ -25,7 +25,7 @@ const storage = {
   },
 };
 
-const useAuthStore = create<AuthState>()(
+export const authStore = create<AuthState>()(
   persist(
     (set) => ({
       token: null,
@@ -39,5 +39,3 @@ const useAuthStore = create<AuthState>()(
     storage
   )
 );
-
-export default useAuthStore;
