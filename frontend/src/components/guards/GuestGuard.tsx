@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as AuthService from "@/services/auth-service";
 
@@ -10,15 +10,20 @@ export default function GuestGuard({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const hasAuth = AuthService.isAuthenticated();
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
-    if (hasAuth) {
-      router.replace("/dashboard");
-    }
-  }, [hasAuth]);
+    const authenticated = AuthService.isAuthenticated();
+    authenticated ? router.replace("/dashboard") : setIsGuest(true);
 
-  if (hasAuth) return null;
+    setAuthChecked(true); // we're done checking
+  }, [router]);
 
-  return <>{children}</>;
+  if (!authChecked) {
+    // Optional loading UI while checking
+    return <div>Loading... please wait</div>;
+  }
+
+  return isGuest ? <>{children}</> : null;
 }

@@ -1,18 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as AuthService from "@/services/auth-service";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const hasAuth = AuthService.isAuthenticated();
+  const [authChecked, setAuthChecked] = useState(false);
+  const [hasAuth, setHasAuth] = useState(false);
 
   useEffect(() => {
-    if (!hasAuth) router.replace("/identity/signin");
-  }, [hasAuth]);
+    const authenticated = AuthService.isAuthenticated();
+    !authenticated ? router.replace("/identity/signin") : setHasAuth(true);
+    setAuthChecked(true);
+  }, [router]);
 
-  if (!hasAuth) return null;
+  if (!authChecked) {
+    // return <div>Loading... please wait</div>; // optional loader
+  }
 
-  return <>{children}</>;
+  return hasAuth ? <>{children}</> : null;
 }
