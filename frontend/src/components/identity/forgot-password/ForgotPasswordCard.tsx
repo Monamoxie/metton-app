@@ -25,7 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import Confetti from "../magicui/confetti";
+import Confetti from "../../magicui/confetti";
 import { Dispatch, SetStateAction } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";

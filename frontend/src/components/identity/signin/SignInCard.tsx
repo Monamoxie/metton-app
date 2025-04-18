@@ -20,7 +20,7 @@ import ErrorDisplay from "@/components/ErrorDisplay";
 import NextLink from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { localApiRequest } from "@/utils/utils";
-import ButtonContent from "../ButtonContent";
+import ButtonContent from "../../ButtonContent";
 import { SigninInputs } from "@/types/identity";
 import { SetIsFinishedProps } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
@@ -72,7 +72,11 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
 
       const response = await AuthService.signIn(data);
       if (response.code === 200) {
-        AuthService.createUserStore(response.data.token, response.data.user, data.remember_me);
+        AuthService.createUserStore(
+          response.data.token,
+          response.data.user,
+          data.remember_me
+        );
         return setIsFinished(true);
       }
 

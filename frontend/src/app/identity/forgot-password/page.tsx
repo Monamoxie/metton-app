@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import Stack from "@mui/material/Stack";
-import SignInCard from "@/components/identity/SignInCard";
+import SignInCard from "@/components/identity/signin/SignInCard";
 import { IDENTITY_DOUBLE_COLUMNS_CSS } from "@/styles/modules/identity.css";
 import Grid from "@mui/material/Grid2";
 import IdentityDisplayBanner from "@/components/identity/IdentityDisplayBanner";
 import { Backdrop } from "@mui/material";
-import ForgotPasswordCard from "@/components/identity/ForgotPasswordCard";
+import ForgotPasswordCard from "@/components/identity/forgot-password/ForgotPasswordCard";
 import GuestGuard from "@/components/guards/GuestGuard";
 
 export default function ForgotPasswordPage() {
