@@ -23,6 +23,12 @@ export const storeToken = async (token: string, expiry: string) => {
   return true;
 };
 
+export const clearToken = async () => {
+  cookies().delete("bearer_token");
+
+  return true;
+};
+
 export const getToken = async (): Promise<string> => {
   return (await cookies()).get("bearer_token")?.value || "";
 };
