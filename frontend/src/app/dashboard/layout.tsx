@@ -20,27 +20,25 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <AuthGuard>
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
-        <TopBar handleSidebarToggle={handleDrawerToggle} />
-        <Sidebar
-          mobileOpen={mobileOpen}
-          handleDrawerToggle={handleDrawerToggle}
-        />
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <TopBar handleSidebarToggle={handleDrawerToggle} />
+      <Sidebar
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      />
 
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            p: { xs: 2, sm: 3 },
-            mt: 8,
-            bgcolor: "background.default",
-          }}
-        >
-          {children}
-        </Box>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: { xs: 2, sm: 3 },
+          mt: 8,
+          bgcolor: "background.default",
+        }}
+      >
+        {children}
       </Box>
-    </AuthGuard>
+    </Box>
   );
 };
 

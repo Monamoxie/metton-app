@@ -8,28 +8,25 @@ import Grid from "@mui/material/Grid2";
 import IdentityDisplayBanner from "@/components/identity/IdentityDisplayBanner";
 import { Backdrop } from "@mui/material";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import GuestGuard from "@/components/guards/GuestGuard";
 
 export default function SignInPage() {
   return (
-    <GuestGuard>
-      <Stack direction="column" sx={IDENTITY_DOUBLE_COLUMNS_CSS}>
-        <Grid container sx={{ height: "100dvh" }}>
-          <Grid size={{ xs: 12, md: 7 }} className="identity-col-1">
-            <Backdrop
-              className="identity-sign-shared-backdrop"
-              open={true}
-              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            >
-              <IdentityDisplayBanner message="Welcome Back." />
-            </Backdrop>
-          </Grid>
-          <Grid size={{ xs: 12, md: 5 }} sx={{ padding: "12" }}>
-            {renderSignInCard()}
-          </Grid>
+    <Stack direction="column" sx={IDENTITY_DOUBLE_COLUMNS_CSS}>
+      <Grid container sx={{ height: "100dvh" }}>
+        <Grid size={{ xs: 12, md: 7 }} className="identity-col-1">
+          <Backdrop
+            className="identity-sign-shared-backdrop"
+            open={true}
+            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          >
+            <IdentityDisplayBanner message="Welcome Back." />
+          </Backdrop>
         </Grid>
-      </Stack>
-    </GuestGuard>
+        <Grid size={{ xs: 12, md: 5 }} sx={{ padding: "12" }}>
+          {renderSignInCard()}
+        </Grid>
+      </Grid>
+    </Stack>
   );
 }
 
