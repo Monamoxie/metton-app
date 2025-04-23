@@ -52,9 +52,9 @@ export const createUserStore = (
 };
 
 // -- Clear token and user's basic info --
-export const clearUserStore = () => {
+export const clearUserStore = async () => {
   const auth = authStore.getState();
-  auth.clearAuth();
+  await auth.clearAuth();
 };
 
 // -- // --
