@@ -32,9 +32,31 @@ export const authStore = create<AuthState>()(
       user: null,
       rememberMe: false,
       setAuth: (token, user, rememberMe) => {
+        // update zustand
         set({ token, user, rememberMe });
+
+        // Secure server-side cookie (middleware uses this)
+        fetch("/api/auth/set", {
+          method: "POST",
+          body: JSON.stringify({ token: token.token, expiry: token.expiry }),
+          headers: { "Content-Type": "application/json" },
+        });
       },
-      clearAuth: () => set({ user: null, rememberMe: false }),
+      clearAuth: async () => {
+        set({ user: null, rememberMe: false });
+
+        fetch("/api/auth/clear", {
+          method: "POST",
+        });
+
+        try {
+          await fetch("/api/auth/clear", {
+            method: "POST",
+          });
+        } catch (err) {
+          console.error("Failed to clear cookie:", err);
+        }
+      },
     }),
     storage
   )

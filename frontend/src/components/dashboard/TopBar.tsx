@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AppBar,
   Toolbar,
@@ -15,6 +17,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import useColorMode from "@/hooks/use-color-mode";
 import Link from "next/link";
+import * as AuthService from "@/services/auth-service";
+import { useRouter } from "next/navigation";
 
 import ToggleColorMode from "@/components/ToggleColorMode";
 interface TopBarProps {
@@ -35,6 +39,8 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
   };
 
   const { mode, toggleColorMode } = useColorMode();
+
+  const router = useRouter();
 
   return (
     <AppBar
@@ -95,7 +101,15 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
           </MenuItem>
           <MenuItem>Change Password</MenuItem>
           <MenuItem>Settings</MenuItem>
-          <MenuItem sx={{ color: "error.main" }}>Logout</MenuItem>
+          <MenuItem
+            sx={{ color: "error.main" }}
+            onClick={async () => {
+              await AuthService.clearUserStore();
+              router.push("/identity/signin");
+            }}
+          >
+            Logout
+          </MenuItem>
         </Menu>
 
         {/* Notifications Menu */}
