@@ -17,6 +17,7 @@ class UserService:
 
     @classmethod
     def create_token(cls, user, remember_user=False) -> Union[str, object]:
+        # todo ::: improve token expiry time IF remember_user == false
         token_ttl = timedelta(days=30) if remember_user else timedelta(hours=1)
         token_instance = AuthToken.objects.create(user=user, expiry=token_ttl)
 

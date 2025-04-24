@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 import TopBar from "../../components/dashboard/TopBar";
 import Sidebar from "../../components/dashboard/Sidebar";
-import AuthGuard from "@/components/guards/AuthGuard";
 
 interface LayoutProps {
   children?: React.ReactNode;
