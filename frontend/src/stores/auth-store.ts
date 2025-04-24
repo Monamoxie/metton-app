@@ -32,7 +32,7 @@ export const authStore = create<AuthState>()(
       user: null,
       rememberMe: false,
       setAuth: (token, user, rememberMe) => {
-        // update zustand
+        // todo ::: @depreciated. No need to store nor use the token stored in zuzstand as this is now handled by the Next js cookie and middleware
         set({ token, user, rememberMe });
 
         // Secure server-side cookie (middleware uses this)
@@ -40,6 +40,7 @@ export const authStore = create<AuthState>()(
           method: "POST",
           body: JSON.stringify({ token: token.token, expiry: token.expiry }),
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
       },
       clearAuth: async () => {

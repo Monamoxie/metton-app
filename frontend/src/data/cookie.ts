@@ -3,7 +3,6 @@ import "server-only";
 import { AuthApiHeaderResponse } from "@/types/api";
 import { cookies } from "next/headers";
 import { getDefaultApiHeader } from "../utils/utils";
-import { AxiosHeaders } from "axios";
 
 export const verifyToken = async () => {
   const token = (await cookies()).get("bearer_token")?.value;
