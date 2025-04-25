@@ -11,10 +11,11 @@ from identity.services import UserService
 from identity.permissions import GuestOnlyPermission
 from identity.serializers.forgot_password_serializer import ForgotPasswordSerializer
 from identity.services.verification_token_service import VerificationTokenService
-
+from core.throttles import IdentityFormsThrottle
 
 class ForgotPasswordView(APIView):
     permission_classes = [GuestOnlyPermission]
+    throttle_classes = [IdentityFormsThrottle]
 
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)

@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from core.message_bag import MessageBag
-from core.throttles import SignupRateThrottle
+from core.throttles import IdentityFormsThrottle
 from dashboard.models.user import User
 from identity.permissions import GuestOnlyPermission
 from identity.serializers import SignupSerializer, UserSerializer
@@ -10,7 +10,7 @@ from identity.utils import send_signup_email
 
 class SignupView(APIView):
     permission_classes = [GuestOnlyPermission]
-    throttle_classes = [SignupRateThrottle]
+    throttle_classes = [IdentityFormsThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = SignupSerializer(data=request.data)

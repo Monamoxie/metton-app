@@ -3,7 +3,7 @@ from rest_framework.exceptions import Throttled
 
 from core import settings
 
-class SignupRateThrottle(AnonRateThrottle):
+class IdentityFormsThrottle(AnonRateThrottle):
     rate = "5/hour"
 
     def throttle_failure(self):
