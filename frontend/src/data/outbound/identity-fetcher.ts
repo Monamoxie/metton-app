@@ -28,26 +28,6 @@ export async function verifyToken(
   }
 }
 
-// ********** FORGOT PASSWORD ********** //
-export async function forgotPassword(email: string): Promise<ApiResponse> {
-  try {
-    const request = await fetch(
-      process.env.API_BASE_URL + "/identity/forgot-password",
-      {
-        method: "POST",
-        headers: getDefaultApiHeader(),
-        body: JSON.stringify({
-          email,
-        }),
-      }
-    );
-
-    return await request.json();
-  } catch (error: any) {
-    return ApiExceptionHandler(error.message);
-  }
-}
-
 // ********** VERIFY PASSWORD RESET TOKEN ********** //
 export async function verifyPasswordResetToken(
   token: string | undefined
