@@ -104,7 +104,7 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
           <MenuItem
             sx={{ color: "error.main" }}
             onClick={async () => {
-              await AuthService.clearUserStore();
+              await AuthService.clearUserSession();
               router.push("/identity/signin");
             }}
           >

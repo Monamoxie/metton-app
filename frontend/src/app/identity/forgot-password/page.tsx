@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Stack from "@mui/material/Stack";
-import SignInCard from "@/components/identity/signin/SignInCard";
 import { IDENTITY_DOUBLE_COLUMNS_CSS } from "@/styles/modules/identity.css";
 import Grid from "@mui/material/Grid2";
 import IdentityDisplayBanner from "@/components/identity/IdentityDisplayBanner";

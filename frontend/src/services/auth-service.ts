@@ -42,7 +42,7 @@ export const signIn = async (payload: SigninInputs): Promise<ApiResponse> => {
 };
 
 // -- Store token and user basic info --
-export const createUserStore = (
+export const persistUserSession = (
   token: UserToken,
   user: UserProfile,
   rememberMe: boolean = false
@@ -52,7 +52,7 @@ export const createUserStore = (
 };
 
 // -- Clear token and user's basic info --
-export const clearUserStore = async () => {
+export const clearUserSession = async () => {
   const auth = authStore.getState();
   await auth.clearAuth();
 };
