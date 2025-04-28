@@ -2,7 +2,7 @@ import { hasRecaptcha } from "@/utils/utils";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useMemo } from "react";
 
-export default function useRecaptcha() {
+export default function useRecaptcha(action: null | string = null) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const handleRecaptcha = useMemo(() => {
@@ -16,13 +16,13 @@ export default function useRecaptcha() {
       }
 
       try {
-        const token = await executeRecaptcha("signup");
+        const token = await executeRecaptcha(action || undefined);
         return token;
       } catch (error) {
         throw new Error("Failed to execute ReCaptcha. Please try again.");
       }
     };
-  }, [executeRecaptcha]);
+  }, [executeRecaptcha, action]);
 
   return { handleRecaptcha };
 }
