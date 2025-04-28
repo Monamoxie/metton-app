@@ -6,6 +6,7 @@ import {
   SignupInputs,
   UserToken,
   UserProfile,
+  ForgotPasswordInputs,
 } from "@/types/identity";
 import { authStore } from "@/stores/auth-store";
 
@@ -67,4 +68,25 @@ export const isAuthenticated = (): boolean => {
 export const isTokenExpired = (token: UserToken | null): boolean => {
   if (!token?.expiry) return true;
   return new Date(token.expiry).getTime() <= Date.now();
+};
+
+// -- // --
+export const requestPasswordReset = async (
+  payload: ForgotPasswordInputs
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.post(
+      "/identity/forgot-password",
+      payload,
+      {
+        headers: Utils.getDefaultApiHeader(),
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
 };

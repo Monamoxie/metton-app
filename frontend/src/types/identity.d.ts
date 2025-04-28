@@ -2,12 +2,17 @@ import {
   profileUpdateSchema,
   signInSchema,
   signupSchema,
+  forgotPasswordSchema,
 } from "@/schemas/identity-schemas";
 import * as z from "zod";
 
 export type SignupInputs = z.infer<ReturnType<typeof signupSchema>>;
 
 export type SigninInputs = z.infer<ReturnType<typeof signInSchema>>;
+
+export type ForgotPasswordInputs = z.infer<
+  ReturnType<typeof forgotPasswordSchema>
+>;
 
 export interface UserToken {
   token: string | null;
