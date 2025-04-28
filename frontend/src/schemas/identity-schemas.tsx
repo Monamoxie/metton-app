@@ -42,6 +42,8 @@ export const forgotPasswordSchema = (t: ReturnType<typeof useTranslations>) => {
     email: z
       .string()
       .email(t("errors.FIELD_IS_INVALID", { field: "email address" })),
+    source: z.string().optional(),
+    recaptcha: z.string().optional(),
   });
 };
 
