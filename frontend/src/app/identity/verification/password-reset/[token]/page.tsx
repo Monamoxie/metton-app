@@ -1,5 +1,5 @@
 import PasswordResetCard from "@/components/identity/password-reset/PasswordResetCard";
-import { Container } from "@mui/material";
+import { Card, Container } from "@mui/material";
 
 type PageProps = {
   params: {
@@ -10,7 +10,9 @@ type PageProps = {
 export default async function PasswordResetPage({ params }: PageProps) {
   return (
     <Container sx={{ mt: 15 }}>
-      <PasswordResetCard token={params.token} />
+      <Card>
+        <PasswordResetCard token={params.token} />
+      </Card>
     </Container>
   );
 }

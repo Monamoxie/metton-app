@@ -90,3 +90,26 @@ export const requestPasswordReset = async (
     return Utils.ApiExceptionHandler(error.message);
   }
 };
+
+// -- // --
+export const verifyPasswordResetToken = async (
+  token: string
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.post(
+      "/identity/verification/password-reset",
+      {
+        token,
+      },
+      {
+        headers: Utils.getDefaultApiHeader(),
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};

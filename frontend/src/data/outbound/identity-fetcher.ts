@@ -1,5 +1,4 @@
 import { ApiResponse, VerifyTokenProps, PasswordResetProps } from "@/types/api";
-import { SigninInputs, SignupInputs } from "@/types/identity";
 import { ApiExceptionHandler, getDefaultApiHeader } from "@/utils/utils";
 import "server-only";
 import { getAuthApiHeader, storeToken } from "@/data/cookie";
@@ -28,27 +27,6 @@ export async function verifyToken(
   }
 }
 
-// ********** VERIFY PASSWORD RESET TOKEN ********** //
-export async function verifyPasswordResetToken(
-  token: string | undefined
-): Promise<ApiResponse> {
-  try {
-    const request = await fetch(
-      process.env.API_BASE_URL + "/identity/verification/password-reset",
-      {
-        method: "POST",
-        headers: getDefaultApiHeader(),
-        body: JSON.stringify({
-          token,
-        }),
-      }
-    );
-
-    return await request.json();
-  } catch (error: any) {
-    return ApiExceptionHandler(error.message);
-  }
-}
 
 // **********  PASSWORD RESET ********** //
 export async function passwordReset({
