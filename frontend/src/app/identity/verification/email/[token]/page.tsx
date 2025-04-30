@@ -1,7 +1,5 @@
-import { verifyToken } from "@/data/outbound/identity-fetcher";
-import ErrorDisplay from "@/components/ErrorDisplay";
-import SuccessDisplay from "@/components/SuccessDisplay";
 import { Card, Container } from "@mui/material";
+import EmailVerificationCard from "@/components/identity/verification/email/EmailVerificationCard";
 
 type PageProps = {
   params: {
@@ -10,21 +8,10 @@ type PageProps = {
 };
 
 export default async function EmailVerificationPage({ params }: PageProps) {
-  const token = params.token;
-  const response = await verifyToken(token);
-
   return (
     <Container sx={{ pt: 30 }}>
       <Card>
-        {response.code !== 200 && <ErrorDisplay errors={response.errors} />}
-
-        {response.code === 200 && (
-          <SuccessDisplay
-            title={response.message}
-            ctaMessage="Go to Dashboard"
-            ctaUrl="/"
-          />
-        )}
+        <EmailVerificationCard token={params.token} />
       </Card>
     </Container>
   );

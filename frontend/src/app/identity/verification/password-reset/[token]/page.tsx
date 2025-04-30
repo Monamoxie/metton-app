@@ -1,4 +1,4 @@
-import PasswordResetCard from "@/components/identity/password-reset/PasswordResetCard";
+import PasswordResetCard from "@/components/identity/verification/password-reset/PasswordResetCard";
 import { Card, Container } from "@mui/material";
 
 type PageProps = {

@@ -28,6 +28,27 @@ export const createAccount = async (
   }
 };
 
+// -- // --
+export const verifyEmailToken = async (token: string): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.patch(
+      "/identity/verification/email",
+      {
+        token,
+      },
+      {
+        headers: Utils.getDefaultApiHeader(),
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
 // -- Sign In --
 export const signIn = async (payload: SigninInputs): Promise<ApiResponse> => {
   try {
