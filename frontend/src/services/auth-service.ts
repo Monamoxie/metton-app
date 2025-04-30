@@ -7,6 +7,7 @@ import {
   UserToken,
   UserProfile,
   ForgotPasswordInputs,
+  PasswordResetInput,
 } from "@/types/identity";
 import { authStore } from "@/stores/auth-store";
 
@@ -100,6 +101,31 @@ export const verifyPasswordResetToken = async (
       "/identity/verification/password-reset",
       {
         token,
+      },
+      {
+        headers: Utils.getDefaultApiHeader(),
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
+// -- // --
+export const passwordReset = async (
+  token: string,
+  data: PasswordResetInput
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.patch(
+      "/identity/password-reset",
+      {
+        token,
+        ...data,
       },
       {
         headers: Utils.getDefaultApiHeader(),
