@@ -1,4 +1,4 @@
-import { hasRecaptcha } from "@/utils/utils";
+import * as CoreUtil from "@/utils/core-util";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useMemo } from "react";
 
@@ -7,7 +7,7 @@ export default function useRecaptcha(action: null | string = null) {
 
   const handleRecaptcha = useMemo(() => {
     return async (): Promise<string | null> => {
-      if (!hasRecaptcha()) {
+      if (!CoreUtil.hasRecaptcha()) {
         return null;
       }
 
