@@ -5,6 +5,9 @@ import { Dispatch, SetStateAction } from "react";
 import { HttpMethods, LocalApiRequestProps } from "@/types/api";
 import { RawAxiosRequestHeaders } from "axios";
 
+// todo ::: @depreciated
+// to migrate all these functions into core utils
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -66,11 +69,4 @@ export function getUserPublicProfileUrl(
   base_url: string | null
 ) {
   return base_url + "/meet/" + public_id;
-}
-
-export function hasRecaptcha() {
-  return (
-    process.env.NEXT_PUBLIC_HAS_GOOGLE_RECAPTCHA &&
-    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
-  );
 }
