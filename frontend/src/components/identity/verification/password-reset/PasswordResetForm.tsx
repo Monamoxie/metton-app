@@ -3,7 +3,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Alert, AlertTitle, Card, Link, Stack } from "@mui/material";
+import { Card, Link, Stack } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -11,16 +11,12 @@ import Typography from "@mui/material/Typography";
 import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { passwordResetSchema } from "@/schemas/identity-schemas";
-import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import Confetti from "../../magicui/confetti";
 import NextLink from "next/link";
-import ButtonContent from "../../ButtonContent";
-import { localApiRequest } from "@/utils/utils";
-import SuccessDisplay from "../../SuccessDisplay";
+import ButtonContent from "../../../ButtonContent";
 import { SetStateProp } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
 import * as AuthService from "@/services/auth-service";
@@ -31,7 +27,7 @@ interface FormProps {
   setIsResetComplete: SetStateProp<boolean>;
 }
 
-export default function PasswordResetCardForm({
+export default function PasswordResetForm({
   token,
   setIsResetComplete,
 }: FormProps) {

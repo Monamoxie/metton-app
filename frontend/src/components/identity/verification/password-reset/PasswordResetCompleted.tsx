@@ -1,7 +1,7 @@
-import Confetti from "../../magicui/confetti";
-import SuccessDisplay from "../../SuccessDisplay";
+import Confetti from "../../../magicui/confetti";
+import SuccessDisplay from "../../../SuccessDisplay";
 
-export default function PasswordResetCardCompleted() {
+export default function PasswordResetCompleted() {
   return (
     <>
       <Confetti />

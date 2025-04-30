@@ -4,11 +4,12 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import * as AuthService from "@/services/auth-service";
-import { CircularProgress, Box, Typography } from "@mui/material";
-import PasswordResetCardForm from "./PasswordResetCardForm";
-import PasswordResetCardCompleted from "./PasswordResetCardCompleted";
+import { Box } from "@mui/material";
+import PasswordResetForm from "./PasswordResetForm";
+import PasswordResetCompleted from "./PasswordResetCompleted";
 import * as CoreUtil from "@/utils/core-util";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import CircularProgressBox from "@/components/loaders/CircularProgressBox";
 
 interface PasswordResetCardProps {
   token?: string;
@@ -46,20 +47,7 @@ export default function PasswordResetCard({ token }: PasswordResetCardProps) {
   }, [token]);
 
   // validating
-  if (isValidatingToken) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  if (isValidatingToken) return <CircularProgressBox />;
 
   if (!isValidToken) {
     return (
@@ -80,17 +68,17 @@ export default function PasswordResetCard({ token }: PasswordResetCardProps) {
     );
   }
 
-  if (isResetComplete) return <PasswordResetCardCompleted />;
+  if (isResetComplete) return <PasswordResetCompleted />;
 
   return CoreUtil.hasRecaptcha() ? (
     <GoogleReCaptchaProvider reCaptchaKey={CoreUtil.getRecaptchaKey()}>
-      <PasswordResetCardForm
+      <PasswordResetForm
         token={token as string}
         setIsResetComplete={setIsResetComplete}
       />
     </GoogleReCaptchaProvider>
   ) : (
-    <PasswordResetCardForm
+    <PasswordResetForm
       token={token as string}
       setIsResetComplete={setIsResetComplete}
     />
