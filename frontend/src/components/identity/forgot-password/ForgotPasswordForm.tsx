@@ -20,13 +20,13 @@ import useRecaptcha from "@/hooks/use-recaptcha";
 import * as AuthService from "@/services/auth-service";
 import { ForgotPasswordInputs } from "@/types/identity";
 
-interface ForgotPasswordCardFormProps {
+interface ForgotPasswordFormProps {
   setIsFinished: SetStateProp<boolean>;
 }
 
-export default function ForgotPasswordCardForm({
+export default function ForgotPasswordForm({
   setIsFinished,
-}: ForgotPasswordCardFormProps) {
+}: ForgotPasswordFormProps) {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});

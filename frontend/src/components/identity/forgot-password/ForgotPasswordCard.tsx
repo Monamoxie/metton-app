@@ -3,8 +3,8 @@
 import { Stack } from "@mui/material";
 import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
 import { useState } from "react";
-import ForgotPasswordCardCompleted from "./ForgotPasswordCardCompleted";
-import ForgotPasswordCardForm from "./ForgotPasswordCardForm";
+import ForgotPasswordCompleted from "./ForgotPasswordCompleted";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 
 export default function ForgotPasswordCard() {
   const [isFinished, setIsFinished] = useState(false);
@@ -13,9 +13,9 @@ export default function ForgotPasswordCard() {
   return (
     <Stack direction="column" sx={IDENTITY_FORM_CARD_CSS}>
       {isFinished ? (
-        <ForgotPasswordCardCompleted message={message} />
+        <ForgotPasswordCompleted message={message} />
       ) : (
-        <ForgotPasswordCardForm
+        <ForgotPasswordForm
           setIsFinished={setIsFinished}
         />
       )}

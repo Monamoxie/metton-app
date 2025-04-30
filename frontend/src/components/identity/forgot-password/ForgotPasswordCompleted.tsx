@@ -2,13 +2,13 @@ import Confetti from "@/components/magicui/confetti";
 import { Alert, AlertTitle } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-interface ForgotPasswordCardCompletedProps {
+interface ForgotPasswordCompletedProps {
   message?: string;
 }
 
-export default function ForgotPasswordCardCompleted({
+export default function ForgotPasswordCompleted({
   message,
-}: ForgotPasswordCardCompletedProps): JSX.Element {
+}: ForgotPasswordCompletedProps): JSX.Element {
   return (
     <>
       <Confetti />
