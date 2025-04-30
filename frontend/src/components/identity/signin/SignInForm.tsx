@@ -26,7 +26,7 @@ import { SetIsFinishedProps } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
 import * as AuthService from "@/services/auth-service";
 
-// --- Form ---
+
 const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
