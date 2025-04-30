@@ -1,29 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Button from "@mui/material/Button";
-import { Alert, AlertTitle, Card, Link, Stack } from "@mui/material";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import { IDENTITY_FORM_CARD_CSS } from "@/styles/modules/identity.css";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { passwordResetSchema } from "@/schemas/identity-schemas";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import Confetti from "../../magicui/confetti";
-import NextLink from "next/link";
-import ButtonContent from "../../ButtonContent";
-import { localApiRequest } from "@/utils/utils";
-import SuccessDisplay from "../../SuccessDisplay";
 import * as AuthService from "@/services/auth-service";
 import { CircularProgress, Box, Typography } from "@mui/material";
 import PasswordResetCardForm from "./PasswordResetCardForm";
-
-type ResetPasswordInput = z.infer<ReturnType<typeof passwordResetSchema>>;
+import PasswordResetCardCompleted from "./PasswordResetCardCompleted";
+import * as CoreUtil from "@/utils/core-util";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 interface PasswordResetCardProps {
   token?: string;
@@ -33,35 +18,35 @@ export default function PasswordResetCard({ token }: PasswordResetCardProps) {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
-  const [processing, setProcessing] = useState(true);
+  const [isValidatingToken, setIsValidatingToken] = useState(true);
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
+  const [isResetComplete, setIsResetComplete] = useState(false);
 
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        if (token == undefined) {
-          return setResponseErrors({ name: ["Missing token"] });
-        }
-        
+        if (token == undefined) return;
         const response = await AuthService.verifyPasswordResetToken(token);
 
         if (response.code === 200) {
           setIsValidToken(true);
         } else {
           setIsValidToken(false);
-          setProcessing(false);
           setResponseErrors(response.errors);
         }
       } catch (error: any) {
-        setProcessing(false);
+        setIsValidToken(false);
         setResponseErrors({ error: error.message });
+      } finally {
+        setIsValidatingToken(false);
       }
     };
 
     verifyToken();
   }, [token]);
 
-  if (processing) {
+  // validating
+  if (isValidatingToken) {
     return (
       <Box
         sx={{
@@ -95,5 +80,19 @@ export default function PasswordResetCard({ token }: PasswordResetCardProps) {
     );
   }
 
-  return <PasswordResetCardForm token={token} />;
+  if (isResetComplete) return <PasswordResetCardCompleted />;
+
+  return CoreUtil.hasRecaptcha() ? (
+    <GoogleReCaptchaProvider reCaptchaKey={CoreUtil.getRecaptchaKey()}>
+      <PasswordResetCardForm
+        token={token as string}
+        setIsResetComplete={setIsResetComplete}
+      />
+    </GoogleReCaptchaProvider>
+  ) : (
+    <PasswordResetCardForm
+      token={token as string}
+      setIsResetComplete={setIsResetComplete}
+    />
+  );
 }

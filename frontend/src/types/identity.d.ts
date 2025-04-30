@@ -3,6 +3,7 @@ import {
   signInSchema,
   signupSchema,
   forgotPasswordSchema,
+  passwordResetSchema,
 } from "@/schemas/identity-schemas";
 import * as z from "zod";
 
@@ -12,6 +13,10 @@ export type SigninInputs = z.infer<ReturnType<typeof signInSchema>>;
 
 export type ForgotPasswordInputs = z.infer<
   ReturnType<typeof forgotPasswordSchema>
+>;
+
+export type PasswordResetInput = z.infer<
+  ReturnType<typeof passwordResetSchema>
 >;
 
 export interface UserToken {
