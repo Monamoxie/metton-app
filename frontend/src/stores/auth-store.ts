@@ -31,12 +31,12 @@ export const authStore = create<AuthState>()(
       token: null,
       user: null,
       rememberMe: false,
-      setAuth: (token, user, rememberMe) => {
+      setAuth: async (token, user, rememberMe) => {
         // todo ::: @depreciated. No need to store nor use the token stored in zuzstand as this is now handled by the Next js cookie and middleware
         set({ token, user, rememberMe });
 
         // Secure server-side cookie (middleware uses this)
-        fetch("/api/auth/set", {
+        return await fetch("/api/auth/set", {
           method: "POST",
           body: JSON.stringify({ token: token.token, expiry: token.expiry }),
           headers: { "Content-Type": "application/json" },

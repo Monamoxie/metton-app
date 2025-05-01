@@ -65,13 +65,14 @@ export const signIn = async (payload: SigninInputs): Promise<ApiResponse> => {
 };
 
 // -- Store token and user basic info --
-export const persistUserSession = (
+export const persistUserSession = async (
   token: UserToken,
   user: UserProfile,
   rememberMe: boolean = false
 ) => {
   const auth = authStore.getState();
-  auth.setAuth(token, user, rememberMe);
+  await auth.setAuth(token, user, rememberMe);
+  return true;
 };
 
 // -- Clear token and user's basic info --

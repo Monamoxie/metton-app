@@ -57,7 +57,7 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
 
       const response = await AuthService.signIn(data);
       if (response.code === 200) {
-        AuthService.persistUserSession(
+        const set = await AuthService.persistUserSession(
           response.data.token,
           response.data.user,
           data.remember_me
