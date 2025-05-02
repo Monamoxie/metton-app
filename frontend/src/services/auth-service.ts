@@ -88,6 +88,12 @@ export const isAuthenticated = (): boolean => {
 };
 
 // -- // --
+export const getBearerToken = (): string => {
+  const { token } = authStore.getState();
+  return token?.token || "";
+};
+
+// -- // --
 export const isTokenExpired = (token: UserToken | null): boolean => {
   if (!token?.expiry) return true;
   return new Date(token.expiry).getTime() <= Date.now();
