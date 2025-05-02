@@ -1,9 +1,8 @@
-import { ApiResponse } from "@/types/api";
+import { ApiResponse, AuthApiHeaderResponse } from "@/types/api";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Dispatch, SetStateAction } from "react";
-import { HttpMethods, LocalApiRequestProps } from "@/types/api";
-import { RawAxiosRequestHeaders } from "axios";
+import { LocalApiRequestProps } from "@/types/api";
+import * as AuthService from "@/services/auth-service";
 
 // todo ::: @depreciated
 // to migrate all these functions into core utils
@@ -26,6 +25,14 @@ export function getDefaultApiHeader(): Record<string, string> {
     Accept: "application/json",
     "Content-Type": "application/json",
     "Cache-Control": "no-store,max-age=0",
+  };
+}
+
+// -- // --
+export function getAuthApiHeader(): Record<string, string> {
+  return {
+    ...(getDefaultApiHeader() as AuthApiHeaderResponse),
+    Authorization: `Token ${AuthService.getBearerToken()}`,
   };
 }
 
