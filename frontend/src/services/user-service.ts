@@ -1,8 +1,6 @@
 import axiosClient from "@/utils/axios-client";
 import { ApiResponse } from "@/types/api";
 import * as Utils from "@/utils/utils";
-import { PasswordResetInput } from "@/types/identity";
-import { authStore } from "@/stores/auth-store";
 
 // -- // --
 export const getUserProfile = async (): Promise<ApiResponse> => {
