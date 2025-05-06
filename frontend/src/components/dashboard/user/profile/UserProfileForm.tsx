@@ -45,7 +45,9 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
   const [processing, setProcessing] = useState(false);
   const [fetchingData, setFetchingData] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    user.profile_photo
+  );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const {
@@ -93,7 +95,7 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
   };
 
   return (
-    <>
+    <Card sx={{ p: 10 }}>
       <Typography component="h4" variant="h4" gutterBottom>
         Update Profile
       </Typography>
@@ -108,7 +110,7 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
         <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
           <Box
             component="img"
-            src={imagePreview || "/placeholder.jpg"}
+            src={imagePreview || "https://place-hold.it/300x500"}
             alt="Profile Preview"
             sx={{
               width: 80,
@@ -145,18 +147,6 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
             {...register("name")}
             error={!!errors.name}
             helperText={errors.name?.message}
-            variant="outlined"
-          />
-        </FormControl>
-
-        {/* Email (Read-Only) */}
-        <FormControl fullWidth sx={{ mb: 3 }}>
-          <FormLabel>Email</FormLabel>
-          <TextField
-            {...register("email")}
-            disabled
-            error={!!errors.email}
-            helperText={errors.email?.message}
             variant="outlined"
           />
         </FormControl>
@@ -201,6 +191,6 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
           <ButtonContent processing={processing} defaultText="Update Profile" />
         </Button>
       </Box>
-    </>
+    </Card>
   );
 }

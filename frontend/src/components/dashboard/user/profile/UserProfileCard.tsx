@@ -64,9 +64,13 @@ export default function ProfileCard() {
       <Box className="pf-header">
         <Box
           component="img"
-          src={user.profile_photo as string}
+          src={
+            user.profile_photo ||
+            "https://place-hold.it/300x500"
+          }
           className="pf-header-img"
         />
+
         <Box>
           <Box className="pf-name">
             <Typography variant="h6">{user.name}</Typography>
@@ -78,9 +82,9 @@ export default function ProfileCard() {
         </Box>
       </Box>
 
-      <Card className="pf-header">
+      <Box>
         <UserProfileForm user={user} />
-      </Card>
+      </Box>
     </Stack>
   );
 }
