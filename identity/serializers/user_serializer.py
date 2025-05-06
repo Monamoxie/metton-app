@@ -74,6 +74,6 @@ class UserSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         if instance.profile_photo:
             representation["profile_photo"] = (
-                f"{settings.MEDIA_URL}{instance.profile_photo.name}"
+                f"{settings.BASE_URL}{settings.MEDIA_URL}{instance.profile_photo.name}"
             )
         return representation
