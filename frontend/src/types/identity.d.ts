@@ -19,6 +19,10 @@ export type PasswordResetInput = z.infer<
   ReturnType<typeof passwordResetSchema>
 >;
 
+export type ProfileUpdateInputs = z.infer<
+  ReturnType<typeof profileUpdateSchema>
+>;
+
 export interface UserToken {
   token: string | null;
   expiry: Date | null;
@@ -40,7 +44,3 @@ export interface UserProfileCardProps {
   user: UserProfile;
   base_url: string | null;
 }
-
-export type ProfileUpdateInputs = z.infer<
-  ReturnType<typeof profileUpdateSchema>
->;

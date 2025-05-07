@@ -19,17 +19,14 @@ export default function ProfileCard() {
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
-  const [processing, setProcessing] = useState(false);
   const [fetchingData, setFetchingData] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    const getUserProfile = async () => {
+    const getProfile = async () => {
       try {
-        const response = await UserService.getUserProfile();
+        const response = await UserService.getProfile();
 
         if (response.code === 200) {
           setUser(response.data);
@@ -44,7 +41,7 @@ export default function ProfileCard() {
       }
     };
 
-    getUserProfile();
+    getProfile();
   }, []);
 
   if (fetchingData) {
@@ -64,10 +61,7 @@ export default function ProfileCard() {
       <Box className="pf-header">
         <Box
           component="img"
-          src={
-            user.profile_photo ||
-            "https://place-hold.it/300x500"
-          }
+          src={user.profile_photo || "https://place-hold.it/300x500"}
           className="pf-header-img"
         />
 
@@ -83,7 +77,7 @@ export default function ProfileCard() {
       </Box>
 
       <Box>
-        <UserProfileForm user={user} />
+        <UserProfileForm user={user} setIsFinished={setIsFinished} />
       </Box>
     </Stack>
   );

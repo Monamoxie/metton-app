@@ -9,7 +9,7 @@ from identity.views.api import (
     ResendEmailVerificationView,
     PasswordUpdateView,
 )
-from identity.views.api.user_profile_view import UserProfileView
+from identity.views.api.user import UserProfileView
 
 
 # API Routes ::: Migration to DRF in progress
@@ -21,20 +21,22 @@ urlpatterns = [
     path("forgot-password", ForgotPasswordView.as_view()),
     path("verification/password-reset", PasswordResetVerificationView.as_view()),
     path("password-reset", PasswordResetView.as_view()),
+    
     # AUTHENTICATION REQUIRED
     path(
         "verification/email/resend",
         ResendEmailVerificationView().as_view(),
         name="resend-email-verification",
     ),
+    # GET, PATCH
     path(
         "user/profile",
         UserProfileView().as_view(),
-        name="user",
+        name="user-profile",
     ),
     path(
         "user/password-update",
         PasswordUpdateView().as_view(),
-        name="user",
+        name="user-password-update",
     ),
 ]

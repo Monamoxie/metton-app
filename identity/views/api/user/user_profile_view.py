@@ -1,10 +1,7 @@
-from functools import partial
 from rest_framework import status
-from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
-
 from identity.serializers import UserSerializer
-
 
 class UserProfileView(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
