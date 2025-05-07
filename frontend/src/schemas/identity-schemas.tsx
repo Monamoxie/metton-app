@@ -67,5 +67,6 @@ export const profileUpdateSchema = (t: ReturnType<typeof useTranslations>) => {
     position: z.string().optional(),
     profile_summary: z.string().optional(),
     profile_photo: z.string().optional(),
+    remove_profile_photo: z.string().optional(),
   });
 };

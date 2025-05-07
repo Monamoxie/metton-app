@@ -16,39 +16,38 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileUpdateSchema } from "@/schemas/identity-schemas";
-import {
-  ProfileUpdateInputs,
-  UserProfile,
-  UserProfileCardProps,
-} from "@/types/identity";
+import { ProfileUpdateInputs, UserProfile } from "@/types/identity";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import ButtonContent from "@/components/ButtonContent";
 import { useTranslations } from "next-intl";
-import { localApiRequest } from "@/utils/utils";
-import { PROFILE_CARD_CSS } from "@/styles/modules/identity.css";
-import { useTheme } from "@mui/material";
-import VerifiedIcon from "@mui/icons-material/Verified";
 import * as UserService from "@/services/user-service";
-import CircularProgressBox from "@/components/loaders/CircularProgressBox";
+import { SetStateProp } from "@/types/core";
+import DeleteIcon from "@mui/icons-material/Delete";
+import UploadIcon from "@mui/icons-material/CloudUpload";
+import Tooltip from "@mui/material/Tooltip";
 
 export interface UserProfileFormProps {
   user: UserProfile;
+  setIsFinished: SetStateProp<boolean>;
+  setUser: SetStateProp<UserProfile | null>;
 }
 
-export default function UserProfileForm({ user }: UserProfileFormProps) {
+export default function UserProfileForm({
+  user,
+  setIsFinished,
+  setUser,
+}: UserProfileFormProps) {
   const t = useTranslations();
-  const theme = useTheme();
 
   const [responseErrors, setResponseErrors] = useState<{
     [key: string]: string[];
   }>({});
   const [processing, setProcessing] = useState(false);
-  const [fetchingData, setFetchingData] = useState(true);
-  const [isFinished, setIsFinished] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(
     user.profile_photo
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [removePhoto, setRemovePhoto] = useState(false);
 
   const {
     register,
@@ -70,28 +69,35 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
     if (selectedFile) {
       const objectUrl = URL.createObjectURL(selectedFile);
       setImagePreview(objectUrl);
+      setRemovePhoto(false);
       return () => URL.revokeObjectURL(objectUrl);
     }
   }, [selectedFile]);
 
   const onSubmit: SubmitHandler<ProfileUpdateInputs> = async (data) => {
-    console.log("GOt in");
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("email", data.email);
     formData.append("company", data.company || "");
     formData.append("position", data.position || "");
     formData.append("profile_summary", data.profile_summary || "");
     if (selectedFile) formData.append("profile_photo", selectedFile);
+    if (removePhoto) formData.append("remove_profile_photo", "true");
 
-    // await localApiRequest({
-    //   url: "/api/identity/update-profile",
-    //   method: "POST",
-    //   body: formData,
-    //   setProcessing,
-    //   setResponseErrors,
-    //   setIsFinished,
-    // });
+    try {
+      setProcessing(true);
+
+      const response = await UserService.updateProfile(formData);
+      if (response.code === 200) {
+        setUser(response.data);
+        return setIsFinished(true);
+      }
+
+      return setResponseErrors(response.errors);
+    } catch (error: any) {
+      setResponseErrors({ error: error.message });
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -120,24 +126,43 @@ export default function UserProfileForm({ user }: UserProfileFormProps) {
               mr: 2,
             }}
           />
-          <IconButton
-            component="label"
-            sx={{
-              background: "rgba(0, 0, 0, 0.04)",
-              borderRadius: "50%",
-              p: 1,
-            }}
-          >
-            <CloudUploadIcon />
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(e) => {
-                if (e.target.files) setSelectedFile(e.target.files[0]);
-              }}
-            />
-          </IconButton>
+
+          <Stack direction="row" spacing={2}>
+            {/* Upload Button */}
+            <Tooltip title="Upload Photo">
+              <Button
+                component="label"
+                variant="outlined"
+                startIcon={<UploadIcon />}
+              >
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => {
+                    if (e.target.files) setSelectedFile(e.target.files[0]);
+                  }}
+                />
+              </Button>
+            </Tooltip>
+
+            {/* Clear Photo Button */}
+            <Tooltip title="Remove Photo">
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteIcon />}
+                onClick={() => {
+                  setSelectedFile(null);
+                  setImagePreview(null);
+                  setRemovePhoto(true);
+                }}
+              >
+                Remove
+              </Button>
+            </Tooltip>
+          </Stack>
         </Box>
 
         {/* Name */}
