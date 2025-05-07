@@ -16,15 +16,19 @@ export default function SuccessDisplay(props: SuccessDisplayProps) {
   return (
     <Box sx={{ p: 4 }}>
       <Alert severity="success" sx={{ p: 5 }}>
-        <AlertTitle>
-          <Typography variant="h6" component="h6">
-            {props.title}
-          </Typography>
-        </AlertTitle>
+        {props.title && (
+          <AlertTitle>
+            <Typography variant="h6" component="h6">
+              {props.title}
+            </Typography>
+          </AlertTitle>
+        )}
 
-        <Typography sx={{ pt: 2, pb: 4 }} variant="h5" component="h5">
-          {props.message}
-        </Typography>
+        {props.message && (
+          <Typography sx={{ pt: 2, pb: 4 }} variant="h5" component="h5">
+            {props.message}
+          </Typography>
+        )}
 
         {props.children && (
           <Typography component="p">{props.children}</Typography>
