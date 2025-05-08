@@ -38,6 +38,7 @@ export interface UserProfile {
   profile_summary: null | string;
   profile_photo: null | string;
   date_joined: Date;
+  email_verified: boolean;
 }
 
 export interface UserProfileCardProps {

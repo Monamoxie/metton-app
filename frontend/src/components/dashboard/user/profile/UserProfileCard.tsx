@@ -11,6 +11,7 @@ import * as UserService from "@/services/user-service";
 import CircularProgressBox from "@/components/loaders/CircularProgressBox";
 import UserProfileForm from "./UserProfileForm";
 import { UserProfile } from "@/types/identity";
+import EmailVerificationReminder from "@/components/EmailVerificationReminder";
 
 export default function ProfileCard() {
   const t = useTranslations();
@@ -61,13 +62,17 @@ export default function ProfileCard() {
         <Box>
           <Box className="pf-name">
             <Typography variant="h6">{user.name}</Typography>
-            <VerifiedIcon className="pf-verified-icon" />
+            {user.email_verified && (
+              <VerifiedIcon className="pf-verified-icon" />
+            )}
           </Box>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {user.position}
           </Typography>
         </Box>
       </Box>
+
+      {!user.email_verified && <EmailVerificationReminder email={user.email} />}
 
       <Box>
         <UserProfileForm user={user} setUser={setUser} />

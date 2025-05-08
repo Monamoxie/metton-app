@@ -30,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
             "profile_summary",
             "profile_photo",
             "date_joined",
+            "email_verified"
         ]
         read_only_fields = [
             "id",
@@ -38,6 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
             "public_id",
             "email_verified",
             "is_active",
+            "email_verified"
         ]
 
     def validate_profile_photo(self, value):

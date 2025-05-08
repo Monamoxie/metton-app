@@ -29,6 +29,29 @@ export const createAccount = async (
 };
 
 // -- // --
+export const resendEmailVerificationNotification = async (
+  email: string
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.post(
+      "/identity/verification/email/resend",
+      {
+        email,
+      },
+      {
+        headers: Utils.getDefaultApiHeader(),
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
+// -- // --
 export const verifyEmailToken = async (token: string): Promise<ApiResponse> => {
   try {
     const response = await axiosClient.patch(
