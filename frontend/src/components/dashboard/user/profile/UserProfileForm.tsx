@@ -9,10 +9,8 @@ import {
   FormLabel,
   TextField,
   Typography,
-  IconButton,
   Stack,
 } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileUpdateSchema } from "@/schemas/identity-schemas";
@@ -25,16 +23,15 @@ import { SetStateProp } from "@/types/core";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadIcon from "@mui/icons-material/CloudUpload";
 import Tooltip from "@mui/material/Tooltip";
+import SuccessDisplay from "@/components/SuccessDisplay";
 
 export interface UserProfileFormProps {
   user: UserProfile;
-  setIsFinished: SetStateProp<boolean>;
   setUser: SetStateProp<UserProfile | null>;
 }
 
 export default function UserProfileForm({
   user,
-  setIsFinished,
   setUser,
 }: UserProfileFormProps) {
   const t = useTranslations();
@@ -48,6 +45,7 @@ export default function UserProfileForm({
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [removePhoto, setRemovePhoto] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
   const {
     register,
@@ -101,11 +99,13 @@ export default function UserProfileForm({
   };
 
   return (
-    <Card sx={{ p: 10 }}>
+    <Card sx={{ p: 4 }}>
+      {responseErrors && <ErrorDisplay errors={responseErrors} />}
+      {isFinished && <SuccessDisplay title="Profile updated successfully!" />}
+      
       <Typography component="h4" variant="h4" gutterBottom>
         Update Profile
       </Typography>
-      {responseErrors && <ErrorDisplay errors={responseErrors} />}
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}

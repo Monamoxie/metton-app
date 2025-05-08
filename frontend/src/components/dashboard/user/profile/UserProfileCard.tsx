@@ -11,7 +11,6 @@ import * as UserService from "@/services/user-service";
 import CircularProgressBox from "@/components/loaders/CircularProgressBox";
 import UserProfileForm from "./UserProfileForm";
 import { UserProfile } from "@/types/identity";
-import SuccessDisplay from "@/components/SuccessDisplay";
 
 export default function ProfileCard() {
   const t = useTranslations();
@@ -21,7 +20,6 @@ export default function ProfileCard() {
     [key: string]: string[];
   }>({});
   const [fetchingData, setFetchingData] = useState(true);
-  const [isFinished, setIsFinished] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
@@ -53,8 +51,6 @@ export default function ProfileCard() {
 
   return (
     <Stack sx={PROFILE_CARD_CSS(theme)}>
-      {isFinished && <SuccessDisplay title="Profile updated successfully!" />}
-
       <Box className="pf-header">
         <Box
           component="img"
@@ -74,11 +70,7 @@ export default function ProfileCard() {
       </Box>
 
       <Box>
-        <UserProfileForm
-          user={user}
-          setIsFinished={setIsFinished}
-          setUser={setUser}
-        />
+        <UserProfileForm user={user} setUser={setUser} />
       </Box>
     </Stack>
   );
