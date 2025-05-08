@@ -14,8 +14,8 @@ interface SuccessDisplayProps extends ctaButtonProps {
 
 export default function SuccessDisplay(props: SuccessDisplayProps) {
   return (
-    <Box sx={{ p: 4 }}>
-      <Alert severity="success" sx={{ p: 5 }}>
+    <Box sx={{ p: 2 }}>
+      <Alert severity="success">
         {props.title && (
           <AlertTitle>
             <Typography variant="h6" component="h6">
