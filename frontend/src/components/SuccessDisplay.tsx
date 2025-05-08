@@ -25,7 +25,7 @@ export default function SuccessDisplay(props: SuccessDisplayProps) {
         )}
 
         {props.message && (
-          <Typography sx={{ pt: 2, pb: 4 }} variant="h5" component="h5">
+          <Typography sx={{ pt: 2, pb: 4 }} variant="h6" component="h6">
             {props.message}
           </Typography>
         )}
