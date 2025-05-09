@@ -97,9 +97,9 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
           onClose={() => setAnchorEl(null)}
         >
           <MenuItem>
-            <Link href="/dashboard/user/profile">Update Profile</Link>
+            <Link href="/identity/user/profile">Update Profile</Link>
           </MenuItem>
-          <MenuItem>Change Password</MenuItem>
+          <MenuItem>Update Password</MenuItem>
           <MenuItem>Settings</MenuItem>
           <MenuItem
             sx={{ color: "error.main" }}

@@ -1,4 +1,4 @@
-import UserProfileCard from "@/components/dashboard/user/profile/UserProfileCard";
+import UserProfileCard from "@/components/identity/user/profile/UserProfileCard";
 import { Card, Container } from "@mui/material";
 
 export default function ProfilePage() {
