@@ -99,7 +99,9 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
           <MenuItem>
             <Link href="/identity/user/profile">Update Profile</Link>
           </MenuItem>
-          <MenuItem>Update Password</MenuItem>
+          <MenuItem>
+            <Link href="/identity/password-update">Update Password</Link>
+          </MenuItem>
           <MenuItem>Settings</MenuItem>
           <MenuItem
             sx={{ color: "error.main" }}

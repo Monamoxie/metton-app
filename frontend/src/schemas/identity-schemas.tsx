@@ -70,3 +70,25 @@ export const profileUpdateSchema = (t: ReturnType<typeof useTranslations>) => {
     remove_profile_photo: z.string().optional(),
   });
 };
+
+// ************ PASSWORD UPDATE ****************/
+export const passwordUpdateSchema = (t: ReturnType<typeof useTranslations>) => {
+  return z
+    .object({
+      current_password: z.string(),
+      new_password: z
+        .string()
+        .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
+      confirm_new_password: z.string().min(
+        8,
+        t("errors.FIELD_MINIMUM_CHARS", {
+          field: "Password Confirmation",
+          min: 8,
+        })
+      ),
+    })
+    .refine((data) => data.new_password === data.confirm_new_password, {
+      message: t("errors.DATA_DO_NOT_MATCH", { data: "Passwords" }),
+      path: ["confirm_new_password"],
+    });
+};

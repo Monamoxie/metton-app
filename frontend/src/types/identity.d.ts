@@ -4,6 +4,7 @@ import {
   signupSchema,
   forgotPasswordSchema,
   passwordResetSchema,
+  passwordUpdateSchema,
 } from "@/schemas/identity-schemas";
 import * as z from "zod";
 
@@ -21,6 +22,10 @@ export type PasswordResetInput = z.infer<
 
 export type ProfileUpdateInputs = z.infer<
   ReturnType<typeof profileUpdateSchema>
+>;
+
+export type PasswordUpdateInputs = z.infer<
+  ReturnType<typeof passwordUpdateSchema>
 >;
 
 export interface UserToken {

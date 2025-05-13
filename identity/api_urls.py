@@ -35,7 +35,7 @@ urlpatterns = [
         name="user-profile",
     ),
     path(
-        "user/password-update",
+        "password-update",
         PasswordUpdateView().as_view(),
         name="user-password-update",
     ),

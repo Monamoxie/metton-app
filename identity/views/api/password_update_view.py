@@ -19,8 +19,9 @@ class PasswordUpdateView(UpdateAPIView):
 
         if serializer.is_valid():
             serializer.save()
+            # TODO ::: send an email notification letting them know of this action
             return Response(
                 {"_message": MessageBag.UPDATED_SUCCESSFULLY.format(data="Password")}
             )
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
