@@ -49,14 +49,19 @@ export const forgotPasswordSchema = (t: ReturnType<typeof useTranslations>) => {
 
 // ************ PASSWORD RESET SCHEMA ****************/
 export const passwordResetSchema = (t: ReturnType<typeof useTranslations>) => {
-  return z.object({
-    password: z
-      .string()
-      .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
-    password_confirmation: z.string(),
-    source: z.string().optional(),
-    recaptcha: z.string().optional(),
-  });
+  return z
+    .object({
+      password: z
+        .string()
+        .min(8, t("errors.FIELD_MINIMUM_CHARS", { field: "Password", min: 8 })),
+      password_confirmation: z.string(),
+      source: z.string().optional(),
+      recaptcha: z.string().optional(),
+    })
+    .refine((data) => data.password === data.password_confirmation, {
+      message: t("errors.DATA_DO_NOT_MATCH", { data: "Passwords" }),
+      path: ["password_confirmation"],
+    });
 };
 
 // ************ PROFILE UPDATE ****************/
