@@ -1,6 +1,6 @@
 "use client";
 
-import Grid2 from "@mui/material/Grid2";
+import Grid2 from "@mui/material/Grid";
 import ProjectsSection from "../../components/dashboard/ProjectsSection";
 import AppointmentsSection from "../../components/dashboard/AppointmentsSection";
 
