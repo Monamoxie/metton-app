@@ -2,7 +2,11 @@ import * as Cookie from "@/data/cookie";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PROTECTED_PATTERNS = ["^/dashboard(/.*)?$", "^/identity/user(/.*)?$"];
+const PROTECTED_PATTERNS = [
+  "^/dashboard(/.*)?$",
+  "^/identity/user(/.*)?$",
+  "^/events(/.*)?$",
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
