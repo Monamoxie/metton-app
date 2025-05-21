@@ -1,4 +1,4 @@
-import EventCard from "@/components/event/EventCard";
+import EventCard from "@/components/events/EventCard";
 import { Card, Container, Stack } from "@mui/material";
 
 export default function EventPage() {
