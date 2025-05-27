@@ -3,14 +3,16 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { SetStateProp } from "@/types/core";
 
-interface CalendarSlotActionProps {
+interface CalendarSlotMenuProps {
   anchorEl: null | HTMLElement;
   setAnchorEl: SetStateProp<null | HTMLElement>;
-  isSlotClosed: (slot: any) => boolean;
-  selectedSlots: any;
+  isClosed: boolean;
+  hasEvent: boolean;
+  handleBook: () => void;
+  handleViewDetails: () => void;
 }
 
-export default function CalendarSlotMenu(props: CalendarSlotActionProps) {
+export default function CalendarSlotMenu(props: CalendarSlotMenuProps) {
   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
 
   return (
@@ -27,20 +29,40 @@ export default function CalendarSlotMenu(props: CalendarSlotActionProps) {
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
     >
       <Box p={2}>
-        {props.isSlotClosed(props.selectedSlots) ? (
-          <Typography color="error">
-            This slot is closed for booking.
-          </Typography>
-        ) : slotHasEvent(props.selectedSlots) ? (
-          <Button variant="contained" onClick={handleViewDetails}>
-            View
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={handleBook}>
-            ADD ENTRY
-          </Button>
-        )}
+        <MenuActions
+          isClosed={props.isClosed}
+          hasEvent={props.hasEvent}
+          handleBook={props.handleBook}
+          handleViewDetails={props.handleViewDetails}
+        />
       </Box>
     </Popover>
   );
 }
+
+const MenuActions = ({
+  isClosed,
+  hasEvent,
+  handleBook,
+  handleViewDetails,
+}: Omit<CalendarSlotMenuProps, "anchorEl" | "setAnchorEl">) => {
+  if (isClosed) {
+    return (
+      <Typography color="error">This slot is closed for booking.</Typography>
+    );
+  }
+
+  if (hasEvent) {
+    return (
+      <Button variant="contained" onClick={handleViewDetails}>
+        View
+      </Button>
+    );
+  }
+
+  return (
+    <Button variant="contained" onClick={handleBook}>
+      ADD ENTRY
+    </Button>
+  );
+};
