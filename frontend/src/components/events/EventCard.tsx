@@ -152,7 +152,7 @@ export default function EventCard() {
       <EventManager
         showManager={showManager}
         setShowManager={setShowManager}
-        selectedSlots={selectedSlots}
+        selectedSlots={selectedSlots as SelectedSlot}
         showPast={showPast}
         showFuture={showFuture}
         closedSlots={closedSlots}
