@@ -5,6 +5,7 @@ import React, { useRef, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+import { DateInput, EventInput } from "@fullcalendar/core";
 
 interface EventManagerProps {
   showManager: boolean;
@@ -13,13 +14,18 @@ interface EventManagerProps {
   closedSlots: any; // todo
   showPast: boolean;
   showFuture: boolean;
+  allEvents: EventInput[]
 }
 
 export default function EventManager(props: EventManagerProps) {
   const [manualStart, setManualStart] = useState<Dayjs | null>(null);
   const [manualEnd, setManualEnd] = useState<Dayjs | null>(null);
 
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+
   const [newEventTitle, setNewEventTitle] = useState("");
+
+  const allowMultipleBookingsPerSlot = false; // TODO ::: include this option as a setting that is controlled by the owner of this calendar
 
   return (
     <Drawer
@@ -55,7 +61,19 @@ export default function EventManager(props: EventManagerProps) {
               props.showFuture
             )
           }
-          // ...other props
+          shouldDisableTime={(timeValue, clockType) => {
+            if (clockType !== "hours") return false; // Only check hours, or adapt for minutes 
+            
+            const base = manualStart ?? dayjs();
+            // @ts-ignore
+            const slot = base.hour(timeValue).minute(0).second(0);
+            
+            return isTimeSlotBooked(
+              slot,
+              props.allEvents,
+              allowMultipleBookingsPerSlot
+            );
+          }} 
         />
 
         {/* {props.selectedSlots ? (
@@ -153,6 +171,26 @@ function isDateClosedOrBlocked(
   }
 
   return false;
+}
 
-  return false;
+type Booking = { start: string; end: string }; // or your event type
+
+function isTimeSlotBooked(
+  slot: Dayjs,
+  bookings: EventInput[],
+  allowMultiple: boolean
+): boolean {
+  if (allowMultiple) return false; // Always allow booking
+ 
+  return bookings.some((booking) => {
+    console.log("HELLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOO")
+    console.log(booking)
+    const bookingStart = dayjs(booking.start as string);
+    const bookingEnd = dayjs(booking.end as string); 
+
+    return (
+      (slot.isAfter(bookingStart) || slot.isSame(bookingStart)) &&
+      slot.isBefore(bookingEnd)
+    );
+  });
 }
