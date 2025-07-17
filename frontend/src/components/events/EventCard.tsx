@@ -15,10 +15,18 @@ const initialEvents = [
   {
     id: "1",
     title: "Design onboarding",
-    start: "2025-05-29T09:30:00",
-    end: "2025-05-29T10:30:00",
+    start: "2025-07-18T09:30:00",
+    end: "2025-07-18T17:30:00",
     tag: "Work",
   },
+  {
+    id: "2",
+    title: "Studies",
+    start: "2025-07-17T19:00:00",
+    end: "2025-07-17T19:00:00",
+    tag: "personal",
+  },
+
   // ...more events
 ];
 
@@ -38,11 +46,11 @@ export default function EventCard() {
 
   const closedSlots = [
     {
-      start: "2025-05-23T09:00:00",
-      end: "2025-05-23T10:00:00",
+      start: "2025-07-19T09:00:00",
+      end: "2025-07-23T10:00:00",
       reason: "UNAVAILABLE",
     },
-    { start: "2025-05-23", end: "2025-05-24", reason: "Maintenance" },
+    { start: "2025-06-25", end: "2025-06-30", reason: "Maintenance" },
     // ...more
   ];
 
@@ -156,6 +164,7 @@ export default function EventCard() {
         showPast={showPast}
         showFuture={showFuture}
         closedSlots={closedSlots}
+        allEvents={allEvents}
         // handleCreateEvent={handleCreateEvent}
       />
 
