@@ -1,3 +1,6 @@
+import dayjs, { Dayjs } from "dayjs";
+import { DateInput, EventInput } from "@fullcalendar/core";
+
 export function isSlotClosed(slot: any, closedSlots: any[]) {
   if (!slot) return false;
 
@@ -26,4 +29,54 @@ export function slotHasEvent(slot: any, events: any[]) {
 
     return overlap;
   });
+}
+
+export const isTimeSlotBooked = (
+  slot: Dayjs,
+  bookings: EventInput[],
+  allowMultiple: boolean
+): boolean => {
+  if (allowMultiple) return false; // Always allow booking
+ 
+  return bookings.some((booking) => {
+    const bookingStart = dayjs(booking.start as string);
+    const bookingEnd = dayjs(booking.end as string); 
+
+    return (
+      (slot.isAfter(bookingStart) || slot.isSame(bookingStart)) &&
+      slot.isBefore(bookingEnd)
+    );
+  });
+}
+
+type ClosedSlot = { start: string; end?: string };
+type BackgroundEvent = { start: string; end?: string };
+
+export const isDateClosedOrBlocked = (
+  date: Dayjs,
+  closedSlots: ClosedSlot[],
+  showPast: boolean,
+  showFuture: boolean
+): boolean => {
+  const now = dayjs();
+
+  // Block past dates if showPast is false
+  if (!showPast && date.isBefore(now, "day")) return true;
+
+  // Block future dates if showFuture is false
+  if (!showFuture && date.isAfter(now, "day")) return true;
+
+  // Check closed slots
+  for (const slot of closedSlots) {
+    const slotStart = dayjs(slot.start);
+    const slotEnd = slot.end ? dayjs(slot.end) : slotStart;
+    if (
+      date.isSame(slotStart, "day") ||
+      (date.isAfter(slotStart, "day") && date.isBefore(slotEnd, "day"))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 }
