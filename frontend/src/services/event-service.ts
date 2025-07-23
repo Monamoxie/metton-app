@@ -1,6 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { DateInput, EventInput } from "@fullcalendar/core";
 
+// -- // --
 export function isSlotClosed(slot: any, closedSlots: any[]) {
   if (!slot) return false;
 
@@ -16,6 +17,7 @@ export function isSlotClosed(slot: any, closedSlots: any[]) {
   });
 }
 
+// -- // --
 export function slotHasEvent(slot: any, events: any[]) {
   if (!slot) return false;
 
@@ -31,13 +33,13 @@ export function slotHasEvent(slot: any, events: any[]) {
   });
 }
 
+// -- // --
 export const isTimeSlotBooked = (
   slot: Dayjs,
   bookings: EventInput[],
   allowMultiple: boolean
 ): boolean => {
   if (allowMultiple) return false; // Always allow booking
- 
   return bookings.some((booking) => {
     const bookingStart = dayjs(booking.start as string);
     const bookingEnd = dayjs(booking.end as string); 
@@ -49,8 +51,9 @@ export const isTimeSlotBooked = (
   });
 }
 
+
+// -- // --
 type ClosedSlot = { start: string; end?: string };
-type BackgroundEvent = { start: string; end?: string };
 
 export const isDateClosedOrBlocked = (
   date: Dayjs,
