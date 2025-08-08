@@ -61,7 +61,7 @@ export default function EventManager(props: EventManagerProps) {
           // minDateTime={minDate} // e.g., new Date()
           // maxDateTime={maxDate} // e.g., new Date('2025-12-31')
           shouldDisableDate={(date) =>
-            isDateClosedOrBlocked(
+            EventService.isDateClosedOrBlocked(
               date,
               props.closedSlots,
               props.showPast,
@@ -75,7 +75,7 @@ export default function EventManager(props: EventManagerProps) {
             // @ts-ignore
             const slot = base.hour(timeValue).minute(0).second(0);
             
-            return isTimeSlotBooked(
+            return EventService.isTimeSlotBooked(
               slot,
               props.allEvents,
               allowMultipleBookingsPerSlot
