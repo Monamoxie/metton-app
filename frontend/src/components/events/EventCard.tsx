@@ -15,15 +15,15 @@ const initialEvents = [
   {
     id: "1",
     title: "Design onboarding",
-    start: "2025-07-18T09:30:00",
-    end: "2025-07-18T17:30:00",
+    start: "2025-08-18T09:30:00",
+    end: "2025-08-18T17:30:00",
     tag: "Work",
   },
   {
     id: "2",
     title: "Studies",
-    start: "2025-07-17T19:00:00",
-    end: "2025-07-17T19:00:00",
+    start: "2025-08-17T19:00:00",
+    end: "2025-08-17T19:00:00",
     tag: "personal",
   },
 
@@ -168,79 +168,6 @@ export default function EventCard() {
         // handleCreateEvent={handleCreateEvent}
       />
 
-      {/* Drawer for event creation */}
-      {/* <Drawer
-        anchor="right"
-        open={showManager}
-        onClose={() => setShowManager(false)}
-        transitionDuration={500}
-        PaperProps={{
-          sx: { width: { xs: "100%", sm: 400 }, p: 3 },
-        }}
-      >
-        <Typography variant="h6" mb={2}>
-          New Booking
-        </Typography>
-        {selectedSlots ? (
-          <>
-            <TextField
-              label="Start"
-              value={
-                selectedSlots.startStr
-                  ? new Date(selectedSlots.startStr).toLocaleString()
-                  : ""
-              }
-              fullWidth
-              sx={{ mb: 2 }}
-              InputProps={{ readOnly: true }}
-            />
-            <TextField
-              label="End"
-              value={
-                selectedSlots.endStr
-                  ? new Date(selectedSlots.endStr).toLocaleString()
-                  : ""
-              }
-              fullWidth
-              sx={{ mb: 2 }}
-              InputProps={{ readOnly: true }}
-            />
-          </>
-        ) : (
-          <>
-            <DateTimePicker
-              label="Start"
-              value={manualStart}
-              onChange={setManualStart}
-              sx={{ mb: 2 }}
-              slotProps={{ textField: { fullWidth: true } }}
-            />
-            <DateTimePicker
-              label="End"
-              value={manualEnd}
-              onChange={setManualEnd}
-              sx={{ mb: 2 }}
-              slotProps={{ textField: { fullWidth: true } }}
-            />
-          </>
-        )}
-        <TextField
-          label="Event Title"
-          fullWidth
-          sx={{ mb: 2 }}
-          value={newEventTitle}
-          onChange={(e) => setNewEventTitle(e.target.value)}
-        />
-    
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={handleCreateEvent}
-          disabled={!newEventTitle}
-        >
-          Add Booking
-        </Button>
-      </Drawer> */}
     </Box>
   );
 }
