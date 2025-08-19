@@ -19,6 +19,10 @@ interface EventManagerProps {
   allEvents: EventInput[]
 }
 
+const repeatOptions = ["No Repeat", "Repeat"];
+const frequencyOptions = ["Daily", "Weekly", "Monthly", "Yearly", "Custom"];
+const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 export default function EventManager(props: EventManagerProps) {
   const [manualStart, setManualStart] = useState<Dayjs | null>(null);
   const [manualEnd, setManualEnd] = useState<Dayjs | null>(null);
@@ -30,9 +34,14 @@ export default function EventManager(props: EventManagerProps) {
   const allowMultipleBookingsPerSlot = false; // TODO ::: include this option as a setting controlled by the owner of this calendar
 
   const [selected, setSelected] = useState<string[]>([]);
-  const options = ["No Repeat", "Daily", "Weekly", "Monthly", "Yearly", "Custom"];
+  const options = ["No Repeat", "Daily", "Weekly", "Monthly", "Yearly"];
 
   // todo ::: "Custom"
+
+  const [repeat, setRepeat] = useState<string>("No Repeat");
+  const [frequency, setFrequency] = useState<string>("");
+  const [customDays, setCustomDays] = useState<string[]>([]);
+  const [repeatEnd, setRepeatEnd] = useState<Dayjs | null>(null);
 
   return (
     <Drawer
@@ -115,51 +124,8 @@ export default function EventManager(props: EventManagerProps) {
             );
           }} 
         />
-
-        {/* {props.selectedSlots ? (
-        <>
-          <TextField
-            label="Start"
-            value={
-              props.selectedSlots.startStr
-                ? new Date(props.selectedSlots.startStr).toLocaleString()
-                : ""
-            }
-            fullWidth
-            sx={{ mb: 2 }}
-            InputProps={{ readOnly: true }}
-          />
-          <TextField
-            label="End"
-            value={
-              props.selectedSlots.endStr
-                ? new Date(props.selectedSlots.endStr).toLocaleString()
-                : ""
-            }
-            fullWidth
-            sx={{ mb: 2 }}
-            InputProps={{ readOnly: true }}
-          />
-        </>
-      ) : (
-        <>
-          <DateTimePicker
-            label="Start"
-            value={manualStart}
-            onChange={setManualStart}
-            sx={{ mb: 2 }}
-            slotProps={{ textField: { fullWidth: true } }}
-          />
-          <DateTimePicker
-            label="End"
-            value={manualEnd}
-            onChange={setManualEnd}
-            sx={{ mb: 2 }}
-            slotProps={{ textField: { fullWidth: true } }}
-          />
-        </>
-      )} */}
-        <FormControl fullWidth sx={{ mt: 2 }}>
+ 
+      <FormControl fullWidth sx={{ mt: 2 }}>
         <TextField
           label="Event Title"
           fullWidth
@@ -167,17 +133,17 @@ export default function EventManager(props: EventManagerProps) {
           value={newEventTitle}
           onChange={(e) => setNewEventTitle(e.target.value)}
           />
-          </FormControl>
+      </FormControl>
 
-      <FormControl fullWidth sx={{ mt: 2 }}>
+      {/* <FormControl fullWidth sx={{ mt: 2 }}>
         <InputLabel id="multi-select-label">Repeat</InputLabel>
         <Select
           labelId="multi-select-label"
-          multiple
           value={selected}
-          onChange={(e) => setSelected(e.target.value as string[])}
+          // onChange={(e) => setSelected(e.target.value as string[])}
           label="Repeat"
-          renderValue={(selected) => selected.join(", ")}
+            // renderValue={(selected) => selected.join(", ")}
+            // renderValue={selected}
         >
           {options.map((option) => (
             <MenuItem key={option} value={option}>
@@ -186,10 +152,77 @@ export default function EventManager(props: EventManagerProps) {
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
+       
+      <FormControl fullWidth sx={{ mt: 2 }}>
+        <InputLabel id="repeat-label">Repeat</InputLabel>
+        <Select
+          labelId="repeat-label"
+          value={repeat}
+          onChange={(e) => setRepeat(e.target.value as string)}
+          label="Repeat"
+        >
+          {repeatOptions.map((option) => (
+            <MenuItem key={option} value={option}>{option}</MenuItem>
+          ))}
+        </Select>
+        </FormControl>
+        
+      {/* Frequency Select (shown only if Repeat is selected) */}
+      {repeat === "Repeat" && (
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <InputLabel id="frequency-label">Frequency</InputLabel>
+          <Select
+            labelId="frequency-label"
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value as string)}
+            label="Frequency"
+          >
+            {frequencyOptions.map((option) => (
+              <MenuItem key={option} value={option}>{option}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        )}
+        
+      {/* Custom Days Select (shown only if Custom is selected) */}
+      {repeat === "Repeat" && frequency === "Custom" && (
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <InputLabel id="custom-days-label">Days of Week</InputLabel>
+          <Select
+            labelId="custom-days-label"
+            multiple
+            value={customDays}
+            onChange={(e) => setCustomDays(e.target.value as string[])}
+            renderValue={(selected) => selected.join(", ")}
+            label="Days of Week"
+          >
+            {daysOfWeek.map((day) => (
+              <MenuItem key={day} value={day}>
+                <Checkbox checked={customDays.indexOf(day) > -1} />
+                <ListItemText primary={day} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
+         {/* Repeat End Date (shown only if Repeat is selected) */}
+      {repeat === "Repeat" && (
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <DateTimePicker
+            label="Repeat End Date"
+            value={repeatEnd}
+            onChange={setRepeatEnd}
+            slotProps={{ textField: { fullWidth: true } }}
+          />
+        </FormControl>
+      )}
+
 
         <Button
           variant="contained"
+          sx={{mt: 8}}
           fullWidth
           // onClick={props.handleCreateEvent}
           disabled={!newEventTitle}
