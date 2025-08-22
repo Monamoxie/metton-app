@@ -7,7 +7,12 @@ from home.views import (
 )
 from django.views.generic import TemplateView
 
+
+# @depreciated: migrating urls to DRF api
 urlpatterns = [
+    path("meet/<str:public_id>/book", BookingView.as_view(), name="book"),
+    
+    # todo 
     path("", TemplateView.as_view(template_name="home/index.html"), name="index"),
     path(
         "privacy",
@@ -20,7 +25,6 @@ urlpatterns = [
         name="terms",
     ),
     path("meet/<str:public_id>", BookingCalendarView.as_view(), name="meet"),
-    path("meet/<str:public_id>/book", BookingView.as_view(), name="book"),
     path(
         "business-hours/<public_id>",
         UserBusinessHoursView.as_view(),
