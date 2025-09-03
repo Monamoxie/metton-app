@@ -27,6 +27,9 @@ urlpatterns = [
     path("identity/", include("identity.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("", include("home.urls")),
+
+    # api specific ::: 
+    path("api/v1/event/", include("event.urls")),
 ]
 
 urlpatterns += [
