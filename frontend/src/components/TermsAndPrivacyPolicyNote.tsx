@@ -4,7 +4,7 @@ export default function TermsAndPrivacyPolicyNote(
   hasItem: boolean,
   url: string | null,
   text: string
-): JSX.Element | null {
+): React.JSX.Element | null {
   if (!hasItem || !url) return null;
 
   return (

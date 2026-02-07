@@ -1,11 +1,12 @@
+import React from "react";
 import Link from "@mui/material/Link";
 import { useState, useContext } from "react";
 import { PlatformSettingsContext } from "@/contexts/base";
 import TermsAndPrivacyPolicyNote from "@/components/TermsAndPrivacyPolicyNote";
 
 interface TermsAndPrivacy {
-  termsOfService: JSX.Element | null;
-  privacyPolicy: JSX.Element | null;
+  termsOfService: React.JSX.Element | null;
+  privacyPolicy: React.JSX.Element | null;
 }
 export default function useTermsAndPrivacyPolicy(): TermsAndPrivacy {
   const platformSettings = useContext(PlatformSettingsContext);

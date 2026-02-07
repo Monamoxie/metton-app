@@ -91,7 +91,7 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
   );
 });
 
-interface ConfettiButtonProps extends ButtonProps {
+interface ConfettiButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   options?: ConfettiOptions &
     ConfettiGlobalOptions & { canvas?: HTMLCanvasElement };
   children?: React.ReactNode;
@@ -112,9 +112,9 @@ function ConfettiButton({ options, children, ...props }: ConfettiButtonProps) {
   };
 
   return (
-    <Button onClick={handleClick} {...props}>
+    <button onClick={handleClick} {...props}>
       {children}
-    </Button>
+    </button>
   );
 }
 
