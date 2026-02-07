@@ -1,5 +1,4 @@
-import { Theme } from "@mui/system";
-import { SxProps } from "@mui/material";
+import { Theme, SystemStyleObject } from "@mui/system";
 
 export const EVENT_CALENDAR = {
   "& .event-closed-slots": {

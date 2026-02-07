@@ -1,7 +1,6 @@
-import { Theme } from "@mui/system";
-import { SxProps } from "@mui/material";
+import { Theme, SystemStyleObject } from "@mui/system";
 
-export const IDENTITY_NAV_CSS = (theme: Theme): SxProps<Theme> => ({
+export const IDENTITY_NAV_CSS = (theme: Theme): SystemStyleObject<Theme> => ({
   p: 4,
   pl: { xs: 4, sm: 4, lg: 10 },
   pr: { xs: 4, sm: 4, lg: 10 },
@@ -19,7 +18,7 @@ export const IDENTITY_NAV_CSS = (theme: Theme): SxProps<Theme> => ({
 });
 
 // ***************** IdentityRowWrapperCss ***************** //
-export const IDENTITY_WRAPPER_CSS = (theme: Theme): SxProps<Theme> => ({
+export const IDENTITY_WRAPPER_CSS = (theme: Theme): SystemStyleObject<Theme> => ({
   alignItems: "stretch",
   position: "relative",
   width: "100%",
@@ -29,7 +28,7 @@ export const IDENTITY_WRAPPER_CSS = (theme: Theme): SxProps<Theme> => ({
 });
 
 // ***************** IDENTITY DOUBLE COLUMNS CSS ***************** //
-export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SxProps<Theme> => ({
+export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SystemStyleObject<Theme> => ({
   // gap: { xs: 6, sm: 12 },
   height: { xs: "100%", md: "100dvh" },
   zIndex: 0,
@@ -56,7 +55,7 @@ export const IDENTITY_DOUBLE_COLUMNS_CSS = (theme: Theme): SxProps<Theme> => ({
 });
 
 // ***************** IDENTITY OVERLAY CSS ***************** //
-export const IDENTITY_OVERLAY_CSS = (theme: Theme): SxProps<Theme> => ({
+export const IDENTITY_OVERLAY_CSS = (theme: Theme): SystemStyleObject<Theme> => ({
   justifyContent: "center",
   position: "relative",
   alignItems: "center",
@@ -78,7 +77,7 @@ export const IDENTITY_OVERLAY_CSS = (theme: Theme): SxProps<Theme> => ({
   },
 });
 
-export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
+export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SystemStyleObject<Theme> => ({
   justifyContent: "center",
   alignItems: "center",
   height: "100vh",
@@ -126,7 +125,7 @@ export const IDENTITY_FORM_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
   },
 });
 
-export const PROFILE_CARD_CSS = (theme: Theme): SxProps<Theme> => ({
+export const PROFILE_CARD_CSS = (theme: Theme): SystemStyleObject<Theme> => ({
   width: "100%",
   minHeight: "100vh",
   color: "text.primary",
