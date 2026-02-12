@@ -11,7 +11,7 @@ export const verifyToken = async () => {
 };
 
 export const storeToken = async (token: string, expiry: string) => {
-  await cookies().set("bearer_token", token, {
+  (await cookies()).set("bearer_token", token, {
     httpOnly: true,
     secure: true,
     expires: new Date(expiry),
@@ -23,7 +23,7 @@ export const storeToken = async (token: string, expiry: string) => {
 };
 
 export const clearToken = async () => {
-  cookies().delete("bearer_token");
+  (await cookies()).delete("bearer_token");
 
   return true;
 };

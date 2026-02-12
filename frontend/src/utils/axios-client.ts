@@ -1,6 +1,4 @@
 import axios from "axios";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
 
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
