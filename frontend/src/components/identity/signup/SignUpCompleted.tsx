@@ -1,7 +1,7 @@
 import Confetti from "@/components/magicui/confetti";
 import SuccessDisplay from "@/components/SuccessDisplay";
 
-const SignUpCompleted = (): JSX.Element => {
+const SignUpCompleted = (): React.JSX.Element => {
   return (
     <>
       <Confetti />

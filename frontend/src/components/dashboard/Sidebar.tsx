@@ -3,7 +3,7 @@ import {
   Box,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   IconButton,
@@ -58,8 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </Box>
       <List>
         {menuItems.map((item) => (
-          <ListItem
-            button
+          <ListItemButton
             key={item.text}
             sx={{
               minHeight: 48,
@@ -77,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               <item.icon />
             </ListItemIcon>
             {expanded && <ListItemText primary={item.text} />}
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Box>

@@ -1,7 +1,7 @@
 import { Box, Typography, Avatar, Stack, IconButton } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-const MessageItem = ({ name, message, time, avatar }) => (
+const MessageItem = ({ name, message, time, avatar }: { name: string; message: string; time: string; avatar: string }) => (
   <Box
     sx={{
       display: "flex",

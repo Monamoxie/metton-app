@@ -2,7 +2,7 @@ import useTermsAndPrivacyPolicy from "@/hooks/use-terms-and-privacy";
 import { Typography } from "@mui/material";
 
 // Form terms and privacy policy notification and link
-const SignUpTermsAndPrivacyPolicy = (): JSX.Element | null => {
+const SignUpTermsAndPrivacyPolicy = (): React.JSX.Element | null => {
   const { termsOfService, privacyPolicy } = useTermsAndPrivacyPolicy();
 
   if (!termsOfService && !privacyPolicy) return null;

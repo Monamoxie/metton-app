@@ -8,7 +8,7 @@ interface ForgotPasswordCompletedProps {
 
 export default function ForgotPasswordCompleted({
   message,
-}: ForgotPasswordCompletedProps): JSX.Element {
+}: ForgotPasswordCompletedProps): React.JSX.Element {
   return (
     <>
       <Confetti />

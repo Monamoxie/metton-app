@@ -43,7 +43,6 @@ export default function ProfileCard({ user, base_url }: UserProfileCardProps) {
     resolver: zodResolver(profileUpdateSchema(t)),
     defaultValues: {
       name: user.name || "",
-      email: user.email || "",
       company: user.company || "",
       position: user.position || "",
       profile_summary: user.profile_summary || "",
@@ -63,7 +62,7 @@ export default function ProfileCard({ user, base_url }: UserProfileCardProps) {
     console.log("GOt in");
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("email", data.email);
+    formData.append("email", user.email || "");
     formData.append("company", data.company || "");
     formData.append("position", data.position || "");
     formData.append("profile_summary", data.profile_summary || "");
@@ -147,10 +146,8 @@ export default function ProfileCard({ user, base_url }: UserProfileCardProps) {
             <FormControl fullWidth sx={{ mb: 3 }}>
               <FormLabel>Email</FormLabel>
               <TextField
-                {...register("email")}
+                value={user.email || ""}
                 disabled
-                error={!!errors.email}
-                helperText={errors.email?.message}
                 variant="outlined"
               />
             </FormControl>
