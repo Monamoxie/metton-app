@@ -1,0 +1,45 @@
+"use client";
+
+import { useState } from "react";
+import { Box, Toolbar, useTheme, useMediaQuery } from "@mui/material";
+import TopBar from "@/components/dashboard/TopBar";
+import Sidebar from "@/components/dashboard/Sidebar";
+
+interface LayoutProps {
+  children?: React.ReactNode;
+}
+
+const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleDrawerToggle = (): void => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  return (
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <TopBar handleSidebarToggle={handleDrawerToggle} />
+      <Sidebar
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      />
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: { xs: 2, sm: 3 },
+          bgcolor: "background.default",
+        }}
+      >
+        {/* Spacer to push content below the fixed AppBar */}
+        <Toolbar />
+        {children}
+      </Box>
+    </Box>
+  );
+};
+
+export default AuthenticatedLayout;
