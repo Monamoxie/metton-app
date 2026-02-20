@@ -1,8 +1,0 @@
-{
-  "errors": {
-    "FIELD_IS_INVALID": "The {{field}} is invalid"
-  },
-  "prompts": {
-    "ENTER_YOUR_DATA": "Enter your {{data}}"
-  }
-}

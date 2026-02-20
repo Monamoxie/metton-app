@@ -1,18 +1,18 @@
 .git
 venv
-frontend/node_modules
-frontend/.pnp
+src/frontend/node_modules
+src/frontend/.pnp
 
-frontend/.pnp.js
-frontend/.yarn/install-state.gz
+src/frontend/.pnp.js
+src/frontend/.yarn/install-state.gz
 
-frontend/coverage
-frontend//.next/
-frontend/out/
+src/frontend/coverage
+src/frontend/.next/
+src/frontend/out/
 
-frontend/.DS_Store
+src/frontend/.DS_Store
 
-frontend/npm-debug.log*
+src/frontend/npm-debug.log*
 
 
 .vscode
@@ -20,5 +20,5 @@ venv
 .env
 *.pyc
 __pycache__
-core/media/*
+src/api/core/media/*
 .DS_Store

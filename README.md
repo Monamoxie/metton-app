@@ -1,4 +1,4 @@
-<p align="left"><img src="core/static/images/logo.png"></p>
+<p align="left"><img src="src/api/core/static/images/logo.png"></p>
 
 # METTON
 
@@ -25,7 +25,7 @@ Whether you are a solopreneur, SME, or a startup, Metton helps you optimize your
 - Material UI
 
 ## PRODUCTION ARCHITECTURE
-<p align="center"><img src="core/static/images/snapshots/metton-arch.webp"></p>
+<p align="center"><img src="src/api/src/api/core/static/images/snapshots/metton-arch.webp"></p>
 
 This project is currently in alpha stage. More components are continuosly being added or dropped as the need arises.
 
@@ -47,7 +47,7 @@ This project is currently in alpha stage. More components are continuosly being 
 - `Nginx` acts as a reverse proxy; For Development, this is made possible through port 8080 on the Host machine & port 80 in the container. You can always configure or change this from your `.env` config
 - `Nginx` also serves static contents & routes incoming requests to `Gunicorn`
 - Django through `Gunicorn` serves the main app on port 8000. The `Python` container EXPOSES port 8000 for this purpose.
-- `collectstatic` uses /var/www/static as static volume in PROD. But you don't have to worry about this during development, as Django would serve the assets directly from core/static
+- `collectstatic` uses /var/www/static as static volume in PROD. But you don't have to worry about this during development, as Django would serve the assets directly from `src/api/core/static`
 - `Python` and `Nginx` both share the same static volume
   <br>
 
@@ -141,23 +141,23 @@ In case of recurring issues, verify that DNS records have been properly updated 
 
 #### Landing page
 
-<p align="center"><img src="core/static/images/snapshots/home.png"></p>
+<p align="center"><img src="src/api/core/static/images/snapshots/home.png"></p>
 
 #### All pages are responsive
 
-<p align="center"><img src="core/static/images/snapshots/home-mobile-view.png"></p>
+<p align="center"><img src="src/api/core/static/images/snapshots/home-mobile-view.png"></p>
 
 #### Booking page
 
-<p align="center"><img src="core/static/images/snapshots/booking-page.png"></p>
+<p align="center"><img src="src/api/core/static/images/snapshots/booking-page.png"></p>
 
 #### Manage Schedules
 
-<p align="center"><img src="core/static/images/snapshots/manage-schedules.png"></p>
+<p align="center"><img src="src/api/core/static/images/snapshots/manage-schedules.png"></p>
 
 #### Manage Appointments
 
-<p align="center"><img src="core/static/images/snapshots/upcoming-appointments.png"></p> -->
+<p align="center"><img src="src/api/core/static/images/snapshots/upcoming-appointments.png"></p> -->
 
 ## License
 

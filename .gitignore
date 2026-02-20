@@ -1,10 +1,10 @@
 .vscode
-venv
+src/api/venv
 .env
 nginx/conf.d
 *.pyc
 __pycache__
-core/media/*
+src/api/core/media/*
 .DS_Store
 .terraform/aws/.terraform
 .terraform/aws/*.tfstate

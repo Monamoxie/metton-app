@@ -5,17 +5,15 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY . /app/
+COPY src/api /app/
 
-COPY requirements.txt ./app/
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r ./app/requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r /app/requirements.txt
 
 RUN mkdir -p /var/www/static
 
 VOLUME /var/www/static
 VOLUME /app/core/media
 
-COPY ./.shell/python_entrypoint.sh /app/.shell/python_entrypoint.sh
 RUN chmod +x /app/.shell/python_entrypoint.sh
 ENTRYPOINT ["/app/.shell/python_entrypoint.sh"]

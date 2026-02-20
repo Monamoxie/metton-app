@@ -1,0 +1,57 @@
+[01:16:18.989] Server  ERROR   ⨯ Error: Cannot find module 'next/dist/client/components/builtin/global-not-found'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:19.638] Server  ERROR   Error: Cannot find module 'next/dist/pages/_error'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:20.009] Server  ERROR   ⨯ Error: Cannot find module 'next/dist/pages/_error'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:20.354] Server  ERROR   Error: Cannot find module 'next/dist/pages/_error'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:20.821] Server  ERROR   ⨯ Error: Cannot find module 'next/dist/client/components/builtin/global-not-found'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:21.128] Server  ERROR   Error: Cannot find module 'next/dist/pages/_error'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:21.373] Server  ERROR   ⨯ Error: Cannot find module 'next/dist/pages/_error'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:21.696] Server  ERROR   Error: Cannot find module 'next/dist/pages/_error'
+Require stack:
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/dev/hot-reloader-turbopack.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/router-server.js
+- /Users/admin/Dev/metton/frontend/node_modules/next/dist/server/lib/start-server.js
+[01:16:22.864] Server  WARN    Error: Failed to persist Chrome DevTools workspace UUID. The Chrome DevTools Workspace needs to be reconnected after the next page reload.

@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN mkdir -p /usr/local/bin
 
-COPY ./frontend ./
+COPY ./src/frontend ./
 COPY ./.shell/node_entrypoint.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/node_entrypoint.sh
