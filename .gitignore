@@ -1,5 +1,5 @@
 .vscode
-src/api/venv
+src/api/.venv
 .env
 nginx/conf.d
 *.pyc
