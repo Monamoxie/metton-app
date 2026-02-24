@@ -10,3 +10,4 @@ src/api/core/media/*
 .terraform/aws/*.tfstate
 .terraform/aws/*.tfstate.*
 *.tfvars
+src/frontend/.next/
