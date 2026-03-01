@@ -161,4 +161,6 @@ In case of recurring issues, verify that DNS records have been properly updated 
 
 ## License
 
-[MIT license](https://opensource.org/licenses/MIT).
+## License
+
+[GNU AGPLv3”](LICENSE).
