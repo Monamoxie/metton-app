@@ -1,0 +1,92 @@
+:root {
+  /* Brand — Golden Scale */
+  --brand-50: #FDFAF0;
+  --brand-100: #FAF1CC;
+  --brand-200: #F8E9A8;
+  --brand-300: #F5DC7A;
+  --brand-400: #F0CE55;
+  --brand-500: #E8BB2A;
+  --brand-600: #D4A83A;
+  --brand-700: #B8903F;
+  --brand-800: #9E7A3A;
+  --brand-900: #7A5C2E;
+  --brand-950: #3D2E14;
+
+  /* Neutral — Warm Scale */
+  --neutral-50: #FAF9F7;
+  --neutral-100: #F0EDE8;
+  --neutral-200: #E0DDD8;
+  --neutral-300: #BFB9B3;
+  --neutral-400: #9A948E;
+  --neutral-500: #746E68;
+  --neutral-600: #4D4740;
+  --neutral-700: #332E27;
+  --neutral-800: #242019;
+  --neutral-900: #171512;
+  --neutral-950: #0F0E0C;
+
+  /* Spacing — 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows (approximation of spec) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.4);
+  --shadow-brand: 0 0 0 3px rgba(232, 187, 42, 0.25);
+  --shadow-glow: 0 0 40px rgba(232, 187, 42, 0.35);
+
+  /* Default semantic tokens (dark-first) */
+  --color-bg-page: var(--neutral-900);
+  --color-bg-card: var(--neutral-800);
+  --color-bg-elevated: var(--neutral-700);
+  --color-border: var(--neutral-700);
+  --color-text-primary: var(--neutral-50);
+  --color-text-secondary: var(--neutral-300);
+  --color-accent: var(--brand-500);
+  --color-success: hsl(142, 60%, 45%);
+  --color-danger: hsl(4, 75%, 55%);
+  --color-info: hsl(220, 90%, 58%);
+}
+
+:root[data-mode="dark"] {
+  --color-bg-page: var(--neutral-900);
+  --color-bg-card: var(--neutral-800);
+  --color-bg-elevated: var(--neutral-700);
+  --color-border: var(--neutral-700);
+  --color-text-primary: var(--neutral-50);
+  --color-text-secondary: var(--neutral-300);
+  --color-accent: var(--brand-500);
+  --color-success: hsl(142, 60%, 45%);
+  --color-danger: hsl(4, 75%, 55%);
+  --color-info: hsl(220, 90%, 58%);
+}
+
+:root[data-mode="light"] {
+  --color-bg-page: var(--neutral-50);
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: var(--neutral-100);
+  --color-border: var(--neutral-200);
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-500);
+  --color-accent: var(--brand-900);
+  --color-success: hsl(142, 60%, 35%);
+  --color-danger: hsl(4, 75%, 45%);
+  --color-info: hsl(220, 90%, 55%);
+}
+

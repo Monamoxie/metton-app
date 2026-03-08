@@ -1,27 +1,35 @@
-import { brand, gray } from "@/utils/theme/default/color";
-
 export const lightPalette = {
   primary: {
-    main: brand[900],
+    main: "#7A5C2E",
   },
   secondary: {
-    main: "#dc004e",
+    main: "#7A5C2E",
   },
   background: {
-    default: "#f4f6f8",
+    default: "#FAF9F7",
+    paper: "#ffffff",
   },
+  text: {
+    primary: "#171512",
+    secondary: "#746E68",
+  },
+  divider: "#E0DDD8",
 };
 
 export const darkPalette = {
   primary: {
-    main: brand[900],
+    main: "#E8BB2A",
   },
   secondary: {
-    main: "#f48fb1",
+    main: "#E8BB2A",
   },
   background: {
-    default: "#000",
-    paper: gray[900],
+    default: "#171512",
+    paper: "#242019",
   },
-  // Add other custom colors here
+  text: {
+    primary: "#FAF9F7",
+    secondary: "#BFB9B3",
+  },
+  divider: "#332E27",
 };
