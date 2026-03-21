@@ -2,7 +2,7 @@ import os
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.templatetags.rest_framework import data
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from core import settings
 from core.message_bag import MessageBag
 from dashboard.tasks import email_sender
@@ -13,12 +13,13 @@ from identity.serializers.forgot_password_serializer import ForgotPasswordSerial
 from identity.services.verification_token_service import VerificationTokenService
 from core.throttles import IdentityFormsThrottle
 
-class ForgotPasswordView(APIView):
+class ForgotPasswordView(GenericAPIView):
     permission_classes = [GuestOnlyPermission]
     throttle_classes = [IdentityFormsThrottle]
+    serializer_class = ForgotPasswordSerializer
 
     def post(self, request):
-        serializer = ForgotPasswordSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
             user = UserService().get_user_by_email(serializer.validated_data["email"])
 

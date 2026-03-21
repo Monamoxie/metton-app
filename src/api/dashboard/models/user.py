@@ -46,6 +46,7 @@ def rename_file(instance, filename):
 
 
 # Create your models here.
+# todo ::: need to make this model soft deleted. 
 class User(AbstractUser):
     username = None
     first_name = None

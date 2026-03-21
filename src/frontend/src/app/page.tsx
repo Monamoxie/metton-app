@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Button from "@/components/ui/Button";
+import LinkButton from "@/components/ui/LinkButton";
 import Card from "@/components/ui/Card";
 
 export default function Home() {
@@ -57,22 +58,12 @@ export default function Home() {
           </Box>
 
           <Box sx={{ display: "flex", gap: 1.5 }}>
-            <Button
-              variant="ghost"
-              size="md"
-              component={Link}
-              href="/identity/signin"
-            >
+            <LinkButton variant="ghost" size="md" href="/identity/signin">
               Sign in
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              component={Link}
-              href="/identity/signup"
-            >
+            </LinkButton>
+            <LinkButton variant="primary" size="md" href="/identity/signup">
               Get started free
-            </Button>
+            </LinkButton>
           </Box>
         </Container>
       </Box>
@@ -116,22 +107,12 @@ export default function Home() {
               </Typography>
 
               <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  component={Link}
-                  href="/identity/signup"
-                >
+                <LinkButton variant="primary" size="lg" href="/identity/signup">
                   Get started free
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  component={Link}
-                  href="https://github.com"
-                >
+                </LinkButton>
+                <LinkButton variant="ghost" size="lg" href="https://github.com">
                   View on GitHub
-                </Button>
+                </LinkButton>
               </Stack>
 
               <Typography

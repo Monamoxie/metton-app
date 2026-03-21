@@ -1,20 +1,21 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 
-# from identity.permissions import IsAuthenticatedPermission 
+# from identity.permissions import IsAuthenticatedPermission
 from core.message_bag import MessageBag
-from identity.serializers import ResendEmailVerificationSerializer 
+from identity.serializers import ResendEmailVerificationSerializer
 from rest_framework.permissions import AllowAny
 from identity.services import UserService
 from identity.utils import send_signup_email
 
 
-class ResendEmailVerificationView(APIView):
+class ResendEmailVerificationView(GenericAPIView):
     permission_classes = [AllowAny]
+    serializer_class = ResendEmailVerificationSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = ResendEmailVerificationSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             user = UserService.get_user_by_email(request.data['email'])

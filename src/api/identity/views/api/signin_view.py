@@ -9,9 +9,10 @@ from identity.services import UserService
 
 class SignInView(KnoxLoginView):
     permission_classes = [GuestOnlyPermission]
+    serializer_class = SignInSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = SignInSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
             user = serializer.validated_data.get("user")
             request.user = user

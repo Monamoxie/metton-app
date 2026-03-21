@@ -15,9 +15,10 @@ from rest_framework.serializers import ListSerializer
 class EmailVerificationView(UpdateAPIView):
     lookup_field = "token"
     permission_classes = []
+    serializer_class = EmailVerificationSerializer
 
     def patch(self, request, *args, **kwargs):
-        serializer = EmailVerificationSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             verification_type = VerificationTypes.EMAIL_VERIFICATION.value

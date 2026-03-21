@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.templatetags.rest_framework import data
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 
 from core.message_bag import MessageBag
 from identity.enums import VerificationTypes
@@ -14,11 +14,12 @@ from identity.services import UserService
 from identity.services.verification_token_service import VerificationTokenService
 
 
-class PasswordResetView(APIView):
+class PasswordResetView(GenericAPIView):
     permission_classes = [GuestOnlyPermission]
+    serializer_class = PasswordResetSerializer
 
     def patch(self, request):
-        serializer = PasswordResetSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
 
             vt_service = VerificationTokenService(

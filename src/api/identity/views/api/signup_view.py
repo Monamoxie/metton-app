@@ -1,4 +1,4 @@
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from core.message_bag import MessageBag
@@ -8,12 +8,13 @@ from identity.permissions import GuestOnlyPermission
 from identity.serializers import SignupSerializer, UserSerializer
 from identity.utils import send_signup_email
 
-class SignupView(APIView):
+class SignupView(GenericAPIView):
     permission_classes = [GuestOnlyPermission]
     throttle_classes = [IdentityFormsThrottle]
+    serializer_class = SignupSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = SignupSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
 

@@ -20,6 +20,7 @@ from django.urls import path
 from django.urls import include
 from core import settings
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 # Deprecated in favor of DRF ::: Migration to DRF in progress
 urlpatterns = [
@@ -35,6 +36,8 @@ urlpatterns = [
 urlpatterns += [
     path("api/v1/identity/", include("identity.api_urls")),
     path("api/v1/platform/", include("home.api_urls")),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
 ]
 
 # Serve static files during development
