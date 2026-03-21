@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { Card, Checkbox, FormControlLabel, Link, Stack } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -21,6 +20,7 @@ import NextLink from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../../ButtonContent";
+import { Button } from "@/components/ui/Button";
 import { SigninInputs } from "@/types/identity";
 import { SetIsFinishedProps } from "@/types/core";
 import useRecaptcha from "@/hooks/use-recaptcha";
@@ -144,7 +144,7 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
         <Button
           type="submit"
           fullWidth
-          variant="contained"
+          variant="primary"
           disabled={processing}
         >
           <ButtonContent processing={processing} defaultText="Sign In" />

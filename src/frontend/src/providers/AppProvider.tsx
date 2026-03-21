@@ -16,6 +16,16 @@ export default function AppProvider({ children }: LayoutProps) {
   const { platformSettings } = usePlatformSettings();
   const theme = createTheme(defaultTheme(mode));
 
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const root = document.documentElement;
+      root.setAttribute(
+        "data-mode",
+        mode === ColorMode.Dark ? "dark" : "light"
+      );
+    }
+  }, [mode]);
+
   return (
     <AppModeContext.Provider value={{ mode, toggleColorMode }}>
       <PlatformSettingsContext.Provider value={platformSettings}>
