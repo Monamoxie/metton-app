@@ -1,95 +1,243 @@
+import Link from "next/link";
 import Image from "next/image";
-import styles from "./page.module.css";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "var(--color-bg-page)",
+        color: "var(--color-text-primary)",
+      }}
+    >
+      <Box
+        component="header"
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--color-border)",
+          bgcolor: "rgba(23,21,18,0.85)",
+        }}
+      >
+        <Container
+          maxWidth="lg"
+          sx={{
+            py: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+              src="/images/logo-transparent.png"
+              alt="Metton"
+              width={120}
+              height={40}
             />
-          </a>
-        </div>
-      </div>
+          </Box>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+          <Box
+            component="nav"
+            sx={{
+              display: { xs: "none", md: "flex" },
+              gap: 3,
+              alignItems: "center",
+              fontSize: 14,
+            }}
+          >
+            <Link href="#features">Features</Link>
+            <Link href="#open-source">Open Source</Link>
+            <Link href="#pricing">Pricing</Link>
+          </Box>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+          <Box sx={{ display: "flex", gap: 1.5 }}>
+            <Button
+              variant="ghost"
+              size="md"
+              component={Link}
+              href="/identity/signin"
+            >
+              Sign in
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              component={Link}
+              href="/identity/signup"
+            >
+              Get started free
+            </Button>
+          </Box>
+        </Container>
+      </Box>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+      <Box
+        component="main"
+        sx={{
+          bgcolor: "var(--color-bg-page)",
+          color: "var(--color-text-primary)",
+        }}
+      >
+        {/* Hero */}
+        <Box sx={{ py: "var(--space-8)" }}>
+          <Container
+            maxWidth="lg"
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "1.1fr 1fr" },
+              gap: { xs: 6, md: 8 },
+              alignItems: "center",
+            }}
+          >
+            <Box>
+              <Typography
+                className="text-display-xl"
+                sx={{ mb: 3, maxWidth: 600 }}
+              >
+                Scheduling that feels like yours.
+              </Typography>
+              <Typography
+                className="text-body-lg"
+                sx={{
+                  color: "var(--color-text-secondary)",
+                  maxWidth: 480,
+                  mb: 4,
+                }}
+              >
+                Metton helps solopreneurs and small teams manage bookings
+                without vendor lock-in. Open source, self-hostable, and
+                designed for humans, not contracts.
+              </Typography>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  component={Link}
+                  href="/identity/signup"
+                >
+                  Get started free
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  component={Link}
+                  href="https://github.com"
+                >
+                  View on GitHub
+                </Button>
+              </Stack>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+              <Typography
+                className="text-body-sm"
+                sx={{ color: "var(--color-text-secondary)", mt: 2 }}
+              >
+                No credit card required. MIT-licensed.
+              </Typography>
+            </Box>
+
+            {/* Booking preview card */}
+            <Box
+              sx={{
+                position: "relative",
+                borderRadius: "var(--radius-xl)",
+                boxShadow: "var(--shadow-glow)",
+                p: 1,
+                bgcolor: "radial-gradient(circle at 0 0, rgba(232,187,42,0.16), transparent 55%)",
+              }}
+            >
+              <Card
+                sx={{
+                  borderRadius: "var(--radius-xl)",
+                  bgcolor: "var(--color-bg-card)",
+                }}
+              >
+                <Box
+                  sx={{
+                    borderBottom: "1px solid var(--color-border)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    pb: 1.5,
+                    mb: 2,
+                  }}
+                >
+                  <Typography className="text-mono" sx={{ fontSize: 12 }}>
+                    mettoncloud.com/meet/alex-morgan
+                  </Typography>
+                </Box>
+
+                <Stack direction="row" spacing={3} alignItems="flex-start">
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: "var(--radius-full)",
+                      bgcolor: "var(--neutral-700)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: 600,
+                    }}
+                  >
+                    AM
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography className="text-heading-md">
+                      Alex Morgan
+                    </Typography>
+                    <Typography
+                      className="text-body-sm"
+                      sx={{ color: "var(--color-text-secondary)", mb: 2 }}
+                    >
+                      Product Strategy Consultant
+                    </Typography>
+
+                    <Typography
+                      className="text-label"
+                      sx={{ mb: 1, color: "var(--color-text-secondary)" }}
+                    >
+                      Select a time
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={1.5}
+                      sx={{ mb: 3, flexWrap: "wrap" }}
+                    >
+                      {["9:00 AM", "10:00 AM", "11:00 AM"].map((time) => (
+                        <Box
+                          key={time}
+                          sx={{
+                            px: 2,
+                            py: 1,
+                            borderRadius: "var(--radius-md)",
+                            border: "1px solid var(--color-border)",
+                            bgcolor: "var(--neutral-800)",
+                            fontSize: 13,
+                          }}
+                        >
+                          {time}
+                        </Box>
+                      ))}
+                    </Stack>
+
+                    <Button variant="primary" size="md" fullWidth>
+                      Confirm booking
+                    </Button>
+                  </Box>
+                </Stack>
+              </Card>
+            </Box>
+          </Container>
+        </Box>
+      </Box>
+    </Box>
   );
 }
+

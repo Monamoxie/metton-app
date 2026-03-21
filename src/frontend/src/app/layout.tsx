@@ -1,16 +1,30 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import { DM_Serif_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
+import "../styles/tokens.css";
+import "../styles/typography.css";
 import "./globals.css";
-import CssBaseline from "@mui/material/CssBaseline";
 import { LayoutProps } from "@/types/layout-props";
 import AppProvider from "@/providers/AppProvider";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+
+const display = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+});
+
+const body = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: "Metton",
@@ -22,7 +36,10 @@ export default async function RootLayout(props: Readonly<LayoutProps>) {
   const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${body.variable} ${display.variable} ${mono.variable}`}
+    >
       <meta name="viewport" content="initial-scale=1, width=device-width" />
       <body>
         <NextIntlClientProvider messages={messages}>
