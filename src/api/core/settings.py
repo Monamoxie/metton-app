@@ -94,6 +94,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "widget_tweaks",
     "rest_framework",
+    "drf_spectacular",
     "knox",
     "corsheaders",
     "django_recaptcha",
@@ -248,6 +249,25 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Metton API",
+    "DESCRIPTION": "Booking and scheduling platform API",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENTS": {
+        "securitySchemes": {
+            "KnoxTokenAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Knox token. Format: **Token &lt;your_token&gt;**",
+            }
+        }
+    },
+    "SECURITY": [{"KnoxTokenAuth": []}],
 }
 
 REST_KNOX = {

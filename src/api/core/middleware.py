@@ -8,8 +8,14 @@ from django.utils.translation import gettext_lazy as _
 from core.message_bag import MessageBag
 
 
+MIDDLEWARE_EXCLUDED_PATHS = ("/api/schema/", "/api/docs/")
+
+
 class ApiResponseMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
+        if request.path.startswith(MIDDLEWARE_EXCLUDED_PATHS):
+            return response
+
         try:
             if isinstance(response, Response):
                 data = response.data
