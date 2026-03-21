@@ -117,3 +117,7 @@ export const mockWorkspaces: Workspace[] = [
 
 // ─── Current workspace helper ──────────────────────────────────
 export const currentWorkspace = mockWorkspaces[0];
+
+// ─── Mock "current user's workspaces" (session/backend) ─────────
+// Set to null to mock no workspace list / none selected. Swap for real API later.
+export const mockUserWorkspaces: Workspace[] | null = null;
