@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     "identity",
     "event",
     "home",
+    "workspace",
     "django.contrib.admin",
     "django.contrib.auth",
     "widget_tweaks",

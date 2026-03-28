@@ -10,8 +10,11 @@ def main():
     """Run administrative tasks."""
     if os.environ.get("PROJECT_ENV") != "production":
         # Load .env from repo root (two levels up from src/api/manage.py)
+        # Skipped silently in containers where Docker Compose injects env vars directly
         root_dir = Path(__file__).resolve().parent.parent.parent
-        dotenv.read_dotenv(root_dir / ".env", override=True)
+        env_file = root_dir / ".env"
+        if env_file.exists():
+            dotenv.read_dotenv(env_file, override=True)
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     try:

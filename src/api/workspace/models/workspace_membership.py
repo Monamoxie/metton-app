@@ -17,10 +17,15 @@ class WorkspaceMembership(models.Model):
     role = models.ForeignKey(
         WorkspaceRole, on_delete=models.PROTECT, related_name="granted_memberships"
     )
-    invited_by = models.ForeignKey(WorkspaceRole, on_delete=models.SET_NULL, null=True)
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="sent_invitations",
+    )
     meta = models.JSONField(default=dict, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unqiue_togeather = ("user", "workspace")
+        unique_together = ("user", "workspace")
