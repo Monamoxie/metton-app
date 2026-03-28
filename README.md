@@ -133,6 +133,17 @@ If the validation fails or takes longer than expected, try running the process a
 
 In case of recurring issues, verify that DNS records have been properly updated and propagated before retrying. I recommend being patient during these steps, as AWS and DNS updates can take time to fully propagate.
 
+## API Documentation
+
+Metton uses [drf-spectacular](https://drf-spectacular.readthedocs.io/) to auto-generate OpenAPI 3.0 schema documentation.
+
+| URL | Description |
+|---|---|
+| `http://127.0.0.1:8000/api/docs/` | Swagger UI — interactive API explorer and manual testing |
+| `http://127.0.0.1:8000/api/schema/` | Raw OpenAPI schema (JSON/YAML download) |
+
+The Swagger UI lets you authenticate with a Knox token and test all endpoints directly from the browser. Click **Authorize**, enter your token in the format `Token <your_token>`, then explore and execute any endpoint.
+
 ## UI Components
 - Material UI
 - Magic UI
