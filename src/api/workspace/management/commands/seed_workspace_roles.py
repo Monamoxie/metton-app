@@ -1,4 +1,4 @@
-from click import BaseCommand
+from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from workspace.enums import WorkspaceRoleName
 from workspace.models.workspace_role import WorkspaceRole
@@ -15,8 +15,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         for role_data in self.SYSTEM_ROLES:
-            WorkspaceRole.objects.get_or_create(
-                slug=slugify(role_data["name"]),
-                defaults={"name": role_data["name"], 
-                "is_system": True},
+            role, was_created = WorkspaceRole.objects.get_or_create(
+                label=slugify(role_data["name"]),
+                defaults={"name": role_data["name"], "is_system": True},
             )
+            status = "created" if was_created else "already exists"
+            self.stdout.write(f"  {role.label}: {status}")
