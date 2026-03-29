@@ -28,4 +28,5 @@ class WorkspaceMembership(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        db_table = "workspace_memberships"
         unique_together = ("user", "workspace")

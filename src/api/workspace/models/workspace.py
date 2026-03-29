@@ -17,5 +17,8 @@ class Workspace(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        db_table = "workspace_workspaces"
+
     def __str__(self) -> str:
         return self.name
