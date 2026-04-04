@@ -1,5 +1,5 @@
 from django.db import models
-
+from workspace.enums import WorkspaceRoleName
 from workspace.models.workspace import Workspace
 
 
@@ -16,6 +16,12 @@ class WorkspaceRole(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    SYSTEM_ROLES = [
+        {"name": WorkspaceRoleName.OWNER.value},
+        {"name": WorkspaceRoleName.ADMIN.value},
+        {"name": WorkspaceRoleName.MEMBER.value},
+    ]
 
     class Meta:
         db_table = "workspace_roles"

@@ -139,8 +139,8 @@ Metton uses [drf-spectacular](https://drf-spectacular.readthedocs.io/) to auto-g
 
 | URL | Description |
 |---|---|
-| `http://127.0.0.1:8000/api/docs/` | Swagger UI — interactive API explorer and manual testing |
-| `http://127.0.0.1:8000/api/schema/` | Raw OpenAPI schema (JSON/YAML download) |
+| `http://127.0.0.1:8084/api/docs/` | Swagger UI — interactive API explorer and manual testing |
+| `http://127.0.0.1:8084/api/schema/` | Raw OpenAPI schema (JSON/YAML download) |
 
 The Swagger UI lets you authenticate with a Knox token and test all endpoints directly from the browser. Click **Authorize**, enter your token in the format `Token <your_token>`, then explore and execute any endpoint.
 

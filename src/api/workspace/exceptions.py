@@ -1,0 +1,2 @@
+class SlugAlreadyTakenError(Exception):
+    pass

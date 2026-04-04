@@ -1,6 +1,6 @@
+from rest_framework.views import APIView
 
-from rest_framework.generics import GenericAPIView
 
-
-class WorkspaceView(GenericAPIView):
-    # name = Charfoed
+class WorkspaceView(APIView):
+    def get(self, request):
+        return False

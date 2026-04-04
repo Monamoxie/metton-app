@@ -28,16 +28,20 @@ urlpatterns = [
     path("identity/", include("identity.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("", include("home.urls")),
-
-    # api specific ::: 
+    # api specific :::
     path("api/v1/event/", include("event.urls")),
 ]
 
 urlpatterns += [
     path("api/v1/identity/", include("identity.api_urls")),
     path("api/v1/platform/", include("home.api_urls")),
+    path("api/v1/workspace/", include("workspace.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
 ]
 
 # Serve static files during development
