@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -15,26 +16,51 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import * as WorkspaceService from "@/services/workspace-service";
+import { WorkspaceSummary } from "@/types/workspace";
+import ButtonContent from "@/components/ButtonContent";
 
 interface CreateWorkspaceDialogProps {
   open: boolean;
   onClose: () => void;
+  onCreated?: (workspace: WorkspaceSummary) => void;
 }
 
 export default function CreateWorkspaceDialog({
   open,
   onClose,
+  onCreated,
 }: CreateWorkspaceDialogProps) {
   const [workspaceName, setWorkspaceName] = useState("");
+  const [processing, setProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleCreate = () => {
-    // TODO: send to backend
-    setWorkspaceName("");
-    onClose();
+  const handleCreate = async () => {
+    if (!workspaceName.trim()) return;
+
+    setProcessing(true);
+    setErrorMessage(null);
+    try {
+      const response = await WorkspaceService.createWorkspace({
+        name: workspaceName.trim(),
+      });
+
+      if (response.code !== 201) {
+        setErrorMessage(response.message || "Unable to create workspace.");
+        return;
+      }
+
+      onCreated?.(response.data.workspace as WorkspaceSummary);
+      setWorkspaceName("");
+      onClose();
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleClose = () => {
     setWorkspaceName("");
+    setErrorMessage(null);
     onClose();
   };
 
@@ -51,6 +77,11 @@ export default function CreateWorkspaceDialog({
       </DialogTitle>
 
       <DialogContent dividers>
+        {errorMessage && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
         <TextField
           label="Workspace name"
           placeholder="e.g. Acme Corp, My Company"
@@ -58,6 +89,12 @@ export default function CreateWorkspaceDialog({
           size="small"
           value={workspaceName}
           onChange={(e) => setWorkspaceName(e.target.value)}
+          error={workspaceName.length > 0 && workspaceName.trim().length < 2}
+          helperText={
+            workspaceName.length > 0 && workspaceName.trim().length < 2
+              ? "Workspace name must be at least 2 characters."
+              : ""
+          }
           sx={{ mb: 3 }}
         />
 
@@ -91,13 +128,18 @@ export default function CreateWorkspaceDialog({
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} disabled={processing}>
+          Cancel
+        </Button>
         <Button
           variant="contained"
           onClick={handleCreate}
-          disabled={!workspaceName.trim()}
+          disabled={processing || workspaceName.trim().length < 2}
         >
-          Create workspace
+          <ButtonContent
+            processing={processing}
+            defaultText="Create workspace"
+          />
         </Button>
       </DialogActions>
     </Dialog>

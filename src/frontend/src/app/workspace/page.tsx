@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Grid2 from "@mui/material/Grid";
 import {
@@ -13,26 +13,59 @@ import {
   Typography,
 } from "@mui/material";
 import CreateWorkspaceDialog from "@/components/workspace/CreateWorkspaceDialog";
-import { mockUserWorkspaces } from "@/data/mock/workspace";
+import CircularProgressBox from "@/components/loaders/CircularProgressBox";
+import ErrorDisplay from "@/components/ErrorDisplay";
+import * as WorkspaceService from "@/services/workspace-service";
+import { WorkspaceSummary } from "@/types/workspace";
 
 export default function WorkspaceLandingPage() {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
+  const [fetchingData, setFetchingData] = useState(true);
+  const [workspaces, setWorkspaces] = useState<WorkspaceSummary[]>([]);
+  const [responseErrors, setResponseErrors] = useState<{
+    [key: string]: string[];
+  }>({});
 
-  // null or empty = no workspace list / none selected (create flow)
-  const workspaces = useMemo(() => mockUserWorkspaces ?? [], []);
+  const fetchWorkspaces = async () => {
+    setFetchingData(true);
+    try {
+      const response = await WorkspaceService.listWorkspaces();
+      if (response.code === 200) {
+        setWorkspaces(response.data.workspaces);
+      } else {
+        setResponseErrors(response.errors);
+      }
+    } catch (error: any) {
+      setResponseErrors({ error: [error.message] });
+    } finally {
+      setFetchingData(false);
+    }
+  };
 
   useEffect(() => {
-    if (workspaces.length === 1) {
+    fetchWorkspaces();
+  }, []);
+
+  useEffect(() => {
+    if (!fetchingData && workspaces.length === 1) {
       router.replace(`/workspace/${workspaces[0].slug}`);
     }
-  }, [router, workspaces]);
+  }, [fetchingData, router, workspaces]);
+
+  if (fetchingData) {
+    return <CircularProgressBox />;
+  }
 
   const hasNoWorkspaces = workspaces.length === 0;
   const hasMultipleWorkspaces = workspaces.length > 1;
 
   return (
     <Box sx={{ maxWidth: 720, mx: "auto", py: 6 }}>
+      {Object.keys(responseErrors).length > 0 && (
+        <ErrorDisplay errors={responseErrors} />
+      )}
+
       {hasNoWorkspaces && (
         <>
           <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -83,10 +116,7 @@ export default function WorkspaceLandingPage() {
                   <CardActionArea
                     onClick={() => router.push(`/workspace/${ws.slug}`)}
                   >
-                    <CardHeader
-                      title={ws.name}
-                      subheader={`${ws.memberCount} members • ${ws.teamCount} teams`}
-                    />
+                    <CardHeader title={ws.name} subheader={ws.slug} />
                   </CardActionArea>
                 </Card>
               </Grid2>
@@ -104,6 +134,7 @@ export default function WorkspaceLandingPage() {
       <CreateWorkspaceDialog
         open={createOpen}
         onClose={() => setCreateOpen(false)}
+        onCreated={(workspace) => router.replace(`/workspace/${workspace.slug}`)}
       />
     </Box>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   Avatar,
@@ -18,16 +18,33 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
-import { mockWorkspaces } from "@/data/mock/workspace";
+import { WorkspaceSummary } from "@/types/workspace";
+import CircularProgressBox from "@/components/loaders/CircularProgressBox";
+import * as WorkspaceService from "@/services/workspace-service";
 
 type SettingsTab = "general" | "members" | "teams" | "billing";
 
 export default function WorkspaceSettingsPage() {
   const { slug } = useParams<{ slug: string }>();
-  const workspace = mockWorkspaces.find((ws) => ws.slug === slug);
+  const [workspace, setWorkspace] = useState<WorkspaceSummary | null>(null);
+  const [fetchingData, setFetchingData] = useState(true);
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
-  const [workspaceName, setWorkspaceName] = useState(workspace?.name ?? "");
+  const [workspaceName, setWorkspaceName] = useState("");
+
+  useEffect(() => {
+    const fetchWorkspace = async () => {
+      setFetchingData(true);
+      const response = await WorkspaceService.getWorkspace(slug);
+      const fetched =
+        response.code === 200 ? (response.data.workspace as WorkspaceSummary) : null;
+      setWorkspace(fetched);
+      setWorkspaceName(fetched?.name ?? "");
+      setFetchingData(false);
+    };
+
+    fetchWorkspace();
+  }, [slug]);
 
   const tabs: { key: SettingsTab; label: string }[] = [
     { key: "general", label: "General" },
@@ -35,6 +52,10 @@ export default function WorkspaceSettingsPage() {
     { key: "teams", label: "Teams" },
     { key: "billing", label: "Billing" },
   ];
+
+  if (fetchingData) {
+    return <CircularProgressBox />;
+  }
 
   if (!workspace) {
     return (

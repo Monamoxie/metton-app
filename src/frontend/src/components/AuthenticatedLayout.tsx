@@ -5,7 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Box, Toolbar, useTheme, useMediaQuery } from "@mui/material";
 import TopBar from "@/components/dashboard/TopBar";
 import Sidebar from "@/components/dashboard/Sidebar";
-import { mockUserWorkspaces } from "@/data/mock/workspace";
+import CircularProgressBox from "@/components/loaders/CircularProgressBox";
+import * as WorkspaceService from "@/services/workspace-service";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -13,6 +14,7 @@ interface LayoutProps {
 
 const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [checkingWorkspaces, setCheckingWorkspaces] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const pathname = usePathname();
@@ -22,16 +24,38 @@ const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
     setMobileOpen(!mobileOpen);
   };
 
-  // Guard: if user has no workspaces / none selected, send them to workspace flow.
-  // Skip when already on /workspace. Swap mockUserWorkspaces for backend data when ready.
+  // Guard: if user has no workspaces, send them to the workspace creation flow.
+  // Skip when already on /workspace to avoid a redirect loop.
   useEffect(() => {
     const onWorkspaceFlow = pathname?.startsWith("/workspace");
-    const hasNoWorkspaces =
-      mockUserWorkspaces == null || mockUserWorkspaces.length === 0;
-    if (!onWorkspaceFlow && hasNoWorkspaces) {
-      router.replace("/workspace");
+    if (onWorkspaceFlow) {
+      setCheckingWorkspaces(false);
+      return;
     }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await WorkspaceService.listWorkspaces();
+        const hasNoWorkspaces =
+          response.code !== 200 || response.data.workspaces.length === 0;
+        if (!cancelled && hasNoWorkspaces) {
+          router.replace("/workspace");
+          return;
+        }
+      } finally {
+        if (!cancelled) setCheckingWorkspaces(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [pathname, router]);
+
+  if (checkingWorkspaces) {
+    return <CircularProgressBox />;
+  }
 
   return (
     <Box

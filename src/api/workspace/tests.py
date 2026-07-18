@@ -46,8 +46,8 @@ class WorkspaceCreateTests(APITestCase):
         second = self.client.post(self.url, {"name": "Acme Corp"})
 
         self.assertNotEqual(
-            first.data["data"]["workspace"]["slug"],
-            second.data["data"]["workspace"]["slug"],
+            first.json()["data"]["workspace"]["slug"],
+            second.json()["data"]["workspace"]["slug"],
         )
 
     def test_second_workspace_for_same_owner_returns_400(self):
@@ -68,7 +68,7 @@ class WorkspaceCreateTests(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data["data"]["workspaces"]), 1)
+        self.assertEqual(len(response.json()["data"]["workspaces"]), 1)
 
 
 class WorkspaceServiceTests(TestCase):
@@ -83,11 +83,15 @@ class WorkspaceServiceTests(TestCase):
 
     def test_workspace_created_signal_fires_after_save(self):
         received = []
-        workspace_created.connect(
-            lambda sender, workspace, user, **kwargs: received.append(
-                (workspace, user)
-            )
-        )
+
+        def handler(sender, workspace, user, **kwargs):
+            received.append((workspace, user))
+
+        # weak=False: without it Django holds only a weak reference to the
+        # receiver, and since nothing else here keeps `handler` alive, it can
+        # be garbage-collected before `send()` fires - the signal is emitted
+        # but silently has zero listeners.
+        workspace_created.connect(handler, weak=False)
 
         workspace = WorkspaceService.create_workspace(user=self.user, name="Acme Corp")
 

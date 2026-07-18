@@ -32,3 +32,19 @@ export interface Workspace {
   createdBy: string;
   createdAt: string;
 }
+
+export interface WorkspaceSummary {
+  id: number;
+  name: string;
+  slug: string;
+  timezone: string;
+  description: string | null;
+  photo: string | null;
+  banner: string | null;
+  created_at: string;
+}
+
+export interface CreateWorkspaceInput {
+  name: string;
+  timezone?: string;
+}

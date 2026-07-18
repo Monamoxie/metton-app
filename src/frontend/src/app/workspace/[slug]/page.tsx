@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   Box,
@@ -14,27 +14,37 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import Link from "next/link";
-import { WorkspaceMember, Team } from "@/types/workspace";
-import {
-  mockWorkspaces,
-  mockMembers,
-  mockTeams,
-} from "@/data/mock/workspace";
+import { WorkspaceMember, Team, WorkspaceSummary } from "@/types/workspace";
+import { mockMembers, mockTeams } from "@/data/mock/workspace";
 import MembersPreviewTable from "@/components/workspace/MembersPreviewTable";
 import TeamsGrid from "@/components/workspace/TeamsGrid";
 import InviteMemberDialog from "@/components/workspace/InviteMemberDialog";
 import CreateTeamDialog from "@/components/workspace/CreateTeamDialog";
 import MemberDetailDrawer from "@/components/workspace/MemberDetailDrawer";
+import CircularProgressBox from "@/components/loaders/CircularProgressBox";
+import * as WorkspaceService from "@/services/workspace-service";
 
 export default function WorkspacePage() {
   const { slug } = useParams<{ slug: string }>();
-  const workspace = mockWorkspaces.find((ws) => ws.slug === slug);
+  const [workspace, setWorkspace] = useState<WorkspaceSummary | null>(null);
+  const [fetchingData, setFetchingData] = useState(true);
 
   const [inviteOpen, setInviteOpen] = useState(false);
   const [createTeamOpen, setCreateTeamOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<WorkspaceMember | null>(
     null
   );
+
+  useEffect(() => {
+    const fetchWorkspace = async () => {
+      setFetchingData(true);
+      const response = await WorkspaceService.getWorkspace(slug);
+      setWorkspace(response.code === 200 ? response.data.workspace : null);
+      setFetchingData(false);
+    };
+
+    fetchWorkspace();
+  }, [slug]);
 
   const handleMemberClick = (member: WorkspaceMember) => {
     setSelectedMember(member);
@@ -43,6 +53,10 @@ export default function WorkspacePage() {
   const handleTeamClick = (team: Team) => {
     // Navigate to team detail in the future
   };
+
+  if (fetchingData) {
+    return <CircularProgressBox />;
+  }
 
   if (!workspace) {
     return (
@@ -71,12 +85,12 @@ export default function WorkspacePage() {
           </Typography>
           <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
             <Chip
-              label={`${workspace.memberCount} members`}
+              label={`${mockMembers.length} members`}
               size="small"
               variant="outlined"
             />
             <Chip
-              label={`${workspace.teamCount} teams`}
+              label={`${mockTeams.length} teams`}
               size="small"
               variant="outlined"
             />
