@@ -1,0 +1,2 @@
+class WorkspaceLimitReachedError(Exception):
+    pass

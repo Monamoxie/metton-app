@@ -1,0 +1,2 @@
+class WorkspaceNotFoundError(Exception):
+    pass

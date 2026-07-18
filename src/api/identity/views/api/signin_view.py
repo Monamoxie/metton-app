@@ -12,7 +12,9 @@ class SignInView(KnoxLoginView):
     serializer_class = SignInSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid() and isinstance(serializer.validated_data, dict):
             user = serializer.validated_data.get("user")
             request.user = user

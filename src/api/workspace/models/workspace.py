@@ -6,6 +6,7 @@ class Workspace(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True)
+    timezone = models.CharField(max_length=64, default="UTC")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
