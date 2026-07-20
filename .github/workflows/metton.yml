@@ -31,10 +31,10 @@ jobs:
         # Postgres takes a moment to accept connections after the container
         # starts - this polls pg_isready so the test step below doesn't race it.
         options: >-
-          --health-cmd="pg_isready -U metton_test"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
