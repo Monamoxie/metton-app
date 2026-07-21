@@ -1,0 +1,2 @@
+class TeamLimitReachedError(Exception):
+    pass

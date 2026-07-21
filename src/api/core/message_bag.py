@@ -38,6 +38,7 @@ class MessageBag:
     # Generic messages
     GENERIC_ERROR_MESSAGE = _("An error occurred while processing your request")
     GENERIC_SUCCESS_MESSAGE = _("Action completed successfully")
+    ACTION_NOT_ALLOWED = _("You do not have permission to perform this action")
 
     # Authentication based messages
     INVALID_SIGNIN_CREDENTIALS = _("Invalid email or password")
@@ -45,3 +46,6 @@ class MessageBag:
 
     # Workspace
     WORKSPACE_LIMIT_REACHED = "You are only limited to 1 workspace"
+
+    # Team
+    TEAM_LIMIT_REACHED = "You are only limited to 20 teams per workspace"

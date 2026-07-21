@@ -9,3 +9,8 @@ class WorkspaceRoleName(Enum):
     @classmethod
     def options(cls):
         return [(key.value, key.value.title()) for key in cls]
+
+
+class TeamMembershipRoleName(Enum):
+    LEAD = "lead"
+    MEMBER = "member"
