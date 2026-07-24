@@ -48,3 +48,11 @@ export interface CreateWorkspaceInput {
   name: string;
   timezone?: string;
 }
+
+export interface TeamSummary {
+  id: number;
+  name: string;
+  slug: string;
+  is_default: boolean;
+  created_at: string;
+}

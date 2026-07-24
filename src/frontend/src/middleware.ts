@@ -7,6 +7,7 @@ const PROTECTED_PATTERNS = [
   "^/identity/user(/.*)?$",
   "^/events(/.*)?$",
   "^/workspace(/.*)?$",
+  "^/onboarding(/.*)?$",
 ];
 
 export async function middleware(request: NextRequest) {

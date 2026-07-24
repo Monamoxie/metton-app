@@ -7,6 +7,7 @@ import TopBar from "@/components/dashboard/TopBar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import CircularProgressBox from "@/components/loaders/CircularProgressBox";
 import * as WorkspaceService from "@/services/workspace-service";
+import * as TeamService from "@/services/team-service";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -25,10 +26,13 @@ const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   // Guard: if user has no workspaces, send them to the workspace creation flow.
-  // Skip when already on /workspace to avoid a redirect loop.
+  // Once a workspace exists, if it has no manually created team yet, send them
+  // to the team onboarding step. Skip both checks when already on /workspace
+  // or /onboarding to avoid a redirect loop (those routes do their own checks).
   useEffect(() => {
-    const onWorkspaceFlow = pathname?.startsWith("/workspace");
-    if (onWorkspaceFlow) {
+    const onOnboardingFlow =
+      pathname?.startsWith("/workspace") || pathname?.startsWith("/onboarding");
+    if (onOnboardingFlow) {
       setCheckingWorkspaces(false);
       return;
     }
@@ -36,11 +40,20 @@ const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
     let cancelled = false;
     (async () => {
       try {
-        const response = await WorkspaceService.listWorkspaces();
-        const hasNoWorkspaces =
-          response.code !== 200 || response.data.workspaces.length === 0;
-        if (!cancelled && hasNoWorkspaces) {
-          router.replace("/workspace");
+        const workspacesResponse = await WorkspaceService.listWorkspaces();
+        const workspace = workspacesResponse.data?.workspaces?.[0];
+        if (!workspace) {
+          if (!cancelled) router.replace("/workspace");
+          return;
+        }
+
+        const teamsResponse = await TeamService.listTeams(workspace.slug);
+        const teams = teamsResponse.data?.teams ?? [];
+        const hasManuallyCreatedTeam = teams.some(
+          (team: any) => !team.is_default
+        );
+        if (!cancelled && !hasManuallyCreatedTeam) {
+          router.replace("/onboarding/team");
           return;
         }
       } finally {
