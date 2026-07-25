@@ -12,7 +12,12 @@ from workspace.models import (
     WorkspaceMembership,
     WorkspaceRole,
 )
-from workspace.services import TeamService, WorkspaceMembershipService, WorkspaceService
+from workspace.services import (
+    TeamMembershipService,
+    TeamService,
+    WorkspaceMembershipService,
+    WorkspaceService,
+)
 from workspace.signals import workspace_created
 
 
@@ -188,6 +193,66 @@ class TeamCreateTests(APITestCase):
         self.assertEqual(len(teams), 1)
         self.assertEqual(teams[0]["name"], "General")
         self.assertTrue(teams[0]["is_default"])
+
+
+class TeamMemberListTests(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(
+            email="owner@example.com", password="password123"
+        )
+        WorkspaceRole.objects.get_or_create(
+            name=WorkspaceRoleName.OWNER.value,
+            defaults={"label": "owner", "is_system": True},
+        )
+        WorkspaceRole.objects.get_or_create(
+            name=WorkspaceRoleName.MEMBER.value,
+            defaults={"label": "member", "is_system": True},
+        )
+        self.workspace = WorkspaceService.create_workspace(
+            user=self.owner, name="Acme Corp"
+        )
+        self.team = Team.objects.get(workspace=self.workspace, is_default=True)
+        self.url = (
+            f"/api/v1/workspace/{self.workspace.slug}/teams/{self.team.slug}/members/"
+        )
+        self.client.force_authenticate(user=self.owner)
+
+    def test_list_members_includes_the_team_lead(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        members = response.json()["data"]["members"]
+        self.assertEqual(len(members), 1)
+        self.assertEqual(members[0]["user"]["email"], self.owner.email)
+        self.assertEqual(members[0]["role"], "lead")
+
+    def test_list_members_reflects_added_member(self):
+        member = User.objects.create_user(
+            email="member@example.com", password="password123"
+        )
+        TeamMembershipService.add_member(team=self.team, user=member, role="member")
+
+        response = self.client.get(self.url)
+
+        members = response.json()["data"]["members"]
+        self.assertEqual(len(members), 2)
+
+    def test_returns_404_for_unknown_team_slug(self):
+        response = self.client.get(
+            f"/api/v1/workspace/{self.workspace.slug}/teams/nonexistent/members/"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_non_member_of_workspace_cannot_list_team_members(self):
+        outsider = User.objects.create_user(
+            email="outsider@example.com", password="password123"
+        )
+        self.client.force_authenticate(user=outsider)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class TeamServiceTests(TestCase):

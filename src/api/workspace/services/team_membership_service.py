@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from django.db.models import QuerySet
+
 from dashboard.models import User
 from workspace.models import Team, TeamMembership
 
@@ -13,6 +15,10 @@ class TeamMembershipService:
         team: Team, user: User, role: str
     ) -> TeamMembership:
         return TeamMembership.objects.create(team=team, user=user, role=role)
+
+    @staticmethod
+    def get_members_for_team(team: Team) -> QuerySet:
+        return TeamMembership.objects.filter(team=team).select_related("user")
 
     @staticmethod
     def is_member(team: Team, user: "User | AbstractBaseUser | AnonymousUser") -> bool:

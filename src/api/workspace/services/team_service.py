@@ -4,7 +4,7 @@ from django.utils.text import slugify
 
 from dashboard.models.user import User
 from workspace.enums import TeamMembershipRoleName
-from workspace.exceptions import TeamLimitReachedError
+from workspace.exceptions import TeamLimitReachedError, TeamNotFoundError
 from workspace.models import Team, Workspace
 from workspace.services.team_membership_service import TeamMembershipService
 
@@ -53,6 +53,13 @@ class TeamService:
     @staticmethod
     def get_teams_for_workspace(workspace: Workspace) -> QuerySet:
         return Team.objects.filter(workspace=workspace)
+
+    @staticmethod
+    def get_by_slug(workspace: Workspace, team_slug: str) -> Team:
+        try:
+            return Team.objects.get(workspace=workspace, slug=team_slug)
+        except Team.DoesNotExist:
+            raise TeamNotFoundError()
 
     @staticmethod
     def _team_count(workspace: Workspace) -> int:
