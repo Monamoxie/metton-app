@@ -56,3 +56,15 @@ export interface TeamSummary {
   is_default: boolean;
   created_at: string;
 }
+
+export interface TeamMemberUser {
+  public_id: string;
+  email: string;
+  name: string;
+}
+
+export interface TeamMembershipSummary {
+  user: TeamMemberUser;
+  role: "lead" | "member";
+  created_at: string;
+}

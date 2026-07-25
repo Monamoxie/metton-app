@@ -1,24 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box, Button, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import Link from "next/link";
-import { Team } from "@/types/workspace";
-import { mockMembers, mockTeams } from "@/data/mock/workspace";
-import TeamsGrid from "@/components/workspace/TeamsGrid";
+import { TeamSummary } from "@/types/workspace";
+import { mockMembers } from "@/data/mock/workspace";
+import TeamSummaryGrid from "@/components/workspace/TeamSummaryGrid";
 import CreateTeamDialog from "@/components/workspace/CreateTeamDialog";
+import CircularProgressBox from "@/components/loaders/CircularProgressBox";
+import * as TeamService from "@/services/team-service";
 
 export default function WorkspaceTeamsPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [teams, setTeams] = useState<TeamSummary[]>([]);
+  const [fetchingData, setFetchingData] = useState(true);
   const [createTeamOpen, setCreateTeamOpen] = useState(false);
   const router = useRouter();
 
-  const handleTeamClick = (team: Team) => {
-    router.push(`/workspace/${slug}/teams/${team.id}`);
+  useEffect(() => {
+    const fetchTeams = async () => {
+      setFetchingData(true);
+      const response = await TeamService.listTeams(slug);
+      setTeams(response.code === 200 ? response.data.teams : []);
+      setFetchingData(false);
+    };
+
+    fetchTeams();
+  }, [slug]);
+
+  const handleTeamClick = (team: TeamSummary) => {
+    router.push(`/workspace/${slug}/teams/${team.slug}`);
   };
+
+  if (fetchingData) {
+    return <CircularProgressBox />;
+  }
 
   return (
     <Box>
@@ -43,7 +62,7 @@ export default function WorkspaceTeamsPage() {
         }}
       >
         <Typography variant="h5" fontWeight={700}>
-          Teams ({mockTeams.length})
+          Teams ({teams.length})
         </Typography>
         <Button
           variant="contained"
@@ -55,7 +74,7 @@ export default function WorkspaceTeamsPage() {
       </Box>
 
       {/* Teams grid */}
-      <TeamsGrid teams={mockTeams} onTeamClick={handleTeamClick} />
+      <TeamSummaryGrid teams={teams} onTeamClick={handleTeamClick} />
 
       {/* Create team dialog */}
       <CreateTeamDialog

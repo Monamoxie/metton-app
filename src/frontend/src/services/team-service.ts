@@ -36,3 +36,22 @@ export const createTeam = async (
     return Utils.ApiExceptionHandler(error.message);
   }
 };
+
+// -- List a team's members --
+export const getTeamMembers = async (
+  slug: string,
+  teamSlug: string
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.get(
+      `/workspace/${slug}/teams/${teamSlug}/members/`,
+      { headers: Utils.getAuthApiHeader() }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
