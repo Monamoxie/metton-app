@@ -1,6 +1,6 @@
 import uuid
 from typing import Union
-from dashboard.models.user import User
+from identity.models.user import User
 
 
 class UserService:

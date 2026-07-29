@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from core.utils import get_template_path
 from dashboard.forms import PasswordUpdateForm
-from dashboard.models.user import User
+from identity.models.user import User
 from dashboard.tasks import email_sender
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 

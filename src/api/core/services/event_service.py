@@ -5,7 +5,7 @@ from datetime import datetime
 import dateutil.parser
 from django.db.models import Q
 from typing import Union, List
-from dashboard.models.user import User
+from identity.models.user import User
 from dashboard.models.event import Event
 from dashboard.enums import EventTypes
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser

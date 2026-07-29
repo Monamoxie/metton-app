@@ -10,7 +10,7 @@ from typing import Any
 from datetime import datetime
 from django.contrib import messages
 from django.shortcuts import redirect
-from dashboard.models.user import User
+from identity.models.user import User
 
 
 class DashboardView(LoginRequiredMixin, SuccessMessageMixin, FormView):

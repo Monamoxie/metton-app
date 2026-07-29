@@ -101,7 +101,7 @@ INSTALLED_APPS = [
     "django_recaptcha",
 ]
 
-AUTH_USER_MODEL = "dashboard.User"
+AUTH_USER_MODEL = "identity.User"
 
 LOGIN_URL = "/identity/signin"
 
