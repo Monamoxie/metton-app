@@ -6,7 +6,7 @@ from dashboard.models import Event
 from typing import Any, Union
 from django import forms
 
-from dashboard.models.user import User
+from identity.models.user import User
 
 
 class BookingForm(forms.ModelForm):

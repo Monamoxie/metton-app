@@ -5,7 +5,7 @@ import json
 from core.services.event_service import EventService
 from dashboard.enums import EventTypes
 from dashboard.models import Event
-from dashboard.models.user import User
+from identity.models.user import User
 from home.forms.booking_form import BookingForm
 from django.http import JsonResponse
 

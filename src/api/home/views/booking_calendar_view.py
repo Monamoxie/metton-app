@@ -1,7 +1,7 @@
 from typing import Any
 from django.views.generic import TemplateView
 from datetime import datetime
-from dashboard.models.user import User
+from identity.models.user import User
 from dashboard.enums import RecurrenceTypes
 from django.shortcuts import render, get_object_or_404
 from core import settings

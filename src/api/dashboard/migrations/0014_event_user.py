@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('dashboard', '0013_event'),
+        ('identity', '0000_user'),
     ]
 
     operations = [

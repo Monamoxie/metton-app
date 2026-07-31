@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from dashboard.enums import EventTypes
 from dashboard.models import Event
-from dashboard.models.user import User
+from identity.models.user import User
 from core.services.event_service import EventService
 from home.forms.booking_form import BookingForm
 

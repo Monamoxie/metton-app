@@ -7,7 +7,7 @@ from django.http import HttpResponseBadRequest
 from django.core.exceptions import ValidationError
 
 from core import settings
-from dashboard.models.user import User
+from identity.models.user import User
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
 
