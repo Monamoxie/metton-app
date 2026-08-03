@@ -75,9 +75,6 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    class Meta:
-        db_table = "dashboard_user"
-
     def __str__(self):
         return str(self.email)
 
