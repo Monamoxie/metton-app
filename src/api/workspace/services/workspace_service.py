@@ -23,11 +23,6 @@ class WorkspaceService:
     def create_workspace(
         cls, user: User, name: str, timezone: str = "UTC"
     ) -> Workspace:
-        """
-        Creates a workspace and assigns the user as owner, in a single
-        atomic transaction. Raises WorkspaceLimitReachedError if the user
-        already owns MAX_WORKSPACES_PER_OWNER workspaces.
-        """
         if cls._owned_workspace_count(user) >= cls.MAX_WORKSPACES_PER_OWNER:
             raise WorkspaceLimitReachedError()
 
