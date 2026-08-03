@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from dashboard.models.user import User
+from identity.models.user import User
 from workspace.enums import WorkspaceRoleName
 from workspace.exceptions import TeamLimitReachedError, WorkspaceLimitReachedError
 from workspace.models import (

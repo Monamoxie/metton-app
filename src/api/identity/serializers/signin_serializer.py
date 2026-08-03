@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from core.utils import CoreUtils
-from dashboard.models.user import User
+from identity.models.user import User
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator

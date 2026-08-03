@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from django.db.models import QuerySet
 
-from dashboard.models import User
+from identity.models import User
 from workspace.models import Team, TeamMembership
 
 if TYPE_CHECKING:

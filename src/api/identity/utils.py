@@ -2,7 +2,7 @@ import os
 from typing import Union
 from django.contrib.auth.models import AbstractUser
 from core import settings
-from dashboard.models.user import User
+from identity.models.user import User
 from dashboard.tasks import email_sender
 from identity.enums import VerificationTypes
 from identity.services import VerificationTokenService

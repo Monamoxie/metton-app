@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from dashboard.models import User
+from identity.models import User
 from workspace.models import Workspace
 from workspace.models import WorkspaceMembership
 from workspace.models.workspace_role import WorkspaceRole

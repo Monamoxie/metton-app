@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dashboard.models.user import User
+from identity.models.user import User
 
 
 class TeamMemberUserSerializer(serializers.ModelSerializer):

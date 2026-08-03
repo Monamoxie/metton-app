@@ -1,6 +1,6 @@
 from django.db import models
 from core import settings
-from dashboard.models.user import User
+from identity.models.user import User
 from identity.enums import VerificationTypes
 
 

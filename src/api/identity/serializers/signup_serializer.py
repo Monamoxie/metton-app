@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from core import settings
 from core.utils import CoreUtils
-from dashboard.models.user import User
+from identity.models.user import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _

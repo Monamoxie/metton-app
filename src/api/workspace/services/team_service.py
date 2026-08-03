@@ -2,7 +2,7 @@ from django.db import transaction
 from django.db.models import QuerySet
 from django.utils.text import slugify
 
-from dashboard.models.user import User
+from identity.models.user import User
 from workspace.enums import TeamMembershipRoleName
 from workspace.exceptions import TeamLimitReachedError, TeamNotFoundError
 from workspace.models import Team, Workspace

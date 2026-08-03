@@ -4,7 +4,7 @@ from typing import Union
 from django.urls import reverse
 from core import settings
 from core.message_bag import MessageBag
-from dashboard.models.user import User
+from identity.models.user import User
 import secrets
 from identity.enums import VerificationTypes
 from identity.models.verification_token import VerificationToken

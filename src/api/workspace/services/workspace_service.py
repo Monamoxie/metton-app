@@ -2,7 +2,7 @@ from django.db import transaction
 from django.db.models import QuerySet
 from django.utils.text import slugify
 
-from dashboard.models.user import User
+from identity.models.user import User
 from workspace.enums import WorkspaceRoleName
 from workspace.exceptions import (
     SlugAlreadyTakenError,

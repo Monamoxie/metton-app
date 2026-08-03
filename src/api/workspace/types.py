@@ -3,7 +3,7 @@ Type definitions for workspace app.
 Provides proper type hints for DRF request.user with custom User model.
 """
 from rest_framework.request import Request as DRFRequest
-from dashboard.models import User
+from identity.models import User
 
 
 class AuthenticatedRequest(DRFRequest):

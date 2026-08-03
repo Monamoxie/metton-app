@@ -3,7 +3,7 @@ from rest_framework.fields import EmailValidator
 
 from core.message_bag import MessageBag
 from core.utils import CoreUtils
-from dashboard.models.user import User
+from identity.models.user import User
 
 
 class ForgotPasswordSerializer(serializers.Serializer):

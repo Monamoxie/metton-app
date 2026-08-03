@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from dashboard.models.user import User
+from identity.models.user import User
 from core.message_bag import MessageBag
 
 

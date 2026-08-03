@@ -9,7 +9,7 @@ from core import settings
 from core.message_bag import MessageBag
 from core.mixins.guest_only_mixin import GuestOnlyMixin
 from identity.services import UserService
-from dashboard.models.user import User
+from identity.models.user import User
 from dashboard.tasks import email_sender
 from identity.enums import VerificationTypes
 from identity.models.verification_token import VerificationToken

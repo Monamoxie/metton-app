@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from core.message_bag import MessageBag
-from dashboard.models.user import User
+from identity.models.user import User
 from dashboard.enums import ImageUploadTypes
 from core import settings
 

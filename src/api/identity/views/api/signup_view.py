@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from core.message_bag import MessageBag
 from core.throttles import IdentityFormsThrottle
-from dashboard.models.user import User
+from identity.models.user import User
 from identity.permissions import GuestOnlyPermission
 from identity.serializers import SignupSerializer, UserSerializer
 from identity.utils import send_signup_email
