@@ -1,0 +1,2 @@
+class InvitationExpiredError(Exception):
+    pass

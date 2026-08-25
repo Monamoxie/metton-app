@@ -1,0 +1,2 @@
+class InvitationAlreadyAcceptedError(Exception):
+    pass

@@ -1,0 +1,2 @@
+class InvitationNotFoundError(Exception):
+    pass

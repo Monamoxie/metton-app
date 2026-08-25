@@ -1,0 +1,2 @@
+class InvitationEmailMismatchError(Exception):
+    pass

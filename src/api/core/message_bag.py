@@ -49,3 +49,10 @@ class MessageBag:
 
     # Team
     TEAM_LIMIT_REACHED = "You are only limited to 20 teams per workspace"
+
+    # Workspace Invitation
+    ALREADY_A_WORKSPACE_MEMBER = _("{data} is already a member of this workspace")
+    INVITATION_ALREADY_ACCEPTED = _("This invitation has already been accepted")
+    INVITATION_EMAIL_MISMATCH = _(
+        "This invitation was sent to a different email address"
+    )

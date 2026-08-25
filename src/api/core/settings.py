@@ -21,6 +21,7 @@ from corsheaders.defaults import default_headers
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_URL = os.environ.get("BASE_URL")
+FRONTEND_BASE_URL = os.environ.get("FRONTEND_BASE_URL")
 
 PROJECT_NAME = os.environ.get("PROJECT_NAME")
 

@@ -3,6 +3,7 @@ from workspace.models import (
     Team,
     TeamMembership,
     Workspace,
+    WorkspaceInvitation,
     WorkspaceMembership,
     WorkspaceRole,
 )
@@ -39,4 +40,12 @@ class TeamMembershipAdmin(admin.ModelAdmin):
     list_display = ["user", "team", "role", "created_at"]
     list_filter = ["role"]
     search_fields = ["user__email", "team__slug"]
+
+
+@admin.register(WorkspaceInvitation)
+class WorkspaceInvitationAdmin(admin.ModelAdmin):
+    list_display = ["email", "workspace", "role", "status", "invited_by", "created_at"]
+    list_filter = ["status", "role"]
+    search_fields = ["email", "workspace__slug"]
+    readonly_fields = ["token", "created_at"]
 
