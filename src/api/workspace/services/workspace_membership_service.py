@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from django.db.models import QuerySet
+
 from identity.models import User
 from workspace.models import Workspace
 from workspace.models import WorkspaceMembership
@@ -29,6 +31,20 @@ class WorkspaceMembershipService:
             .select_related("role")
             .first()
         )
+
+    @staticmethod
+    def get_workspace_membership_by_email(
+        workspace: Workspace, email: str
+    ) -> WorkspaceMembership | None:
+        return WorkspaceMembership.objects.filter(
+            workspace=workspace, user__email__iexact=email
+        ).first()
+
+    @staticmethod
+    def get_members_for_workspace(workspace: Workspace) -> QuerySet:
+        return WorkspaceMembership.objects.filter(
+            workspace=workspace
+        ).select_related("user", "role")
 
     @staticmethod
     def is_member(workspace: Workspace, user: "User | AbstractBaseUser | AnonymousUser") -> bool:
