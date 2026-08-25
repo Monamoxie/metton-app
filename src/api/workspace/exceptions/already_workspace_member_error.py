@@ -1,0 +1,2 @@
+class AlreadyWorkspaceMemberError(Exception):
+    pass
