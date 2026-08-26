@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -23,29 +24,39 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Team, WorkspaceRole } from "@/types/workspace";
+import { TeamSummary } from "@/types/workspace";
+import * as InvitationService from "@/services/invitation-service";
+import ButtonContent from "@/components/ButtonContent";
+
+type InviteRole = "admin" | "member";
 
 interface PendingInvite {
   email: string;
-  role: WorkspaceRole;
+  role: InviteRole;
 }
 
 interface InviteMemberDialogProps {
   open: boolean;
   onClose: () => void;
-  teams: Team[];
+  slug: string;
+  teams: TeamSummary[];
+  onInvited?: () => void;
 }
 
 export default function InviteMemberDialog({
   open,
   onClose,
+  slug,
   teams,
+  onInvited,
 }: InviteMemberDialogProps) {
   const [emailInput, setEmailInput] = useState("");
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([]);
   const [selectedTeam, setSelectedTeam] = useState(
-    teams.find((t) => t.isDefault)?.id || ""
+    teams.find((t) => t.is_default)?.slug || ""
   );
+  const [processing, setProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleAddEmail = () => {
     const trimmed = emailInput.trim();
@@ -59,22 +70,42 @@ export default function InviteMemberDialog({
     setPendingInvites(pendingInvites.filter((i) => i.email !== email));
   };
 
-  const handleRoleChange = (email: string, role: WorkspaceRole) => {
+  const handleRoleChange = (email: string, role: InviteRole) => {
     setPendingInvites(
       pendingInvites.map((i) => (i.email === email ? { ...i, role } : i))
     );
   };
 
-  const handleSend = () => {
-    // TODO: send invitations to backend
-    setPendingInvites([]);
-    setEmailInput("");
-    onClose();
+  const handleSend = async () => {
+    if (pendingInvites.length === 0) return;
+
+    setProcessing(true);
+    setErrorMessage(null);
+    try {
+      const response = await InvitationService.inviteMembers(
+        slug,
+        pendingInvites,
+        selectedTeam || undefined
+      );
+
+      if (response.code !== 201) {
+        setErrorMessage(response.message || "Unable to send invitations.");
+        return;
+      }
+
+      onInvited?.();
+      setPendingInvites([]);
+      setEmailInput("");
+      onClose();
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleClose = () => {
     setPendingInvites([]);
     setEmailInput("");
+    setErrorMessage(null);
     onClose();
   };
 
@@ -91,6 +122,11 @@ export default function InviteMemberDialog({
       </DialogTitle>
 
       <DialogContent dividers>
+        {errorMessage && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
         {/* Email input */}
         <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
           <TextField
@@ -146,7 +182,7 @@ export default function InviteMemberDialog({
                     <Select
                       value={invite.role}
                       onChange={(e) =>
-                        handleRoleChange(invite.email, e.target.value as WorkspaceRole)
+                        handleRoleChange(invite.email, e.target.value as InviteRole)
                       }
                       variant="standard"
                     >
@@ -169,9 +205,9 @@ export default function InviteMemberDialog({
             onChange={(e) => setSelectedTeam(e.target.value)}
           >
             {teams.map((team) => (
-              <MenuItem key={team.id} value={team.id}>
+              <MenuItem key={team.slug} value={team.slug}>
                 {team.name}
-                {team.isDefault && (
+                {team.is_default && (
                   <Chip
                     label="default"
                     size="small"
@@ -187,14 +223,18 @@ export default function InviteMemberDialog({
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} disabled={processing}>
+          Cancel
+        </Button>
         <Button
           variant="contained"
           onClick={handleSend}
-          disabled={pendingInvites.length === 0}
+          disabled={processing || pendingInvites.length === 0}
         >
-          Send {pendingInvites.length > 0 ? `(${pendingInvites.length})` : ""}{" "}
-          invitation{pendingInvites.length !== 1 ? "s" : ""}
+          <ButtonContent
+            processing={processing}
+            defaultText={`Send ${pendingInvites.length > 0 ? `(${pendingInvites.length})` : ""} invitation${pendingInvites.length !== 1 ? "s" : ""}`}
+          />
         </Button>
       </DialogActions>
     </Dialog>

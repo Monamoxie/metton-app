@@ -17,7 +17,7 @@ import { useState } from "react";
 import ErrorDisplay from "@/components/ErrorDisplay";
 
 import NextLink from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { localApiRequest } from "@/utils/utils";
 import ButtonContent from "../../ButtonContent";
 import { Button } from "@/components/ui/Button";
@@ -34,6 +34,8 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
 
   const t = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const prefillEmail = searchParams.get("email") || "";
 
   const {
     register,
@@ -41,6 +43,9 @@ const SignInFormCard: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
     formState: { errors },
   } = useForm<SigninInputs>({
     resolver: zodResolver(signInSchema(t)),
+    defaultValues: {
+      email: prefillEmail,
+    },
   });
   const [processing, setProcessing] = useState(false);
 

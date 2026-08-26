@@ -10,10 +10,20 @@ const PROTECTED_PATTERNS = [
   "^/onboarding(/.*)?$",
 ];
 
+// Routes that must work the same way whether the visitor is signed in or not -
+// neither forced to sign in, nor bounced away for already having a session.
+// The invite-accept flow needs both: an existing user clicking the link while
+// logged in must land on the page, not get redirected to /workspace first.
+const NEUTRAL_PATTERNS = ["^/invitations(/.*)?$"];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   // todo ::: check if multiple requests were made to cookie.verifyToken
   const hasToken = await Cookie.verifyToken();
+
+  const isNeutralRoute = NEUTRAL_PATTERNS.some((pattern) =>
+    new RegExp(pattern).test(pathname)
+  );
 
   const isProtectedRoute = PROTECTED_PATTERNS.some((pattern) => {
     const regex = new RegExp(pattern);
@@ -21,11 +31,11 @@ export async function middleware(request: NextRequest) {
     return matches;
   });
 
-  if (isProtectedRoute && !hasToken) {
+  if (!isNeutralRoute && isProtectedRoute && !hasToken) {
     return NextResponse.redirect(new URL("/identity/signin", request.url));
   }
 
-  if (!isProtectedRoute && hasToken) {
+  if (!isNeutralRoute && !isProtectedRoute && hasToken) {
     return NextResponse.redirect(new URL("/workspace", request.url));
   }
 

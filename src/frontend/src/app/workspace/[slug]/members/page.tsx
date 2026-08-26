@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   Box,
@@ -19,25 +19,74 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
-import { WorkspaceMember, WorkspaceRole, InviteStatus } from "@/types/workspace";
-import {
-  mockMembers,
-  mockTeams,
-} from "@/data/mock/workspace";
+import { WorkspaceMember, WorkspaceRole, InviteStatus, TeamSummary } from "@/types/workspace";
+import { mockTeams } from "@/data/mock/workspace";
 import MembersPreviewTable from "@/components/workspace/MembersPreviewTable";
 import MemberDetailDrawer from "@/components/workspace/MemberDetailDrawer";
 import InviteMemberDialog from "@/components/workspace/InviteMemberDialog";
+import * as WorkspaceService from "@/services/workspace-service";
+import * as TeamService from "@/services/team-service";
+import * as InvitationService from "@/services/invitation-service";
 
 export default function WorkspaceMembersPage() {
   const { slug } = useParams<{ slug: string }>();
 
+  const [members, setMembers] = useState<WorkspaceMember[]>([]);
+  const [teams, setTeams] = useState<TeamSummary[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState<WorkspaceMember | null>(null);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<WorkspaceRole | "all">("all");
   const [statusFilter, setStatusFilter] = useState<InviteStatus | "all">("all");
 
-  const filteredMembers = mockMembers.filter((member) => {
+  const fetchData = useCallback(async () => {
+    const [membersResponse, invitationsResponse, teamsResponse] = await Promise.all([
+      WorkspaceService.listWorkspaceMembers(slug),
+      InvitationService.listPendingInvitations(slug),
+      TeamService.listTeams(slug),
+    ]);
+
+    const activeMembers: WorkspaceMember[] =
+      membersResponse.code === 200
+        ? membersResponse.data.members.map((m: any) => ({
+            id: m.user.public_id,
+            name: m.user.name,
+            email: m.user.email,
+            avatar: "",
+            role: m.role.toLowerCase() as WorkspaceRole,
+            status: "active" as InviteStatus,
+            teamId: null,
+            teamName: null,
+            joinedAt: m.created_at,
+          }))
+        : [];
+
+    const pendingMembers: WorkspaceMember[] =
+      invitationsResponse.code === 200
+        ? invitationsResponse.data.invitations.map((i: any) => ({
+            id: `invite-${i.email}`,
+            name: "",
+            email: i.email,
+            avatar: "",
+            role: i.role.toLowerCase() as WorkspaceRole,
+            status: "pending" as InviteStatus,
+            teamId: null,
+            teamName: i.team || null,
+            joinedAt: null,
+          }))
+        : [];
+
+    setMembers([...activeMembers, ...pendingMembers]);
+    setTeams(teamsResponse.code === 200 ? teamsResponse.data.teams : []);
+    setLoading(false);
+  }, [slug]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const filteredMembers = members.filter((member) => {
     const matchesSearch =
       member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       member.email.toLowerCase().includes(searchQuery.toLowerCase());
@@ -46,8 +95,8 @@ export default function WorkspaceMembersPage() {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const activeCount = mockMembers.filter((m) => m.status === "active").length;
-  const pendingCount = mockMembers.filter((m) => m.status === "pending").length;
+  const activeCount = members.filter((m) => m.status === "active").length;
+  const pendingCount = members.filter((m) => m.status === "pending").length;
 
   return (
     <Box>
@@ -140,7 +189,7 @@ export default function WorkspaceMembersPage() {
           members={filteredMembers}
           onMemberClick={setSelectedMember}
         />
-        {filteredMembers.length === 0 && (
+        {!loading && filteredMembers.length === 0 && (
           <Box sx={{ py: 6, textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary">
               No members found matching your filters.
@@ -153,7 +202,9 @@ export default function WorkspaceMembersPage() {
       <InviteMemberDialog
         open={inviteOpen}
         onClose={() => setInviteOpen(false)}
-        teams={mockTeams}
+        slug={slug}
+        teams={teams}
+        onInvited={fetchData}
       />
       <MemberDetailDrawer
         member={selectedMember}

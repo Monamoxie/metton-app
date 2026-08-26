@@ -177,7 +177,8 @@ export default function WorkspacePage() {
       <InviteMemberDialog
         open={inviteOpen}
         onClose={() => setInviteOpen(false)}
-        teams={mockTeams}
+        slug={slug}
+        teams={[]}
       />
 
       <CreateTeamDialog

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Suspense } from "react";
 import Stack from "@mui/material/Stack";
 import SignInCard from "@/components/identity/signin/SignInCard";
 import { IDENTITY_DOUBLE_COLUMNS_CSS } from "@/styles/modules/identity.css";
@@ -23,7 +24,7 @@ export default function SignInPage() {
           </Backdrop>
         </Grid>
         <Grid size={{ xs: 12, md: 5 }} sx={{ padding: "12" }}>
-          {renderSignInCard()}
+          <Suspense fallback={null}>{renderSignInCard()}</Suspense>
         </Grid>
       </Grid>
     </Stack>

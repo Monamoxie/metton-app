@@ -14,6 +14,7 @@ import { signupSchema } from "@/schemas/identity-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import NextLink from "next/link";
 import { SignupInputs } from "@/types/identity";
@@ -26,6 +27,10 @@ import SignUpTermsAndPrivacyPolicy from "./SignUpTermsAndPrivacyPolicy";
 const SignUpForm: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
   const t = useTranslations();
   const schema = signupSchema(t);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("invite_token");
+  const prefillEmail = searchParams.get("email") || "";
 
   const [responseErrors, setResponseErrors] = useState<PairOfStrings>({});
   const [processing, setProcessing] = useState(false);
@@ -39,7 +44,7 @@ const SignUpForm: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
   } = useForm<SignupInputs>({
     resolver: zodResolver(schema),
     defaultValues: {
-      // source: "",
+      email: prefillEmail,
     },
   });
 
@@ -54,6 +59,14 @@ const SignUpForm: React.FC<SetIsFinishedProps> = ({ setIsFinished }) => {
 
       const response = await AuthService.createAccount(data);
       if (response.code === 200) {
+        if (inviteToken) {
+          // Signup doesn't establish a session - route to sign in to complete
+          // joining the workspace via the invite.
+          router.push(
+            `/identity/signin?invite_token=${inviteToken}&email=${encodeURIComponent(data.email)}`
+          );
+          return;
+        }
         return setIsFinished(true);
       }
 
