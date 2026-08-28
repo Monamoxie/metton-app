@@ -68,3 +68,31 @@ export interface TeamMembershipSummary {
   role: "lead" | "member";
   created_at: string;
 }
+
+export interface WorkspaceMembershipSummary {
+  user: TeamMemberUser;
+  role: "Owner" | "Admin" | "Member";
+  created_at: string;
+}
+
+export interface InviteInput {
+  email: string;
+  role: "admin" | "member";
+}
+
+export interface InvitationSummary {
+  email: string;
+  role: "Admin" | "Member";
+  team: string | null;
+  status: "pending" | "accepted";
+  expires_at: string;
+  created_at: string;
+}
+
+export interface InvitationPeek {
+  email: string;
+  role: "Admin" | "Member";
+  workspace_name: string;
+  workspace_slug: string;
+  expires_at: string;
+}
