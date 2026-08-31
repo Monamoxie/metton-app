@@ -23,13 +23,15 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useColorMode from "@/hooks/use-color-mode";
 import * as AuthService from "@/services/auth-service";
-import { useRouter } from "next/navigation";
+import * as WorkspaceService from "@/services/workspace-service";
+import { usePathname, useRouter } from "next/navigation";
 import ToggleColorMode from "@/components/ToggleColorMode";
 import CreateWorkspaceDialog from "@/components/workspace/CreateWorkspaceDialog";
-import { mockWorkspaces, currentWorkspace } from "@/data/mock/workspace";
+import { WorkspaceSummary } from "@/types/workspace";
+import { authStore } from "@/stores/auth-store";
 
 interface TopBarProps {
   handleSidebarToggle: () => void;
@@ -40,6 +42,7 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
   const [notificationAnchor, setNotificationAnchor] =
     useState<null | HTMLElement>(null);
   const [createWsOpen, setCreateWsOpen] = useState(false);
+  const [workspaces, setWorkspaces] = useState<WorkspaceSummary[]>([]);
 
   const handleProfileClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -53,6 +56,20 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
 
   const { mode, toggleColorMode } = useColorMode();
   const router = useRouter();
+  const pathname = usePathname();
+  const user = authStore((state) => state.user);
+
+  const fetchWorkspaces = async () => {
+    const response = await WorkspaceService.listWorkspaces();
+    setWorkspaces(response.code === 200 ? response.data.workspaces : []);
+  };
+
+  useEffect(() => {
+    fetchWorkspaces();
+  }, []);
+
+  const currentSlugMatch = pathname.match(/^\/workspace\/([^/]+)/);
+  const currentSlug = currentSlugMatch ? currentSlugMatch[1] : null;
 
   return (
     <>
@@ -123,7 +140,7 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
               <Typography
                 sx={{ ml: 1, display: { xs: "none", sm: "block" } }}
               >
-                John Doe
+                {user?.name || user?.email || ""}
               </Typography>
               <KeyboardArrowDownIcon />
             </Box>
@@ -186,7 +203,7 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
               </Typography>
             </MenuItem>
 
-            {mockWorkspaces.map((ws) => (
+            {workspaces.map((ws) => (
               <MenuItem
                 key={ws.id}
                 onClick={() => {
@@ -201,16 +218,14 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
                       height: 24,
                       fontSize: "0.7rem",
                       bgcolor:
-                        ws.id === currentWorkspace.id
-                          ? "primary.main"
-                          : "grey.400",
+                        ws.slug === currentSlug ? "primary.main" : "grey.400",
                     }}
                   >
                     {ws.name.charAt(0)}
                   </Avatar>
                 </ListItemIcon>
                 <ListItemText>{ws.name}</ListItemText>
-                {ws.id === currentWorkspace.id && (
+                {ws.slug === currentSlug && (
                   <CheckIcon fontSize="small" color="primary" sx={{ ml: 1 }} />
                 )}
               </MenuItem>
@@ -263,6 +278,7 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
       <CreateWorkspaceDialog
         open={createWsOpen}
         onClose={() => setCreateWsOpen(false)}
+        onCreated={fetchWorkspaces}
       />
     </>
   );

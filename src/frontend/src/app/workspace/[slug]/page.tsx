@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -14,19 +14,25 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import Link from "next/link";
-import { WorkspaceMember, Team, WorkspaceSummary } from "@/types/workspace";
-import { mockMembers, mockTeams } from "@/data/mock/workspace";
+import { WorkspaceMember, TeamSummary, WorkspaceSummary } from "@/types/workspace";
+import { mockTeams } from "@/data/mock/workspace";
 import MembersPreviewTable from "@/components/workspace/MembersPreviewTable";
-import TeamsGrid from "@/components/workspace/TeamsGrid";
+import TeamSummaryGrid from "@/components/workspace/TeamSummaryGrid";
 import InviteMemberDialog from "@/components/workspace/InviteMemberDialog";
 import CreateTeamDialog from "@/components/workspace/CreateTeamDialog";
 import MemberDetailDrawer from "@/components/workspace/MemberDetailDrawer";
 import CircularProgressBox from "@/components/loaders/CircularProgressBox";
 import * as WorkspaceService from "@/services/workspace-service";
+import * as TeamService from "@/services/team-service";
+import * as InvitationService from "@/services/invitation-service";
+import { mapToWorkspaceMembers } from "@/utils/workspace-member-mapper";
 
 export default function WorkspacePage() {
   const { slug } = useParams<{ slug: string }>();
+  const router = useRouter();
   const [workspace, setWorkspace] = useState<WorkspaceSummary | null>(null);
+  const [members, setMembers] = useState<WorkspaceMember[]>([]);
+  const [teams, setTeams] = useState<TeamSummary[]>([]);
   const [fetchingData, setFetchingData] = useState(true);
 
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -35,23 +41,37 @@ export default function WorkspacePage() {
     null
   );
 
-  useEffect(() => {
-    const fetchWorkspace = async () => {
-      setFetchingData(true);
-      const response = await WorkspaceService.getWorkspace(slug);
-      setWorkspace(response.code === 200 ? response.data.workspace : null);
-      setFetchingData(false);
-    };
+  const fetchData = useCallback(async () => {
+    setFetchingData(true);
+    const [workspaceResponse, membersResponse, invitationsResponse, teamsResponse] =
+      await Promise.all([
+        WorkspaceService.getWorkspace(slug),
+        WorkspaceService.listWorkspaceMembers(slug),
+        InvitationService.listPendingInvitations(slug),
+        TeamService.listTeams(slug),
+      ]);
 
-    fetchWorkspace();
+    setWorkspace(workspaceResponse.code === 200 ? workspaceResponse.data.workspace : null);
+    setMembers(
+      mapToWorkspaceMembers(
+        membersResponse.code === 200 ? membersResponse.data.members : [],
+        invitationsResponse.code === 200 ? invitationsResponse.data.invitations : []
+      )
+    );
+    setTeams(teamsResponse.code === 200 ? teamsResponse.data.teams : []);
+    setFetchingData(false);
   }, [slug]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleMemberClick = (member: WorkspaceMember) => {
     setSelectedMember(member);
   };
 
-  const handleTeamClick = (team: Team) => {
-    // Navigate to team detail in the future
+  const handleTeamClick = (team: TeamSummary) => {
+    router.push(`/workspace/${slug}/teams/${team.slug}`);
   };
 
   if (fetchingData) {
@@ -85,12 +105,12 @@ export default function WorkspacePage() {
           </Typography>
           <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
             <Chip
-              label={`${mockMembers.length} members`}
+              label={`${members.length} members`}
               size="small"
               variant="outlined"
             />
             <Chip
-              label={`${mockTeams.length} teams`}
+              label={`${teams.length} teams`}
               size="small"
               variant="outlined"
             />
@@ -120,7 +140,7 @@ export default function WorkspacePage() {
           }}
         >
           <Typography variant="subtitle1" fontWeight={600}>
-            Members ({mockMembers.length})
+            Members ({members.length})
           </Typography>
           <Box sx={{ display: "flex", gap: 1 }}>
             <Button
@@ -143,7 +163,7 @@ export default function WorkspacePage() {
         </Box>
         <Divider />
         <MembersPreviewTable
-          members={mockMembers}
+          members={members}
           onMemberClick={handleMemberClick}
         />
       </Paper>
@@ -159,7 +179,7 @@ export default function WorkspacePage() {
           }}
         >
           <Typography variant="subtitle1" fontWeight={600}>
-            Teams ({mockTeams.length})
+            Teams ({teams.length})
           </Typography>
           <Button
             variant="outlined"
@@ -170,7 +190,7 @@ export default function WorkspacePage() {
             Create team
           </Button>
         </Box>
-        <TeamsGrid teams={mockTeams} onTeamClick={handleTeamClick} />
+        <TeamSummaryGrid teams={teams} onTeamClick={handleTeamClick} />
       </Box>
 
       {/* ─── Dialogs & Drawers ───────────────────────────────── */}
@@ -178,13 +198,14 @@ export default function WorkspacePage() {
         open={inviteOpen}
         onClose={() => setInviteOpen(false)}
         slug={slug}
-        teams={[]}
+        teams={teams}
+        onInvited={fetchData}
       />
 
       <CreateTeamDialog
         open={createTeamOpen}
         onClose={() => setCreateTeamOpen(false)}
-        existingMembers={mockMembers}
+        existingMembers={members}
       />
 
       <MemberDetailDrawer

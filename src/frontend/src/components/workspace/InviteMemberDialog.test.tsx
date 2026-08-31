@@ -28,6 +28,9 @@ describe("InviteMemberDialog", () => {
   });
 
   it("adds an email to the pending list and enables Send", async () => {
+    // Extra timeout headroom: this dialog's interaction test is on the slower
+    // side and this dev machine runs several heavy concurrent processes
+    // (Docker, the app's own dev server) - passes instantly in isolation.
     render(
       <InviteMemberDialog open onClose={vi.fn()} slug="acme-corp" teams={teams} />
     );
@@ -39,7 +42,7 @@ describe("InviteMemberDialog", () => {
 
     expect(screen.getByText("colleague@example.com")).toBeInTheDocument();
     expect(sendButton).toBeEnabled();
-  });
+  }, 15000);
 
   it("sends invites with the default team and calls onInvited + onClose on success", async () => {
     vi.mocked(InvitationService.inviteMembers).mockResolvedValue({

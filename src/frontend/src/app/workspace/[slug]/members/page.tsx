@@ -27,6 +27,7 @@ import InviteMemberDialog from "@/components/workspace/InviteMemberDialog";
 import * as WorkspaceService from "@/services/workspace-service";
 import * as TeamService from "@/services/team-service";
 import * as InvitationService from "@/services/invitation-service";
+import { mapToWorkspaceMembers } from "@/utils/workspace-member-mapper";
 
 export default function WorkspaceMembersPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -47,37 +48,12 @@ export default function WorkspaceMembersPage() {
       TeamService.listTeams(slug),
     ]);
 
-    const activeMembers: WorkspaceMember[] =
-      membersResponse.code === 200
-        ? membersResponse.data.members.map((m: any) => ({
-            id: m.user.public_id,
-            name: m.user.name,
-            email: m.user.email,
-            avatar: "",
-            role: m.role.toLowerCase() as WorkspaceRole,
-            status: "active" as InviteStatus,
-            teamId: null,
-            teamName: null,
-            joinedAt: m.created_at,
-          }))
-        : [];
-
-    const pendingMembers: WorkspaceMember[] =
-      invitationsResponse.code === 200
-        ? invitationsResponse.data.invitations.map((i: any) => ({
-            id: `invite-${i.email}`,
-            name: "",
-            email: i.email,
-            avatar: "",
-            role: i.role.toLowerCase() as WorkspaceRole,
-            status: "pending" as InviteStatus,
-            teamId: null,
-            teamName: i.team || null,
-            joinedAt: null,
-          }))
-        : [];
-
-    setMembers([...activeMembers, ...pendingMembers]);
+    setMembers(
+      mapToWorkspaceMembers(
+        membersResponse.code === 200 ? membersResponse.data.members : [],
+        invitationsResponse.code === 200 ? invitationsResponse.data.invitations : []
+      )
+    );
     setTeams(teamsResponse.code === 200 ? teamsResponse.data.teams : []);
     setLoading(false);
   }, [slug]);
