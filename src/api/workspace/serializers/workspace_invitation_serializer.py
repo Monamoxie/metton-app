@@ -8,5 +8,5 @@ class WorkspaceInvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkspaceInvitation
-        fields = ["email", "role", "team", "status", "expires_at", "created_at"]
+        fields = ["id", "email", "role", "team", "status", "expires_at", "created_at"]
         read_only_fields = fields

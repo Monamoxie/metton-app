@@ -213,6 +213,8 @@ export default function WorkspacePage() {
         open={!!selectedMember}
         onClose={() => setSelectedMember(null)}
         teams={mockTeams}
+        slug={slug}
+        onRevoked={fetchData}
       />
     </Box>
   );

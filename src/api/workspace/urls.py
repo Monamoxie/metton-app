@@ -6,6 +6,9 @@ from workspace.views.workspace_detail_view import WorkspaceDetailView
 from workspace.views.workspace_invitation_accept_view import (
     WorkspaceInvitationAcceptView,
 )
+from workspace.views.workspace_invitation_detail_view import (
+    WorkspaceInvitationDetailView,
+)
 from workspace.views.workspace_invitation_list_create_view import (
     WorkspaceInvitationListCreateView,
 )
@@ -35,6 +38,11 @@ urlpatterns = [
         "<slug:slug>/invitations/",
         WorkspaceInvitationListCreateView.as_view(),
         name="workspace-invitation-list-create",
+    ),
+    path(
+        "<slug:slug>/invitations/<int:invitation_id>/",
+        WorkspaceInvitationDetailView.as_view(),
+        name="workspace-invitation-detail",
     ),
     path(
         "invitations/<str:token>/",

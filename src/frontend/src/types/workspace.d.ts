@@ -11,6 +11,7 @@ export interface WorkspaceMember {
   teamId: string | null;
   teamName: string | null;
   joinedAt: string | null;
+  invitationId?: number;
 }
 
 export interface Team {
@@ -81,6 +82,7 @@ export interface InviteInput {
 }
 
 export interface InvitationSummary {
+  id: number;
   email: string;
   role: "Admin" | "Member";
   team: string | null;

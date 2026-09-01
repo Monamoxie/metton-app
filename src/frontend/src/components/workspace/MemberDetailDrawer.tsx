@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -18,12 +19,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Team, WorkspaceMember, WorkspaceRole } from "@/types/workspace";
 import { mockWorkspaces } from "@/data/mock/workspace";
 import { useState, useEffect } from "react";
+import * as InvitationService from "@/services/invitation-service";
+import ButtonContent from "@/components/ButtonContent";
 
 interface MemberDetailDrawerProps {
   member: WorkspaceMember | null;
   open: boolean;
   onClose: () => void;
   teams: Team[];
+  slug: string;
+  onRevoked?: () => void;
 }
 
 export default function MemberDetailDrawer({
@@ -31,19 +36,47 @@ export default function MemberDetailDrawer({
   open,
   onClose,
   teams,
+  slug,
+  onRevoked,
 }: MemberDetailDrawerProps) {
   const [role, setRole] = useState<WorkspaceRole>("member");
   const [teamId, setTeamId] = useState("");
   const [workspaceId, setWorkspaceId] = useState(mockWorkspaces[0]?.id || "");
+  const [revoking, setRevoking] = useState(false);
+  const [revokeError, setRevokeError] = useState<string | null>(null);
 
   useEffect(() => {
     if (member) {
       setRole(member.role);
       setTeamId(member.teamId || "");
+      setRevokeError(null);
     }
   }, [member]);
 
   if (!member) return null;
+
+  const handleRevoke = async () => {
+    if (!member.invitationId) return;
+
+    setRevoking(true);
+    setRevokeError(null);
+    try {
+      const response = await InvitationService.revokeInvitation(
+        slug,
+        member.invitationId
+      );
+
+      if (response.code !== 200) {
+        setRevokeError(response.message || "Unable to revoke this invitation.");
+        return;
+      }
+
+      onRevoked?.();
+      onClose();
+    } finally {
+      setRevoking(false);
+    }
+  };
 
   const isPending = member.status === "pending";
   const displayName = member.name || member.email;
@@ -170,9 +203,21 @@ export default function MemberDetailDrawer({
       {/* Danger zone */}
       {member.role !== "owner" && (
         <Box>
+          {revokeError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {revokeError}
+            </Alert>
+          )}
           {isPending ? (
-            <Button variant="outlined" color="error" fullWidth size="small">
-              Revoke invitation
+            <Button
+              variant="outlined"
+              color="error"
+              fullWidth
+              size="small"
+              onClick={handleRevoke}
+              disabled={revoking}
+            >
+              <ButtonContent processing={revoking} defaultText="Revoke invitation" />
             </Button>
           ) : (
             <Button variant="outlined" color="error" fullWidth size="small">

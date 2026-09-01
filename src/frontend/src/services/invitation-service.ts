@@ -3,7 +3,7 @@ import { ApiResponse } from "@/types/api";
 import * as Utils from "@/utils/utils";
 import { InviteInput } from "@/types/workspace";
 
-// -- Invite one or more emails to a workspace --
+
 export const inviteMembers = async (
   slug: string,
   invites: InviteInput[],
@@ -43,6 +43,25 @@ export const listPendingInvitations = async (slug: string): Promise<ApiResponse>
 export const peekInvitation = async (token: string): Promise<ApiResponse> => {
   try {
     const response = await axiosClient.get(`/workspace/invitations/${token}/`);
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
+// -- Revoke a pending invitation --
+export const revokeInvitation = async (
+  slug: string,
+  invitationId: number
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.delete(
+      `/workspace/${slug}/invitations/${invitationId}/`,
+      { headers: Utils.getAuthApiHeader() }
+    );
     return response.data;
   } catch (error: any) {
     if (error.response?.data) {

@@ -486,6 +486,79 @@ class WorkspaceInvitationCreateTests(APITestCase):
         self.assertEqual(invitations[0]["email"], "newperson@example.com")
 
 
+class WorkspaceInvitationRevokeTests(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(
+            email="owner@example.com", password="password123"
+        )
+        WorkspaceRole.objects.get_or_create(
+            name=WorkspaceRoleName.OWNER.value,
+            defaults={"label": "owner", "is_system": True},
+        )
+        WorkspaceRole.objects.get_or_create(
+            name=WorkspaceRoleName.MEMBER.value,
+            defaults={"label": "member", "is_system": True},
+        )
+        self.workspace = WorkspaceService.create_workspace(
+            user=self.owner, name="Acme Corp"
+        )
+        invitations = WorkspaceInvitationService.create_invitations(
+            workspace=self.workspace,
+            invites=[{"email": "invitee@example.com", "role": "Member"}],
+            invited_by=self.owner,
+        )
+        self.invitation = invitations[0]
+        self.url = (
+            f"/api/v1/workspace/{self.workspace.slug}/invitations/{self.invitation.id}/"
+        )
+        self.client.force_authenticate(user=self.owner)
+
+    def test_revoke_deletes_the_pending_invitation(self):
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(
+            WorkspaceInvitation.objects.filter(id=self.invitation.id).exists()
+        )
+
+    def test_revoked_invitation_can_no_longer_be_accepted(self):
+        self.client.delete(self.url)
+
+        invitee = User.objects.create_user(
+            email="invitee@example.com", password="password123"
+        )
+        self.client.force_authenticate(user=invitee)
+
+        response = self.client.post(
+            f"/api/v1/workspace/invitations/{self.invitation.plain_token}/accept/"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_revoke_unknown_invitation_returns_404(self):
+        response = self.client.delete(
+            f"/api/v1/workspace/{self.workspace.slug}/invitations/999999/"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_workspace_member_cannot_revoke(self):
+        member = User.objects.create_user(
+            email="member@example.com", password="password123"
+        )
+        WorkspaceMembershipService.add_member(
+            workspace=self.workspace,
+            user=member,
+            role_name=WorkspaceRoleName.MEMBER.value,
+            invited_by=self.owner,
+        )
+        self.client.force_authenticate(user=member)
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
 class WorkspaceInvitationPeekTests(APITestCase):
     def setUp(self):
         self.owner = User.objects.create_user(

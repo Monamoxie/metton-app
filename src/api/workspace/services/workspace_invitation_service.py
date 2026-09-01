@@ -111,6 +111,17 @@ class WorkspaceInvitationService:
         )
 
     @staticmethod
+    def revoke(workspace: Workspace, invitation_id: int) -> None:
+        deleted, _ = WorkspaceInvitation.objects.filter(
+            id=invitation_id,
+            workspace=workspace,
+            status=WorkspaceInvitationStatus.PENDING.value,
+        ).delete()
+
+        if not deleted:
+            raise InvitationNotFoundError()
+
+    @staticmethod
     def _default_team(workspace: Workspace) -> Union[Team, None]:
         return Team.objects.filter(workspace=workspace, is_default=True).first()
 

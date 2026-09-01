@@ -6,9 +6,6 @@ import {
   WorkspaceRole,
 } from "@/types/workspace";
 
-// Maps the real active-members + pending-invitations API shapes into the
-// WorkspaceMember shape the existing member-list UI (MembersPreviewTable,
-// MemberDetailDrawer) already renders.
 export function mapToWorkspaceMembers(
   members: WorkspaceMembershipSummary[],
   invitations: InvitationSummary[]
@@ -35,6 +32,7 @@ export function mapToWorkspaceMembers(
     teamId: null,
     teamName: i.team || null,
     joinedAt: null,
+    invitationId: i.id,
   }));
 
   return [...active, ...pending];
