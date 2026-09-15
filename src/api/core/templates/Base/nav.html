@@ -30,41 +30,6 @@
             >Manage Schedule</a
           >
         </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            My Account
-          </a>
-          <ul
-            class="dropdown-menu dropdown-menu-end"
-            aria-labelledby="navbarDropdown"
-          >
-            <li>
-              <a class="dropdown-item" href="{% url 'profile-update' %}"
-                >Update Profile</a
-              >
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item" href="{% url 'password-update' %}"
-                >Update Password</a
-              >
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="dropdown-item text-danger" type="submit">Logout</button>
-              </form>
-            </li>
-          </ul>
-        </li>
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'signup' %}">Create Account</a>

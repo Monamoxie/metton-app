@@ -1,0 +1,27 @@
+from django.http import JsonResponse
+from django.views.generic import DeleteView
+import json
+from event.models import Event
+from event.enums import EventTypes
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+class EventDeleteBusinessHoursView(LoginRequiredMixin, DeleteView):
+    def delete(self, request, *args, **kwargs):
+        body = request.body.decode("utf-8")
+        if "id" in body:
+            data = json.loads(body)
+
+        event = Event.objects.filter(
+            user=request.user, id=data["id"], type=EventTypes.BUSINESS_HOURS.value
+        ).first()
+
+        if event:
+            event.delete()
+            return JsonResponse(data=[{"status": True}], safe=False)
+
+        return JsonResponse(
+            data=[{"status": True, "error": "Event not found or not deleted"}],
+            status=400,
+            safe=False,
+        )

@@ -1,3 +1,4 @@
+import ast
 import string
 import time
 import pytz
@@ -6,8 +7,8 @@ import dateutil.parser
 from django.db.models import Q
 from typing import Union, List
 from identity.models.user import User
-from dashboard.models.event import Event
-from dashboard.enums import EventTypes
+from event.models.event import Event
+from event.enums import EventTypes
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 
 class EventService:
@@ -195,7 +196,7 @@ class EventService:
         if not form_frequencies:
             return ""
 
-        frequencies = eval(form_frequencies) if isinstance(form_frequencies, str) else form_frequencies
+        frequencies = ast.literal_eval(form_frequencies) if isinstance(form_frequencies, str) else form_frequencies
 
         return ",".join(str(f) for f in frequencies if f != "no")
 

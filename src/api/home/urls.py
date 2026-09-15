@@ -1,5 +1,5 @@
 from django.urls import path
-from home.views import (
+from event.views import (
     BookingView,
     BookingCalendarView,
     UserBusinessHoursView,
@@ -8,11 +8,8 @@ from home.views import (
 from django.views.generic import TemplateView
 
 
-# @depreciated: migrating urls to DRF api
 urlpatterns = [
     path("meet/<str:public_id>/book", BookingView.as_view(), name="book"),
-    
-    # todo 
     path("", TemplateView.as_view(template_name="home/index.html"), name="index"),
     path(
         "privacy",
