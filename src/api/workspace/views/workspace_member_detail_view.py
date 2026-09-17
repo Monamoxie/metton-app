@@ -11,6 +11,7 @@ from workspace.exceptions import (
     WorkspaceNotFoundError,
 )
 from workspace.policies.team_policy import CanManageTeam
+from workspace.policies.workspace_policy import CanUpdateWorkspace
 from workspace.serializers.workspace_member_update_serializer import (
     WorkspaceMemberUpdateSerializer,
 )
@@ -67,11 +68,20 @@ class WorkspaceMemberDetailView(APIView):
         new_role = serializer.validated_data.get("role")
         team_slug = serializer.validated_data.get("team_slug")
 
-        if new_role and membership.role.name == WorkspaceRoleName.OWNER.value:
-            return Response(
-                {"_message": MessageBag.ACTION_NOT_ALLOWED},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        if new_role:
+            # Changing a role is an Owner/Admin-only action — Manager can do everything else
+            # this endpoint supports (moving a member between teams) but not grant or revoke
+            # access itself.
+            if not CanUpdateWorkspace().has_object_permission(request, self, workspace):
+                return Response(
+                    {"_message": MessageBag.ACTION_NOT_ALLOWED},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+            if membership.role.name == WorkspaceRoleName.OWNER.value:
+                return Response(
+                    {"_message": MessageBag.ACTION_NOT_ALLOWED},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
 
         team = None
         if team_slug:

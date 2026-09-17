@@ -479,6 +479,214 @@ class WorkspaceMemberUpdateTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
+class WorkspaceRolePermissionTests(APITestCase):
+    """METTON-553 — the actual permission matrix: Owner/Admin/Manager can manage day-to-day
+    membership (teams, invites, moving members between teams); only Owner/Admin can change a
+    member's role; Member/Viewer can only read."""
+
+    def setUp(self):
+        self.owner = User.objects.create_user(
+            email="owner@example.com", password="password123"
+        )
+        for role_name in (
+            WorkspaceRoleName.OWNER.value,
+            WorkspaceRoleName.ADMIN.value,
+            WorkspaceRoleName.MANAGER.value,
+            WorkspaceRoleName.MEMBER.value,
+            WorkspaceRoleName.VIEWER.value,
+        ):
+            WorkspaceRole.objects.get_or_create(
+                name=role_name, defaults={"label": role_name.lower(), "is_system": True}
+            )
+        self.workspace = WorkspaceService.create_workspace(
+            user=self.owner, name="Acme Corp"
+        )
+
+        def add(email, role_name):
+            user = User.objects.create_user(email=email, password="password123")
+            WorkspaceMembershipService.add_member(
+                workspace=self.workspace,
+                user=user,
+                role_name=role_name,
+                invited_by=self.owner,
+            )
+            return user
+
+        self.manager = add("manager@example.com", WorkspaceRoleName.MANAGER.value)
+        self.member = add("member@example.com", WorkspaceRoleName.MEMBER.value)
+        self.viewer = add("viewer@example.com", WorkspaceRoleName.VIEWER.value)
+        self.target = add("target@example.com", WorkspaceRoleName.MEMBER.value)
+
+        self.email_patcher = patch(
+            "workspace.views.workspace_invitation_list_create_view.send_workspace_invite_email"
+        )
+        self.mock_send_email = self.email_patcher.start()
+        self.addCleanup(self.email_patcher.stop)
+
+    def _as(self, user):
+        self.client.force_authenticate(user=user)
+
+    def test_manager_can_create_a_team(self):
+        self._as(self.manager)
+
+        response = self.client.post(
+            f"/api/v1/workspace/{self.workspace.slug}/teams/", {"name": "Sales"}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_manager_can_invite_members(self):
+        self._as(self.manager)
+
+        response = self.client.post(
+            f"/api/v1/workspace/{self.workspace.slug}/invitations/",
+            {"invites": [{"email": "newperson@example.com", "role": "member"}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_manager_can_revoke_an_invitation(self):
+        invitations = WorkspaceInvitationService.create_invitations(
+            workspace=self.workspace,
+            invites=[{"email": "invitee@example.com", "role": "Member"}],
+            invited_by=self.owner,
+        )
+        self._as(self.manager)
+
+        response = self.client.delete(
+            f"/api/v1/workspace/{self.workspace.slug}/invitations/{invitations[0].id}/"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_manager_can_move_a_member_between_teams(self):
+        engineering = TeamService.create_team(
+            workspace=self.workspace, name="Engineering", created_by=self.owner
+        )
+        self._as(self.manager)
+
+        response = self.client.patch(
+            f"/api/v1/workspace/{self.workspace.slug}/members/{self.target.public_id}/",
+            {"team_slug": engineering.slug},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_manager_cannot_change_a_members_role(self):
+        self._as(self.manager)
+
+        response = self.client.patch(
+            f"/api/v1/workspace/{self.workspace.slug}/members/{self.target.public_id}/",
+            {"role": "admin"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_manager_cannot_change_role_even_when_bundled_with_a_team_move(self):
+        engineering = TeamService.create_team(
+            workspace=self.workspace, name="Engineering", created_by=self.owner
+        )
+        self._as(self.manager)
+
+        response = self.client.patch(
+            f"/api/v1/workspace/{self.workspace.slug}/members/{self.target.public_id}/",
+            {"role": "admin", "team_slug": engineering.slug},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(TeamMembershipService.is_member(engineering, self.target))
+
+    def test_member_cannot_create_a_team(self):
+        self._as(self.member)
+
+        response = self.client.post(
+            f"/api/v1/workspace/{self.workspace.slug}/teams/", {"name": "Sales"}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_member_cannot_invite_members(self):
+        self._as(self.member)
+
+        response = self.client.post(
+            f"/api/v1/workspace/{self.workspace.slug}/invitations/",
+            {"invites": [{"email": "newperson@example.com", "role": "member"}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_member_cannot_move_a_member_between_teams(self):
+        engineering = TeamService.create_team(
+            workspace=self.workspace, name="Engineering", created_by=self.owner
+        )
+        self._as(self.member)
+
+        response = self.client.patch(
+            f"/api/v1/workspace/{self.workspace.slug}/members/{self.target.public_id}/",
+            {"team_slug": engineering.slug},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_viewer_cannot_create_a_team(self):
+        self._as(self.viewer)
+
+        response = self.client.post(
+            f"/api/v1/workspace/{self.workspace.slug}/teams/", {"name": "Sales"}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_viewer_cannot_invite_members(self):
+        self._as(self.viewer)
+
+        response = self.client.post(
+            f"/api/v1/workspace/{self.workspace.slug}/invitations/",
+            {"invites": [{"email": "newperson@example.com", "role": "member"}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_viewer_cannot_change_a_members_role(self):
+        self._as(self.viewer)
+
+        response = self.client.patch(
+            f"/api/v1/workspace/{self.workspace.slug}/members/{self.target.public_id}/",
+            {"role": "admin"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_member_and_viewer_can_still_read_workspace_data(self):
+        for user in (self.member, self.viewer):
+            self._as(user)
+
+            self.assertEqual(
+                self.client.get(f"/api/v1/workspace/{self.workspace.slug}/").status_code,
+                status.HTTP_200_OK,
+            )
+            self.assertEqual(
+                self.client.get(
+                    f"/api/v1/workspace/{self.workspace.slug}/members/"
+                ).status_code,
+                status.HTTP_200_OK,
+            )
+            self.assertEqual(
+                self.client.get(
+                    f"/api/v1/workspace/{self.workspace.slug}/teams/"
+                ).status_code,
+                status.HTTP_200_OK,
+            )
+
+
 class WorkspaceInvitationCreateTests(APITestCase):
     def setUp(self):
         self.owner = User.objects.create_user(

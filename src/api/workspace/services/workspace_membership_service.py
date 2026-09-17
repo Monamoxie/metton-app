@@ -75,6 +75,19 @@ class WorkspaceMembershipService:
         ).exists()
 
     @staticmethod
+    def has_any_role(
+        workspace: Workspace,
+        user: "User | AbstractBaseUser | AnonymousUser",
+        role_names: set,
+    ) -> bool:
+        if not hasattr(user, 'is_authenticated') or not user.is_authenticated:
+            return False
+
+        return WorkspaceMembership.objects.filter(
+            workspace=workspace, user=user, role__name__in=role_names
+        ).exists()
+
+    @staticmethod
     def has_system_role(workspace: Workspace, user: User) -> bool:
         return WorkspaceMembership.objects.filter(
             workspace=workspace, user=user, role__is_system=True

@@ -9,9 +9,12 @@ class IsWorkspaceMember(BasePermission):
 
 
 class CanUpdateWorkspace(BasePermission):
+    """Owner or Admin only — administrative actions Manager doesn't get, e.g. granting or
+    revoking another member's role."""
+
     def has_object_permission(self, request, view, obj) -> bool:
-        return WorkspaceMembershipService.has_role(
-            obj, request.user, WorkspaceRoleName.OWNER.value
-        ) or WorkspaceMembershipService.has_role(
-            obj, request.user, WorkspaceRoleName.ADMIN.value
+        return WorkspaceMembershipService.has_any_role(
+            obj,
+            request.user,
+            {WorkspaceRoleName.OWNER.value, WorkspaceRoleName.ADMIN.value},
         )
