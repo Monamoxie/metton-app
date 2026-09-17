@@ -28,7 +28,7 @@ import { TeamSummary } from "@/types/workspace";
 import * as InvitationService from "@/services/invitation-service";
 import ButtonContent from "@/components/ButtonContent";
 
-type InviteRole = "admin" | "member";
+type InviteRole = "admin" | "manager" | "member" | "viewer";
 
 interface PendingInvite {
   email: string;
@@ -186,7 +186,9 @@ export default function InviteMemberDialog({
                       }
                       variant="standard"
                     >
+                      <MenuItem value="viewer">Viewer</MenuItem>
                       <MenuItem value="member">Member</MenuItem>
+                      <MenuItem value="manager">Manager</MenuItem>
                       <MenuItem value="admin">Admin</MenuItem>
                     </Select>
                   </FormControl>

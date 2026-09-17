@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from django.db.models import QuerySet
 
 from identity.models import User
+from workspace.exceptions import MembershipNotFoundError
 from workspace.models import Workspace
 from workspace.models import WorkspaceMembership
 from workspace.models.workspace_role import WorkspaceRole
@@ -39,6 +40,15 @@ class WorkspaceMembershipService:
         return WorkspaceMembership.objects.filter(
             workspace=workspace, user__email__iexact=email
         ).first()
+
+    @staticmethod
+    def get_by_user_public_id(workspace: Workspace, public_id: str) -> WorkspaceMembership:
+        try:
+            return WorkspaceMembership.objects.select_related("user", "role").get(
+                workspace=workspace, user__public_id=public_id
+            )
+        except WorkspaceMembership.DoesNotExist:
+            raise MembershipNotFoundError()
 
     @staticmethod
     def get_members_for_workspace(workspace: Workspace) -> QuerySet:

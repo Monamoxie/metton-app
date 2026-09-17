@@ -17,8 +17,8 @@ export function mapToWorkspaceMembers(
     avatar: "",
     role: m.role.toLowerCase() as WorkspaceRole,
     status: "active" as InviteStatus,
-    teamId: null,
-    teamName: null,
+    teamId: m.team?.slug || null,
+    teamName: m.team?.name || null,
     joinedAt: m.created_at,
   }));
 

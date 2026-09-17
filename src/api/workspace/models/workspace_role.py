@@ -20,7 +20,9 @@ class WorkspaceRole(models.Model):
     SYSTEM_ROLES = [
         {"name": WorkspaceRoleName.OWNER.value},
         {"name": WorkspaceRoleName.ADMIN.value},
+        {"name": WorkspaceRoleName.MANAGER.value},
         {"name": WorkspaceRoleName.MEMBER.value},
+        {"name": WorkspaceRoleName.VIEWER.value},
     ]
 
     class Meta:

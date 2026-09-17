@@ -15,7 +15,6 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import Link from "next/link";
 import { WorkspaceMember, TeamSummary, WorkspaceSummary } from "@/types/workspace";
-import { mockTeams } from "@/data/mock/workspace";
 import MembersPreviewTable from "@/components/workspace/MembersPreviewTable";
 import TeamSummaryGrid from "@/components/workspace/TeamSummaryGrid";
 import InviteMemberDialog from "@/components/workspace/InviteMemberDialog";
@@ -212,9 +211,10 @@ export default function WorkspacePage() {
         member={selectedMember}
         open={!!selectedMember}
         onClose={() => setSelectedMember(null)}
-        teams={mockTeams}
+        teams={teams}
         slug={slug}
         onRevoked={fetchData}
+        onMemberUpdated={fetchData}
       />
     </Box>
   );

@@ -99,4 +99,44 @@ describe("InviteMemberDialog", () => {
     expect(await screen.findByText(/already a member/i)).toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
   });
+
+  it("offers Manager and Viewer as invite role options", async () => {
+    render(
+      <InviteMemberDialog open onClose={vi.fn()} slug="acme-corp" teams={teams} />
+    );
+
+    await addEmail("colleague@example.com");
+    const user = userEvent.setup();
+    await user.click(screen.getAllByRole("combobox")[0]);
+
+    expect(screen.getByRole("option", { name: /^manager$/i })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /^viewer$/i })).toBeInTheDocument();
+  });
+
+  it("sends the selected Manager role for an invite", async () => {
+    vi.mocked(InvitationService.inviteMembers).mockResolvedValue({
+      code: 201,
+      message: "Invitations has been sent successfully",
+      errors: null,
+      data: { invitations: [] },
+    } as any);
+
+    render(
+      <InviteMemberDialog open onClose={vi.fn()} slug="acme-corp" teams={teams} />
+    );
+
+    await addEmail("colleague@example.com");
+    const user = userEvent.setup();
+    await user.click(screen.getAllByRole("combobox")[0]);
+    await user.click(screen.getByRole("option", { name: /^manager$/i }));
+    await user.click(screen.getByRole("button", { name: /send.*invitation/i }));
+
+    await waitFor(() => {
+      expect(InvitationService.inviteMembers).toHaveBeenCalledWith(
+        "acme-corp",
+        [{ email: "colleague@example.com", role: "manager" }],
+        "general"
+      );
+    });
+  });
 });

@@ -348,6 +348,137 @@ class WorkspaceMemberListTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
+class WorkspaceMemberUpdateTests(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(
+            email="owner@example.com", password="password123"
+        )
+        for role_name in (
+            WorkspaceRoleName.OWNER.value,
+            WorkspaceRoleName.ADMIN.value,
+            WorkspaceRoleName.MANAGER.value,
+            WorkspaceRoleName.MEMBER.value,
+            WorkspaceRoleName.VIEWER.value,
+        ):
+            WorkspaceRole.objects.get_or_create(
+                name=role_name, defaults={"label": role_name.lower(), "is_system": True}
+            )
+        self.workspace = WorkspaceService.create_workspace(
+            user=self.owner, name="Acme Corp"
+        )
+        self.member = User.objects.create_user(
+            email="member@example.com", password="password123"
+        )
+        self.membership = WorkspaceMembershipService.add_member(
+            workspace=self.workspace,
+            user=self.member,
+            role_name=WorkspaceRoleName.MEMBER.value,
+            invited_by=self.owner,
+        )
+        self.url = (
+            f"/api/v1/workspace/{self.workspace.slug}/members/"
+            f"{self.member.public_id}/"
+        )
+        self.client.force_authenticate(user=self.owner)
+
+    def test_owner_can_promote_a_member_to_manager(self):
+        response = self.client.patch(self.url, {"role": "manager"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.membership.refresh_from_db()
+        self.assertEqual(self.membership.role.name, "Manager")
+
+    def test_owner_can_demote_a_member_to_viewer(self):
+        response = self.client.patch(self.url, {"role": "viewer"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.membership.refresh_from_db()
+        self.assertEqual(self.membership.role.name, "Viewer")
+
+    def test_member_cannot_change_roles(self):
+        self.client.force_authenticate(user=self.member)
+
+        response = self.client.patch(self.url, {"role": "admin"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_owner_role_cannot_be_changed(self):
+        url = f"/api/v1/workspace/{self.workspace.slug}/members/{self.owner.public_id}/"
+
+        response = self.client.patch(url, {"role": "admin"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_invalid_role_returns_422(self):
+        response = self.client.patch(
+            self.url, {"role": "superadmin"}, format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_unknown_member_returns_404(self):
+        url = f"/api/v1/workspace/{self.workspace.slug}/members/does-not-exist/"
+
+        response = self.client.patch(url, {"role": "admin"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_empty_body_returns_422(self):
+        response = self.client.patch(self.url, {}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_moves_a_member_to_another_team(self):
+        engineering = TeamService.create_team(
+            workspace=self.workspace, name="Engineering", created_by=self.owner
+        )
+
+        response = self.client.patch(
+            self.url, {"team_slug": engineering.slug}, format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["data"]["member"]["team"]["slug"], "engineering")
+        self.assertTrue(
+            TeamMembershipService.is_member(engineering, self.member)
+        )
+
+    def test_moving_teams_removes_the_previous_team_membership(self):
+        general = TeamService.get_by_slug(self.workspace, "general")
+        TeamMembershipService.add_member(team=general, user=self.member, role="member")
+        engineering = TeamService.create_team(
+            workspace=self.workspace, name="Engineering", created_by=self.owner
+        )
+
+        self.client.patch(self.url, {"team_slug": engineering.slug}, format="json")
+
+        self.assertFalse(TeamMembershipService.is_member(general, self.member))
+        self.assertTrue(TeamMembershipService.is_member(engineering, self.member))
+
+    def test_role_and_team_can_be_updated_in_one_request(self):
+        engineering = TeamService.create_team(
+            workspace=self.workspace, name="Engineering", created_by=self.owner
+        )
+
+        response = self.client.patch(
+            self.url,
+            {"role": "manager", "team_slug": engineering.slug},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.membership.refresh_from_db()
+        self.assertEqual(self.membership.role.name, "Manager")
+        self.assertTrue(TeamMembershipService.is_member(engineering, self.member))
+
+    def test_unknown_team_slug_returns_404(self):
+        response = self.client.patch(
+            self.url, {"team_slug": "does-not-exist"}, format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
 class WorkspaceInvitationCreateTests(APITestCase):
     def setUp(self):
         self.owner = User.objects.create_user(

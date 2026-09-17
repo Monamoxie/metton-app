@@ -1,7 +1,7 @@
 import axiosClient from "@/utils/axios-client";
 import { ApiResponse } from "@/types/api";
 import * as Utils from "@/utils/utils";
-import { CreateWorkspaceInput } from "@/types/workspace";
+import { CreateWorkspaceInput, UpdateMemberInput } from "@/types/workspace";
 
 // -- List the current user's workspaces --
 export const listWorkspaces = async (): Promise<ApiResponse> => {
@@ -39,6 +39,27 @@ export const listWorkspaceMembers = async (slug: string): Promise<ApiResponse> =
     const response = await axiosClient.get(`/workspace/${slug}/members/`, {
       headers: Utils.getAuthApiHeader(),
     });
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
+// -- Change an existing member's role and/or team in one request --
+export const updateMember = async (
+  slug: string,
+  publicId: string,
+  payload: UpdateMemberInput
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.patch(
+      `/workspace/${slug}/members/${publicId}/`,
+      payload,
+      { headers: Utils.getAuthApiHeader() }
+    );
     return response.data;
   } catch (error: any) {
     if (error.response?.data) {

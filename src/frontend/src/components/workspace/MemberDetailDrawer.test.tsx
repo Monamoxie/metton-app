@@ -3,9 +3,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MemberDetailDrawer from "./MemberDetailDrawer";
 import * as InvitationService from "@/services/invitation-service";
+import * as WorkspaceService from "@/services/workspace-service";
 import { WorkspaceMember } from "@/types/workspace";
 
 vi.mock("@/services/invitation-service");
+vi.mock("@/services/workspace-service");
 
 const pendingMember: WorkspaceMember = {
   id: "invite-invitee@example.com",
@@ -120,5 +122,192 @@ describe("MemberDetailDrawer", () => {
     expect(
       screen.queryByRole("button", { name: /revoke invitation/i })
     ).not.toBeInTheDocument();
+  });
+
+  const activeMember: WorkspaceMember = {
+    id: "user-1",
+    name: "Jane Doe",
+    email: "jane@example.com",
+    role: "member",
+    status: "active",
+    teamId: "general",
+    teamName: "General",
+    joinedAt: "2026-01-01",
+  };
+
+  const teams = [
+    { id: 1, name: "General", slug: "general", is_default: true, created_at: "" },
+    { id: 2, name: "Engineering", slug: "engineering", is_default: false, created_at: "" },
+  ];
+
+  it("offers Manager and Viewer as role options", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemberDetailDrawer
+        member={activeMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+      />
+    );
+
+    await user.click(screen.getAllByRole("combobox")[0]);
+
+    expect(screen.getByRole("option", { name: /^manager$/i })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /^viewer$/i })).toBeInTheDocument();
+  });
+
+  it("lists the workspace's real teams", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemberDetailDrawer
+        member={activeMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+      />
+    );
+
+    await user.click(screen.getAllByRole("combobox")[1]);
+
+    expect(screen.getByRole("option", { name: /engineering/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: /general.*default/i })
+    ).toBeInTheDocument();
+  });
+
+  it("disables the role and team selects while the invitation is pending", () => {
+    render(
+      <MemberDetailDrawer
+        member={pendingMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+      />
+    );
+
+    const [roleSelect, teamSelect] = screen.getAllByRole("combobox");
+    expect(roleSelect).toHaveAttribute("aria-disabled", "true");
+    expect(teamSelect).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("keeps the Update button disabled until something changes", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemberDetailDrawer
+        member={activeMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+      />
+    );
+
+    const updateButton = screen.getByRole("button", { name: /^update$/i });
+    expect(updateButton).toBeDisabled();
+
+    await user.click(screen.getAllByRole("combobox")[0]);
+    await user.click(screen.getByRole("option", { name: /^manager$/i }));
+
+    expect(updateButton).toBeEnabled();
+  });
+
+  it("sends only the changed field and calls onMemberUpdated on success", async () => {
+    vi.mocked(WorkspaceService.updateMember).mockResolvedValue({
+      code: 200,
+      message: "Member updated successfully",
+      errors: null,
+      data: null,
+    } as any);
+
+    const onMemberUpdated = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <MemberDetailDrawer
+        member={activeMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+        onMemberUpdated={onMemberUpdated}
+      />
+    );
+
+    await user.click(screen.getAllByRole("combobox")[0]);
+    await user.click(screen.getByRole("option", { name: /^manager$/i }));
+    await user.click(screen.getByRole("button", { name: /^update$/i }));
+
+    await waitFor(() => {
+      expect(WorkspaceService.updateMember).toHaveBeenCalledWith(
+        "acme-corp",
+        "user-1",
+        { role: "manager" }
+      );
+    });
+    expect(onMemberUpdated).toHaveBeenCalled();
+  });
+
+  it("sends both role and team together when both changed", async () => {
+    vi.mocked(WorkspaceService.updateMember).mockResolvedValue({
+      code: 200,
+      message: "Member updated successfully",
+      errors: null,
+      data: null,
+    } as any);
+
+    const user = userEvent.setup();
+    render(
+      <MemberDetailDrawer
+        member={activeMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+      />
+    );
+
+    await user.click(screen.getAllByRole("combobox")[0]);
+    await user.click(screen.getByRole("option", { name: /^manager$/i }));
+    await user.click(screen.getAllByRole("combobox")[1]);
+    await user.click(screen.getByRole("option", { name: /engineering/i }));
+    await user.click(screen.getByRole("button", { name: /^update$/i }));
+
+    await waitFor(() => {
+      expect(WorkspaceService.updateMember).toHaveBeenCalledWith(
+        "acme-corp",
+        "user-1",
+        { role: "manager", team_slug: "engineering" }
+      );
+    });
+  });
+
+  it("shows an inline error and keeps the edited values on failure", async () => {
+    vi.mocked(WorkspaceService.updateMember).mockResolvedValue({
+      code: 403,
+      message: "You do not have permission to perform this action",
+      errors: null,
+      data: null,
+    } as any);
+
+    const user = userEvent.setup();
+    render(
+      <MemberDetailDrawer
+        member={activeMember}
+        open
+        onClose={vi.fn()}
+        teams={teams}
+        slug="acme-corp"
+      />
+    );
+
+    await user.click(screen.getAllByRole("combobox")[0]);
+    await user.click(screen.getByRole("option", { name: /^viewer$/i }));
+    await user.click(screen.getByRole("button", { name: /^update$/i }));
+
+    expect(await screen.findByText(/do not have permission/i)).toBeInTheDocument();
+    expect(screen.getAllByRole("combobox")[0]).toHaveTextContent("Viewer");
   });
 });

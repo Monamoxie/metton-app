@@ -8,6 +8,7 @@ from .invitation_expired_error import InvitationExpiredError
 from .invitation_already_accepted_error import InvitationAlreadyAcceptedError
 from .invitation_email_mismatch_error import InvitationEmailMismatchError
 from .already_workspace_member_error import AlreadyWorkspaceMemberError
+from .membership_not_found_error import MembershipNotFoundError
 
 __all__ = [
     "SlugAlreadyTakenError",
@@ -20,4 +21,5 @@ __all__ = [
     "InvitationAlreadyAcceptedError",
     "InvitationEmailMismatchError",
     "AlreadyWorkspaceMemberError",
+    "MembershipNotFoundError",
 ]

@@ -20,7 +20,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "next/link";
 import { WorkspaceMember, WorkspaceRole, InviteStatus, TeamSummary } from "@/types/workspace";
-import { mockTeams } from "@/data/mock/workspace";
 import MembersPreviewTable from "@/components/workspace/MembersPreviewTable";
 import MemberDetailDrawer from "@/components/workspace/MemberDetailDrawer";
 import InviteMemberDialog from "@/components/workspace/InviteMemberDialog";
@@ -186,9 +185,10 @@ export default function WorkspaceMembersPage() {
         member={selectedMember}
         open={!!selectedMember}
         onClose={() => setSelectedMember(null)}
-        teams={mockTeams}
+        teams={teams}
         slug={slug}
         onRevoked={fetchData}
+        onMemberUpdated={fetchData}
       />
     </Box>
   );

@@ -8,7 +8,11 @@ from workspace.exceptions import WorkspaceNotFoundError
 from workspace.serializers.workspace_membership_serializer import (
     WorkspaceMembershipSerializer,
 )
-from workspace.services import WorkspaceMembershipService, WorkspaceService
+from workspace.services import (
+    TeamMembershipService,
+    WorkspaceMembershipService,
+    WorkspaceService,
+)
 
 
 class WorkspaceMemberListView(APIView):
@@ -28,5 +32,8 @@ class WorkspaceMemberListView(APIView):
             )
 
         memberships = WorkspaceMembershipService.get_members_for_workspace(workspace)
-        serializer = WorkspaceMembershipSerializer(memberships, many=True)
+        team_map = TeamMembershipService.get_team_map_for_workspace(workspace)
+        serializer = WorkspaceMembershipSerializer(
+            memberships, many=True, context={"team_map": team_map}
+        )
         return Response({"members": serializer.data}, status=status.HTTP_200_OK)

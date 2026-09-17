@@ -1,4 +1,4 @@
-export type WorkspaceRole = "owner" | "admin" | "member";
+export type WorkspaceRole = "owner" | "admin" | "manager" | "member" | "viewer";
 export type InviteStatus = "pending" | "active";
 
 export interface WorkspaceMember {
@@ -72,19 +72,25 @@ export interface TeamMembershipSummary {
 
 export interface WorkspaceMembershipSummary {
   user: TeamMemberUser;
-  role: "Owner" | "Admin" | "Member";
+  role: "Owner" | "Admin" | "Manager" | "Member" | "Viewer";
+  team: { id: number; name: string; slug: string } | null;
   created_at: string;
+}
+
+export interface UpdateMemberInput {
+  role?: string;
+  team_slug?: string;
 }
 
 export interface InviteInput {
   email: string;
-  role: "admin" | "member";
+  role: "admin" | "manager" | "member" | "viewer";
 }
 
 export interface InvitationSummary {
   id: number;
   email: string;
-  role: "Admin" | "Member";
+  role: "Admin" | "Manager" | "Member" | "Viewer";
   team: string | null;
   status: "pending" | "accepted";
   expires_at: string;
@@ -93,7 +99,7 @@ export interface InvitationSummary {
 
 export interface InvitationPeek {
   email: string;
-  role: "Admin" | "Member";
+  role: "Admin" | "Manager" | "Member" | "Viewer";
   workspace_name: string;
   workspace_slug: string;
   expires_at: string;

@@ -1,9 +1,8 @@
-from rest_framework import serializers
-
 from core.message_bag import MessageBag
+from rest_framework import serializers
 from workspace.enums import WorkspaceRoleName
 
-INVITABLE_ROLES = {WorkspaceRoleName.ADMIN.value, WorkspaceRoleName.MEMBER.value}
+INVITABLE_ROLES = WorkspaceRoleName.assignable()
 
 
 class WorkspaceInviteEntrySerializer(serializers.Serializer):
