@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ from rest_framework.views import APIView
 from core.message_bag import MessageBag
 from workspace.exceptions import (
     AlreadyWorkspaceMemberError,
+    InvalidBulkInviteFileError,
     TeamNotFoundError,
     WorkspaceNotFoundError,
 )
@@ -17,28 +19,18 @@ from workspace.serializers.workspace_invitation_serializer import (
     WorkspaceInvitationSerializer,
 )
 from workspace.services import WorkspaceInvitationService, WorkspaceService
+from workspace.services.bulk_invite_file_parser_service import (
+    BulkInviteFileParserService,
+)
 
 
-class WorkspaceInvitationListCreateView(APIView):
+class WorkspaceBulkInvitationView(APIView):
     """
-    GET  /api/v1/workspace/<slug>/invitations/  -> list pending invitations
-    POST /api/v1/workspace/<slug>/invitations/  -> invite one or more emails
+    POST /api/v1/workspace/<slug>/invitations/bulk/  -> invite many emails from a CSV/Excel file
     """
 
     permission_classes = [IsAuthenticated]
-
-    def get(self, request, slug):
-        try:
-            workspace = WorkspaceService.get_by_slug(slug, request.user)
-        except WorkspaceNotFoundError:
-            return Response(
-                {"_message": MessageBag.DATA_NOT_FOUND.format(data="Workspace")},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        invitations = WorkspaceInvitationService.list_pending_for_workspace(workspace)
-        serializer = WorkspaceInvitationSerializer(invitations, many=True)
-        return Response({"invitations": serializer.data}, status=status.HTTP_200_OK)
+    parser_classes = [MultiPartParser]
 
     def post(self, request, slug):
         try:
@@ -55,7 +47,23 @@ class WorkspaceInvitationListCreateView(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        serializer = WorkspaceInvitationCreateSerializer(data=request.data)
+        uploaded_file = request.FILES.get("file")
+        if not uploaded_file:
+            return Response(
+                {"_message": MessageBag.FIELD_IS_REQUIRED.format(field="file")},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        try:
+            rows = BulkInviteFileParserService.parse(uploaded_file)
+        except InvalidBulkInviteFileError as e:
+            return Response(
+                {"_message": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+
+        serializer = WorkspaceInvitationCreateSerializer(
+            data={"invites": rows, "team_slug": request.data.get("team_slug", "")}
+        )
         if not serializer.is_valid():
             return Response(
                 serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY

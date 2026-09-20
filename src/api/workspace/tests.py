@@ -1,6 +1,9 @@
+import io
 from datetime import timedelta
 from unittest.mock import patch
 
+import openpyxl
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils import timezone
 from rest_framework import status
@@ -518,7 +521,7 @@ class WorkspaceRolePermissionTests(APITestCase):
         self.target = add("target@example.com", WorkspaceRoleName.MEMBER.value)
 
         self.email_patcher = patch(
-            "workspace.views.workspace_invitation_list_create_view.send_workspace_invite_email"
+            "workspace.services.workspace_invitation_service.send_workspace_invite_email"
         )
         self.mock_send_email = self.email_patcher.start()
         self.addCleanup(self.email_patcher.stop)
@@ -706,7 +709,7 @@ class WorkspaceInvitationCreateTests(APITestCase):
         self.url = f"/api/v1/workspace/{self.workspace.slug}/invitations/"
         self.client.force_authenticate(user=self.owner)
         self.email_patcher = patch(
-            "workspace.views.workspace_invitation_list_create_view.send_workspace_invite_email"
+            "workspace.services.workspace_invitation_service.send_workspace_invite_email"
         )
         self.mock_send_email = self.email_patcher.start()
         self.addCleanup(self.email_patcher.stop)
@@ -823,6 +826,189 @@ class WorkspaceInvitationCreateTests(APITestCase):
         invitations = response.json()["data"]["invitations"]
         self.assertEqual(len(invitations), 1)
         self.assertEqual(invitations[0]["email"], "newperson@example.com")
+
+
+class WorkspaceBulkInvitationTests(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(
+            email="owner@example.com", password="password123"
+        )
+        for role_name in (
+            WorkspaceRoleName.OWNER.value,
+            WorkspaceRoleName.MANAGER.value,
+            WorkspaceRoleName.MEMBER.value,
+            WorkspaceRoleName.VIEWER.value,
+        ):
+            WorkspaceRole.objects.get_or_create(
+                name=role_name, defaults={"label": role_name.lower(), "is_system": True}
+            )
+        self.workspace = WorkspaceService.create_workspace(
+            user=self.owner, name="Acme Corp"
+        )
+        self.url = f"/api/v1/workspace/{self.workspace.slug}/invitations/bulk/"
+        self.client.force_authenticate(user=self.owner)
+        self.email_patcher = patch(
+            "workspace.services.workspace_invitation_service.send_workspace_invite_email"
+        )
+        self.mock_send_email = self.email_patcher.start()
+        self.addCleanup(self.email_patcher.stop)
+
+    @staticmethod
+    def _csv_file(rows, headers=("email", "role")):
+        content = ",".join(headers) + "\r\n"
+        content += "\r\n".join(",".join(row) for row in rows)
+        return SimpleUploadedFile(
+            "invites.csv", content.encode("utf-8"), content_type="text/csv"
+        )
+
+    @staticmethod
+    def _xlsx_file(rows, headers=("email", "role")):
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        sheet.append(list(headers))
+        for row in rows:
+            sheet.append(list(row))
+        buffer = io.BytesIO()
+        workbook.save(buffer)
+        buffer.seek(0)
+        return SimpleUploadedFile(
+            "invites.xlsx",
+            buffer.read(),
+            content_type=(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            ),
+        )
+
+    def test_csv_upload_creates_invitations_and_sends_emails(self):
+        file = self._csv_file(
+            [
+                ("newperson@example.com", "member"),
+                ("another@example.com", "admin"),
+            ]
+        )
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(WorkspaceInvitation.objects.count(), 2)
+        self.assertEqual(self.mock_send_email.call_count, 2)
+
+    def test_xlsx_upload_creates_invitations(self):
+        file = self._xlsx_file([("newperson@example.com", "member")])
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(
+            WorkspaceInvitation.objects.filter(email="newperson@example.com").exists()
+        )
+
+    def test_unsupported_file_type_returns_422(self):
+        file = SimpleUploadedFile(
+            "invites.txt", b"email,role\na@example.com,member", content_type="text/plain"
+        )
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_missing_required_column_returns_422(self):
+        file = self._csv_file([("a@example.com", "member")], headers=("email", "title"))
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_a_bad_row_rejects_the_whole_file(self):
+        file = self._csv_file(
+            [
+                ("valid@example.com", "member"),
+                ("not-an-email", "member"),
+            ]
+        )
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+        self.assertFalse(WorkspaceInvitation.objects.exists())
+
+    def test_a_row_for_an_existing_member_rejects_the_whole_file(self):
+        member = User.objects.create_user(
+            email="member@example.com", password="password123"
+        )
+        WorkspaceMembershipService.add_member(
+            workspace=self.workspace,
+            user=member,
+            role_name=WorkspaceRoleName.MEMBER.value,
+            invited_by=self.owner,
+        )
+        file = self._csv_file(
+            [
+                ("newperson@example.com", "member"),
+                ("member@example.com", "member"),
+            ]
+        )
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(
+            WorkspaceInvitation.objects.filter(email="newperson@example.com").exists()
+        )
+
+    def test_too_many_rows_returns_422(self):
+        from workspace.services.bulk_invite_file_parser_service import (
+            BulkInviteFileParserService,
+        )
+
+        rows = [
+            (f"person{i}@example.com", "member")
+            for i in range(BulkInviteFileParserService.MAX_ROWS + 1)
+        ]
+        file = self._csv_file(rows)
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_missing_file_returns_422(self):
+        response = self.client.post(self.url, {}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_manager_can_bulk_invite(self):
+        manager = User.objects.create_user(
+            email="manager@example.com", password="password123"
+        )
+        WorkspaceMembershipService.add_member(
+            workspace=self.workspace,
+            user=manager,
+            role_name=WorkspaceRoleName.MANAGER.value,
+            invited_by=self.owner,
+        )
+        self.client.force_authenticate(user=manager)
+        file = self._csv_file([("newperson@example.com", "member")])
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_member_cannot_bulk_invite(self):
+        member = User.objects.create_user(
+            email="member@example.com", password="password123"
+        )
+        WorkspaceMembershipService.add_member(
+            workspace=self.workspace,
+            user=member,
+            role_name=WorkspaceRoleName.MEMBER.value,
+            invited_by=self.owner,
+        )
+        self.client.force_authenticate(user=member)
+        file = self._csv_file([("newperson@example.com", "member")])
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class WorkspaceInvitationRevokeTests(APITestCase):

@@ -18,7 +18,9 @@ from workspace.exceptions import (
 )
 from workspace.models import Team, Workspace, WorkspaceInvitation
 from workspace.services.team_membership_service import TeamMembershipService
+from workspace.services.team_service import TeamService
 from workspace.services.workspace_membership_service import WorkspaceMembershipService
+from workspace.utils import send_workspace_invite_email
 
 
 class WorkspaceInvitationService:
@@ -68,6 +70,29 @@ class WorkspaceInvitationService:
                 created.append(invitation)
 
         return created
+
+    @classmethod
+    def create_invitations_from_payload(
+        cls, workspace: Workspace, validated_data: dict, invited_by: User
+    ) -> list[WorkspaceInvitation]:
+        """Shared by the manual and bulk-file invite endpoints: resolves the optional team,
+        creates the invitations, and sends the invite email for each."""
+        team = None
+        team_slug = validated_data.get("team_slug")
+        if team_slug:
+            team = TeamService.get_by_slug(workspace, team_slug)
+
+        invitations = cls.create_invitations(
+            workspace=workspace,
+            invites=validated_data["invites"],
+            invited_by=invited_by,
+            team=team,
+        )
+
+        for invitation in invitations:
+            send_workspace_invite_email(invitation, invitation.plain_token)
+
+        return invitations
 
     @staticmethod
     def peek(token: str) -> WorkspaceInvitation:

@@ -9,6 +9,7 @@ from .invitation_already_accepted_error import InvitationAlreadyAcceptedError
 from .invitation_email_mismatch_error import InvitationEmailMismatchError
 from .already_workspace_member_error import AlreadyWorkspaceMemberError
 from .membership_not_found_error import MembershipNotFoundError
+from .invalid_bulk_invite_file_error import InvalidBulkInviteFileError
 
 __all__ = [
     "SlugAlreadyTakenError",
@@ -22,4 +23,5 @@ __all__ = [
     "InvitationEmailMismatchError",
     "AlreadyWorkspaceMemberError",
     "MembershipNotFoundError",
+    "InvalidBulkInviteFileError",
 ]

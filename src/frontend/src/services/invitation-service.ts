@@ -24,6 +24,38 @@ export const inviteMembers = async (
   }
 };
 
+// -- Bulk-invite members from a CSV/Excel file --
+export const bulkInviteMembers = async (
+  slug: string,
+  file: File,
+  teamSlug?: string
+): Promise<ApiResponse> => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (teamSlug) {
+      formData.append("team_slug", teamSlug);
+    }
+
+    const response = await axiosClient.post(
+      `/workspace/${slug}/invitations/bulk/`,
+      formData,
+      {
+        headers: {
+          ...Utils.getAuthApiHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
 // -- List pending invitations for a workspace --
 export const listPendingInvitations = async (slug: string): Promise<ApiResponse> => {
   try {

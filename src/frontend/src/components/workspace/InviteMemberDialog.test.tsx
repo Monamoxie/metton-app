@@ -139,4 +139,64 @@ describe("InviteMemberDialog", () => {
       );
     });
   });
+
+  const csvFile = new File(["email,role\ncolleague@example.com,member"], "invites.csv", {
+    type: "text/csv",
+  });
+
+  it("uploads a selected file and calls onInvited + onClose on success", async () => {
+    vi.mocked(InvitationService.bulkInviteMembers).mockResolvedValue({
+      code: 201,
+      message: "Invitations has been sent successfully",
+      errors: null,
+      data: { invitations: [] },
+    } as any);
+
+    const onClose = vi.fn();
+    const onInvited = vi.fn();
+    render(
+      <InviteMemberDialog
+        open
+        onClose={onClose}
+        onInvited={onInvited}
+        slug="acme-corp"
+        teams={teams}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText(/import from csv or excel/i), {
+      target: { files: [csvFile] },
+    });
+
+    await waitFor(() => {
+      expect(InvitationService.bulkInviteMembers).toHaveBeenCalledWith(
+        "acme-corp",
+        csvFile,
+        "general"
+      );
+    });
+    await waitFor(() => expect(onInvited).toHaveBeenCalled());
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it("shows an inline error and does not close when the bulk upload fails", async () => {
+    vi.mocked(InvitationService.bulkInviteMembers).mockResolvedValue({
+      code: 422,
+      message: "Missing required column(s): role",
+      errors: {},
+      data: null,
+    } as any);
+
+    const onClose = vi.fn();
+    render(
+      <InviteMemberDialog open onClose={onClose} slug="acme-corp" teams={teams} />
+    );
+
+    fireEvent.change(screen.getByLabelText(/import from csv or excel/i), {
+      target: { files: [csvFile] },
+    });
+
+    expect(await screen.findByText(/missing required column/i)).toBeInTheDocument();
+    expect(onClose).not.toHaveBeenCalled();
+  });
 });

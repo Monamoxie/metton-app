@@ -24,6 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { TeamSummary } from "@/types/workspace";
 import * as InvitationService from "@/services/invitation-service";
 import ButtonContent from "@/components/ButtonContent";
@@ -57,6 +58,7 @@ export default function InviteMemberDialog({
   );
   const [processing, setProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [bulkUploading, setBulkUploading] = useState(false);
 
   const handleAddEmail = () => {
     const trimmed = emailInput.trim();
@@ -99,6 +101,28 @@ export default function InviteMemberDialog({
       onClose();
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const handleBulkUpload = async (file: File) => {
+    setBulkUploading(true);
+    setErrorMessage(null);
+    try {
+      const response = await InvitationService.bulkInviteMembers(
+        slug,
+        file,
+        selectedTeam || undefined
+      );
+
+      if (response.code !== 201) {
+        setErrorMessage(response.message || "Unable to import invitations.");
+        return;
+      }
+
+      onInvited?.();
+      onClose();
+    } finally {
+      setBulkUploading(false);
     }
   };
 
@@ -145,6 +169,32 @@ export default function InviteMemberDialog({
           />
           <Button variant="outlined" onClick={handleAddEmail} sx={{ flexShrink: 0 }}>
             Add
+          </Button>
+        </Box>
+
+        {/* Bulk import */}
+        <Box sx={{ mb: 2 }}>
+          <Button
+            component="label"
+            variant="text"
+            size="small"
+            startIcon={<CloudUploadOutlinedIcon fontSize="small" />}
+            disabled={bulkUploading}
+          >
+            <ButtonContent
+              processing={bulkUploading}
+              defaultText="Import from CSV or Excel"
+            />
+            <input
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleBulkUpload(file);
+                e.target.value = "";
+              }}
+            />
           </Button>
         </Box>
 

@@ -3,6 +3,7 @@ from django.urls import path
 from workspace.views.team_list_create_view import TeamListCreateView
 from workspace.views.team_member_list_view import TeamMemberListView
 from workspace.views.workspace_detail_view import WorkspaceDetailView
+from workspace.views.workspace_bulk_invitation_view import WorkspaceBulkInvitationView
 from workspace.views.workspace_invitation_accept_view import (
     WorkspaceInvitationAcceptView,
 )
@@ -44,6 +45,11 @@ urlpatterns = [
         "<slug:slug>/invitations/",
         WorkspaceInvitationListCreateView.as_view(),
         name="workspace-invitation-list-create",
+    ),
+    path(
+        "<slug:slug>/invitations/bulk/",
+        WorkspaceBulkInvitationView.as_view(),
+        name="workspace-invitation-bulk",
     ),
     path(
         "<slug:slug>/invitations/<int:invitation_id>/",
