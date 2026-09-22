@@ -1,7 +1,7 @@
 .vscode
 src/api/.venv
 .env
-nginx/conf.d
+.nginx/conf.d
 *.pyc
 __pycache__
 src/api/core/media/*

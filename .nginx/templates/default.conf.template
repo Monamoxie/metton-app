@@ -1,6 +1,11 @@
 upstream core {
     server ${UPSTREAM_SERVER}:8000;
 }
+
+upstream frontend {
+    server node:3000;
+}
+
 server {
     listen 80 default_server;
     server_name ${SERVER_NAME};
@@ -23,11 +28,12 @@ server {
         alias /app/core/media/;
     }
 
-    location ~* \.(env|gitignore|bak|log|git)$ {
+    # Blocks any hidden/dotfile path (.env, .env.local, .git/*, .htaccess, etc.) —
+    # defense-in-depth even though none of these are routable to a Django view anyway.
+    location ~ /\. {
         deny all;
         return 404;
     }
-
 
     location / {
         proxy_pass http://core;
@@ -39,5 +45,26 @@ server {
         proxy_set_header Referer $http_referer;
         proxy_set_header Cookie $http_cookie;
     }
+}
 
+# Fronts the Next.js app the same way the block above fronts Django — same
+# dotfile protection, no longer relying on the node container's own port
+# being reachable directly from outside.
+server {
+    listen 3000;
+    server_name ${SERVER_NAME};
+
+    location ~ /\. {
+        deny all;
+        return 404;
+    }
+
+    location / {
+        proxy_pass http://frontend;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Cookie $http_cookie;
+    }
 }

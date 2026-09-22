@@ -34,7 +34,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 PROJECT_ENV = os.environ.get("PROJECT_ENV")
 
-DEBUG = os.environ.get("PROJECT_ENV") != "production"
+# Defaults to False (safe) rather than deriving from PROJECT_ENV — a missing or
+# misspelled PROJECT_ENV must never silently leave debug mode on.
+DEBUG = os.environ.get("DEBUG", "False").strip().lower() == "true"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ALLOWED_HOSTS = [
