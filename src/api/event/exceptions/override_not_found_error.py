@@ -1,0 +1,2 @@
+class OverrideNotFoundError(Exception):
+    pass
