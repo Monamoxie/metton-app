@@ -7,3 +7,6 @@ from .event_delete_view import EventDeleteView
 from .event_list_business_hours_view import EventListBusinessHoursView
 from .event_delete_business_hours_view import EventDeleteBusinessHoursView
 from .schedule_manager_view import ScheduleManagerView
+from .schedule_detail_view import ScheduleDetailView
+from .schedule_override_view import ScheduleOverrideView
+from .user_available_slots_view import UserAvailableSlotsView
