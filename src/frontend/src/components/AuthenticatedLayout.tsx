@@ -26,9 +26,10 @@ const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   // Guard: if user has no workspaces, send them to the workspace creation flow.
-  // Once a workspace exists, if it has no manually created team yet, send them
-  // to the team onboarding step. Skip both checks when already on /workspace
-  // or /onboarding to avoid a redirect loop (those routes do their own checks).
+  // Once a workspace exists, if it has no team at all yet (the auto-created default
+  // team counts — it's a real, valid team, not an "incomplete" state), send them to
+  // the team onboarding step. Skip both checks when already on /workspace or
+  // /onboarding to avoid a redirect loop (those routes do their own checks).
   useEffect(() => {
     const onOnboardingFlow =
       pathname?.startsWith("/workspace") || pathname?.startsWith("/onboarding");
@@ -49,10 +50,7 @@ const AuthenticatedLayout: React.FC<LayoutProps> = ({ children }) => {
 
         const teamsResponse = await TeamService.listTeams(workspace.slug);
         const teams = teamsResponse.data?.teams ?? [];
-        const hasManuallyCreatedTeam = teams.some(
-          (team: any) => !team.is_default
-        );
-        if (!cancelled && !hasManuallyCreatedTeam) {
+        if (!cancelled && teams.length === 0) {
           router.replace("/onboarding/team");
           return;
         }
