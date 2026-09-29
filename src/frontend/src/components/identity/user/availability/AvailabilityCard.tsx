@@ -10,12 +10,14 @@ import {
   Divider,
   FormControlLabel,
   IconButton,
+  InputAdornment,
   Stack,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -55,6 +57,60 @@ const DEFAULT_RULES: BookingRules = {
 
 type DayRange = { start_time: string; end_time: string };
 type DayState = { enabled: boolean; ranges: DayRange[] };
+
+// MUI's default number input renders the browser's native spinner arrows, which look
+// broken against the rest of this app's styling -- hide them, keep the plain typed value.
+const NO_SPINNER_SX = {
+  "& input[type=number]": { MozAppearance: "textfield" },
+  "& input[type=number]::-webkit-outer-spin-button": {
+    WebkitAppearance: "none",
+    margin: 0,
+  },
+  "& input[type=number]::-webkit-inner-spin-button": {
+    WebkitAppearance: "none",
+    margin: 0,
+  },
+};
+
+const TIME_INPUT_SX = { width: 128 };
+
+// Mirrors the label-left/control-right ".settings-row" pattern established in the design
+// mockups (10-settings.html) -- reused here instead of stacking plain labeled fields.
+function SettingsRow({
+  label,
+  description,
+  last,
+  children,
+}: {
+  label: string;
+  description: string;
+  last?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="flex-start"
+      spacing={3}
+      sx={{
+        py: 2,
+        borderBottom: last ? "none" : "1px solid",
+        borderColor: "divider",
+      }}
+    >
+      <Box>
+        <Typography variant="body2" fontWeight={500}>
+          {label}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {description}
+        </Typography>
+      </Box>
+      <Box sx={{ flexShrink: 0 }}>{children}</Box>
+    </Stack>
+  );
+}
 
 function buildDayState(weeklyHours: WeeklyHoursEntry[]): DayState[] {
   return DAYS.map((_, dayIndex) => {
@@ -154,6 +210,20 @@ export default function AvailabilityCard() {
     );
   };
 
+  // Copies this day's hours onto every other weekday (Mon-Fri) -- the common case of
+  // "I work the same hours most days" shouldn't require re-entering them five times.
+  const copyToWeekdays = (sourceDayIndex: number) => {
+    const source = days[sourceDayIndex];
+    const weekdayIndexes = [1, 2, 3, 4, 5];
+    setDays((prev) =>
+      prev.map((day, index) =>
+        weekdayIndexes.includes(index) && index !== sourceDayIndex
+          ? { enabled: true, ranges: source.ranges.map((range) => ({ ...range })) }
+          : day
+      )
+    );
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setError(null);
@@ -216,32 +286,47 @@ export default function AvailabilityCard() {
       <Stack spacing={3}>
         {error && <Alert severity="error">{error}</Alert>}
 
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+        <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3 }}>
+          <Typography variant="h6" fontWeight={600} sx={{ mb: 0.5 }}>
             Weekly hours
           </Typography>
-          <Stack spacing={2}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            Manage your availability. Set one or more time ranges for each.
+          </Typography>
+          <Stack spacing={0.5}>
             {DAYS.map((label, dayIndex) => {
               const day = days[dayIndex];
               return (
                 <Stack
                   key={label}
                   direction="row"
-                  alignItems="flex-start"
+                  alignItems="center"
                   spacing={2}
-                  sx={{ py: 1, borderBottom: "1px solid", borderColor: "divider" }}
+                  sx={{
+                    py: 1.5,
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    opacity: day.enabled ? 1 : 0.55,
+                    transition: "opacity 150ms ease",
+                    "&:last-of-type": { borderBottom: "none" },
+                  }}
                 >
                   <FormControlLabel
-                    sx={{ width: 140, flexShrink: 0 }}
+                    sx={{ width: 130, flexShrink: 0, m: 0 }}
                     control={<Switch checked={day.enabled} onChange={() => toggleDay(dayIndex)} />}
-                    label={label}
+                    label={
+                      <Typography variant="body2" fontWeight={500}>
+                        {label}
+                      </Typography>
+                    }
                   />
-                  {day.enabled && (
+                  {day.enabled ? (
                     <Stack spacing={1} flex={1}>
                       {day.ranges.map((range, rangeIndex) => (
                         <Stack direction="row" spacing={1} alignItems="center" key={rangeIndex}>
                           <TimePicker
                             value={dayjs(range.start_time, TIME_FORMAT)}
+                            format="h:mm a"
                             onChange={(value) =>
                               value &&
                               updateRange(
@@ -251,11 +336,14 @@ export default function AvailabilityCard() {
                                 value.format(TIME_FORMAT)
                               )
                             }
-                            slotProps={{ textField: { size: "small" } }}
+                            slotProps={{ textField: { size: "small", sx: TIME_INPUT_SX } }}
                           />
-                          <Typography variant="body2">to</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            –
+                          </Typography>
                           <TimePicker
                             value={dayjs(range.end_time, TIME_FORMAT)}
+                            format="h:mm a"
                             onChange={(value) =>
                               value &&
                               updateRange(
@@ -265,29 +353,41 @@ export default function AvailabilityCard() {
                                 value.format(TIME_FORMAT)
                               )
                             }
-                            slotProps={{ textField: { size: "small" } }}
+                            slotProps={{ textField: { size: "small", sx: TIME_INPUT_SX } }}
                           />
+                          <IconButton
+                            size="small"
+                            onClick={() => addRange(dayIndex)}
+                            aria-label="Add another time range"
+                            title="Add another time range"
+                          >
+                            <AddIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() => copyToWeekdays(dayIndex)}
+                            aria-label="Copy to weekdays"
+                            title="Copy to Mon–Fri"
+                          >
+                            <ContentCopyOutlinedIcon fontSize="small" />
+                          </IconButton>
                           {day.ranges.length > 1 && (
                             <IconButton
                               size="small"
                               onClick={() => removeRange(dayIndex, rangeIndex)}
                               aria-label="Remove time range"
+                              title="Remove"
                             >
                               <DeleteOutlineIcon fontSize="small" />
-                            </IconButton>
-                          )}
-                          {rangeIndex === day.ranges.length - 1 && (
-                            <IconButton
-                              size="small"
-                              onClick={() => addRange(dayIndex)}
-                              aria-label="Add another time range"
-                            >
-                              <AddIcon fontSize="small" />
                             </IconButton>
                           )}
                         </Stack>
                       ))}
                     </Stack>
+                  ) : (
+                    <Typography variant="body2" color="text.disabled">
+                      Unavailable
+                    </Typography>
                   )}
                 </Stack>
               );
@@ -295,49 +395,80 @@ export default function AvailabilityCard() {
           </Stack>
         </Card>
 
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+        <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3 }}>
+          <Typography variant="h6" fontWeight={600} sx={{ mb: 0.5 }}>
             Booking rules
           </Typography>
-          <Stack spacing={2} sx={{ maxWidth: 360 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          </Typography>
+
+          <SettingsRow
+            label="Minimum notice"
+            description="How soon before a slot can someone still book it."
+          >
             <TextField
-              label="Minimum notice (minutes)"
               type="number"
               size="small"
+              sx={{ width: 140, ...NO_SPINNER_SX }}
               value={rules.min_notice_minutes}
               onChange={(e) =>
                 setRules({ ...rules, min_notice_minutes: Number(e.target.value) })
               }
+              slotProps={{ input: { endAdornment: <InputAdornment position="end">min</InputAdornment> } }}
             />
+          </SettingsRow>
+
+          <SettingsRow
+            label="Maximum booking window"
+            description="How far into the future someone can book."
+          >
             <TextField
-              label="Maximum booking window (days)"
               type="number"
               size="small"
+              sx={{ width: 140, ...NO_SPINNER_SX }}
               value={rules.max_booking_days}
               onChange={(e) => setRules({ ...rules, max_booking_days: Number(e.target.value) })}
+              slotProps={{ input: { endAdornment: <InputAdornment position="end">days</InputAdornment> } }}
             />
+          </SettingsRow>
+
+          <SettingsRow
+            label="Buffer before / after"
+            description="Padding added around each booking to prevent back-to-backs."
+          >
+            <Stack direction="row" spacing={1.5}>
+              <TextField
+                type="number"
+                size="small"
+                sx={{ width: 110, ...NO_SPINNER_SX }}
+                value={rules.buffer_before_minutes}
+                onChange={(e) =>
+                  setRules({ ...rules, buffer_before_minutes: Number(e.target.value) })
+                }
+                slotProps={{ input: { endAdornment: <InputAdornment position="end">min</InputAdornment> } }}
+              />
+              <TextField
+                type="number"
+                size="small"
+                sx={{ width: 110, ...NO_SPINNER_SX }}
+                value={rules.buffer_after_minutes}
+                onChange={(e) =>
+                  setRules({ ...rules, buffer_after_minutes: Number(e.target.value) })
+                }
+                slotProps={{ input: { endAdornment: <InputAdornment position="end">min</InputAdornment> } }}
+              />
+            </Stack>
+          </SettingsRow>
+
+          <SettingsRow
+            label="Daily booking limit"
+            description="Maximum number of bookings accepted per day. Leave blank for no limit."
+          >
             <TextField
-              label="Buffer before (minutes)"
               type="number"
               size="small"
-              value={rules.buffer_before_minutes}
-              onChange={(e) =>
-                setRules({ ...rules, buffer_before_minutes: Number(e.target.value) })
-              }
-            />
-            <TextField
-              label="Buffer after (minutes)"
-              type="number"
-              size="small"
-              value={rules.buffer_after_minutes}
-              onChange={(e) =>
-                setRules({ ...rules, buffer_after_minutes: Number(e.target.value) })
-              }
-            />
-            <TextField
-              label="Daily booking limit (blank = no limit)"
-              type="number"
-              size="small"
+              placeholder="No limit"
+              sx={{ width: 140, ...NO_SPINNER_SX }}
               value={rules.daily_booking_limit ?? ""}
               onChange={(e) =>
                 setRules({
@@ -346,63 +477,77 @@ export default function AvailabilityCard() {
                 })
               }
             />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={rules.allow_multiple_per_slot}
-                  onChange={(e) =>
-                    setRules({ ...rules, allow_multiple_per_slot: e.target.checked })
-                  }
-                />
-              }
-              label="Allow multiple bookings for the same time slot"
+          </SettingsRow>
+
+          <SettingsRow
+            label="Multiple bookings per slot"
+            description="Allow more than one client to book the exact same time slot."
+            last
+          >
+            <Switch
+              checked={rules.allow_multiple_per_slot}
+              onChange={(e) => setRules({ ...rules, allow_multiple_per_slot: e.target.checked })}
             />
-          </Stack>
+          </SettingsRow>
         </Card>
 
         <Box>
-          <Button variant="contained" onClick={handleSave} disabled={saving}>
+          <Button variant="contained" size="large" onClick={handleSave} disabled={saving}>
             <ButtonContent processing={saving} defaultText="Save changes" />
           </Button>
         </Box>
 
         <Divider />
 
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+        <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3 }}>
+          <Typography variant="h6" fontWeight={600} sx={{ mb: 0.5 }}>
             Date overrides
           </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            One-off exceptions to your weekly hours — a holiday, or a day with different hours.
+          </Typography>
 
-          <Stack spacing={1} sx={{ mb: 3 }}>
-            {overrides.length === 0 && (
-              <Typography variant="body2" color="text.secondary">
-                No overrides yet.
-              </Typography>
-            )}
-            {overrides.map((override) => (
-              <Stack
-                key={override.date}
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                sx={{ py: 1, borderBottom: "1px solid", borderColor: "divider" }}
-              >
-                <Typography variant="body2">
-                  {override.date} —{" "}
-                  {override.is_unavailable
-                    ? "Unavailable"
-                    : `${override.start_time} – ${override.end_time}`}
-                </Typography>
-                <IconButton
-                  size="small"
-                  onClick={() => handleRemoveOverride(override.date)}
-                  aria-label="Remove override"
+          {overrides.length === 0 ? (
+            <Typography variant="body2" color="text.disabled" sx={{ mb: 2 }}>
+              No overrides yet.
+            </Typography>
+          ) : (
+            <Stack spacing={0.5} sx={{ mb: 3 }}>
+              {overrides.map((override) => (
+                <Stack
+                  key={override.date}
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  sx={{
+                    py: 1.25,
+                    px: 1.5,
+                    borderRadius: 2,
+                    bgcolor: "action.hover",
+                  }}
                 >
-                  <DeleteOutlineIcon fontSize="small" />
-                </IconButton>
-              </Stack>
-            ))}
-          </Stack>
+                  <Box>
+                    <Typography variant="body2" fontWeight={500}>
+                      {dayjs(override.date).format("dddd, MMM D, YYYY")}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {override.is_unavailable
+                        ? "Unavailable all day"
+                        : `${dayjs(override.start_time, TIME_FORMAT).format("h:mm a")} – ${dayjs(override.end_time, TIME_FORMAT).format("h:mm a")}`}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleRemoveOverride(override.date)}
+                    aria-label="Remove override"
+                    title="Remove"
+                  >
+                    <DeleteOutlineIcon fontSize="small" />
+                  </IconButton>
+                </Stack>
+              ))}
+            </Stack>
+          )}
 
           {overrideError && (
             <Alert severity="error" sx={{ mb: 2 }}>
@@ -410,7 +555,14 @@ export default function AvailabilityCard() {
             </Alert>
           )}
 
-          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            flexWrap="wrap"
+            useFlexGap
+            sx={{ pt: overrides.length > 0 ? 2 : 0, borderTop: overrides.length > 0 ? "1px solid" : "none", borderColor: "divider" }}
+          >
             <DatePicker
               label="Date"
               value={overrideDate}
@@ -424,21 +576,25 @@ export default function AvailabilityCard() {
                   onChange={(e) => setOverrideUnavailable(e.target.checked)}
                 />
               }
-              label="Mark unavailable all day"
+              label={
+                <Typography variant="body2">Mark unavailable all day</Typography>
+              }
             />
             {!overrideUnavailable && (
               <>
                 <TimePicker
                   label="Start"
+                  format="h:mm a"
                   value={overrideStart}
                   onChange={setOverrideStart}
-                  slotProps={{ textField: { size: "small" } }}
+                  slotProps={{ textField: { size: "small", sx: TIME_INPUT_SX } }}
                 />
                 <TimePicker
                   label="End"
+                  format="h:mm a"
                   value={overrideEnd}
                   onChange={setOverrideEnd}
-                  slotProps={{ textField: { size: "small" } }}
+                  slotProps={{ textField: { size: "small", sx: TIME_INPUT_SX } }}
                 />
               </>
             )}

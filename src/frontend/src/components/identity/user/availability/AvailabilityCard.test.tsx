@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import dayjs from "dayjs";
 import AvailabilityCard from "./AvailabilityCard";
 import * as ScheduleService from "@/services/schedule-service";
+
+const formattedOverrideDate = dayjs("2026-12-25").format("dddd, MMM D, YYYY");
 
 vi.mock("@/services/schedule-service");
 
@@ -47,7 +50,8 @@ describe("AvailabilityCard", () => {
     render(<AvailabilityCard />);
 
     expect(await screen.findByText("Monday")).toBeInTheDocument();
-    expect(screen.getByText(/2026-12-25 — Unavailable/)).toBeInTheDocument();
+    expect(screen.getByText(formattedOverrideDate)).toBeInTheDocument();
+    expect(screen.getByText("Unavailable all day")).toBeInTheDocument();
   });
 
   it("treats a 404 (no schedule yet) as an empty state, not an error", async () => {
@@ -83,11 +87,18 @@ describe("AvailabilityCard", () => {
     render(<AvailabilityCard />);
     await screen.findByText("Monday");
 
+    const rangeControlsBefore = screen.getAllByRole("button", {
+      name: /add another time range/i,
+    }).length;
+
     const user = userEvent.setup();
     const tuesdaySwitch = screen.getByRole("switch", { name: "Tuesday" });
     await user.click(tuesdaySwitch);
 
-    expect(screen.getAllByText("to").length).toBeGreaterThan(0);
+    const rangeControlsAfter = screen.getAllByRole("button", {
+      name: /add another time range/i,
+    }).length;
+    expect(rangeControlsAfter).toBe(rangeControlsBefore + 1);
   });
 
   it("Save changes sends the currently configured weekly hours and booking rules", async () => {
@@ -141,7 +152,7 @@ describe("AvailabilityCard", () => {
     } as any);
 
     render(<AvailabilityCard />);
-    await screen.findByText(/2026-12-25/);
+    await screen.findByText(formattedOverrideDate);
 
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /remove override/i }));
@@ -150,7 +161,7 @@ describe("AvailabilityCard", () => {
       expect(ScheduleService.removeOverride).toHaveBeenCalledWith("2026-12-25");
     });
     await waitFor(() => {
-      expect(screen.queryByText(/2026-12-25/)).not.toBeInTheDocument();
+      expect(screen.queryByText(formattedOverrideDate)).not.toBeInTheDocument();
     });
   });
 
