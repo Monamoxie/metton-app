@@ -42,3 +42,23 @@ class RecurrenceTypes(Enum):
     @classmethod
     def options(cls):
         return {option.value: option.name.replace("_", " ").title() for option in cls}
+
+
+class RepeatOption(Enum):
+    """
+    UI-only "Repeats" dropdown options for the booking frequency field. Never persisted —
+    "daily"/"weekly" are resolved client-side into RecurrenceTypes day indices before submit.
+    """
+
+    NO_REPEAT = "no"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+
+    @classmethod
+    def options(cls):
+        labels = {
+            "no": "Does not repeat",
+            "daily": "Daily",
+            "weekly": "Weekly",
+        }
+        return {option.value: labels[option.value] for option in cls}

@@ -77,6 +77,30 @@ const renderCalender = function (pid) {
 
                     endRecur.setAttribute('min', start_date)
 
+                    const repeatType = document.getElementById('repeatType')
+                    const dayPicker = document.getElementById('dayPicker')
+                    const endRecurRow = document.getElementById('endRecurRow')
+                    const dayChecks = document.getElementsByName('frequency')
+                    const startDateDayIndex = String(new Date(start_date + 'T00:00:00').getDay())
+
+                    const updateRepeatUI = () => {
+                        const repeats = repeatType.value !== 'no'
+                        endRecurRow.style.display = repeats ? '' : 'none'
+                        dayPicker.style.display = repeatType.value === 'weekly' ? '' : 'none'
+
+                        if (repeatType.value === 'weekly') {
+                            const anyChecked = Array.from(dayChecks).some(check => check.checked)
+                            if (!anyChecked) {
+                                for (let i = 0; i < dayChecks.length; i++) {
+                                    dayChecks[i].checked = dayChecks[i].value === startDateDayIndex
+                                }
+                            }
+                        }
+                    }
+
+                    repeatType.addEventListener('change', updateRepeatUI)
+                    updateRepeatUI()
+
                     myModalEl.addEventListener('hidden.bs.modal', event => {
                         myModal.hide()
                         calendar.unselect()
@@ -91,12 +115,15 @@ const renderCalender = function (pid) {
                         const email = document.getElementById('email').value
                         const note = document.getElementById('note').value
                         const title = document.getElementById('title').value
-                        const frequencyChecks = document.getElementsByName('frequency');
-
                         let frequencies = [];
-                        for (let i = 0; i < frequencyChecks.length; i++) {
-                            if (frequencyChecks[i].checked) {
-                                frequencies.push(frequencyChecks[i].value)
+                        if (repeatType.value === 'daily') {
+                            frequencies = ['0', '1', '2', '3', '4', '5', '6']
+                        } else if (repeatType.value === 'weekly') {
+                            const frequencyChecks = document.getElementsByName('frequency');
+                            for (let i = 0; i < frequencyChecks.length; i++) {
+                                if (frequencyChecks[i].checked) {
+                                    frequencies.push(frequencyChecks[i].value)
+                                }
                             }
                         }
                         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value

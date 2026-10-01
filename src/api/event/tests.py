@@ -68,6 +68,31 @@ class BookingViewTests(TestCase):
         self.assertFalse(Event.objects.exists())
 
 
+class BookingCalendarViewTests(TestCase):
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123"
+        )
+
+    def test_repeat_choices_are_the_three_ui_options(self):
+        response = self.client.get(f"/meet/{self.host.public_id}")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context["repeat_choices"],
+            {"no": "Does not repeat", "daily": "Daily", "weekly": "Weekly"},
+        )
+
+    def test_day_choices_are_the_seven_days_with_no_no_repeat_entry(self):
+        response = self.client.get(f"/meet/{self.host.public_id}")
+
+        day_choices = response.context["day_choices"]
+        self.assertNotIn("no", day_choices)
+        self.assertEqual(len(day_choices), 7)
+        self.assertEqual(day_choices["0"], "Every Sunday")
+        self.assertEqual(day_choices["6"], "Every Saturday")
+
+
 class UserBusinessHoursViewTests(TestCase):
     def setUp(self):
         self.host = User.objects.create_user(
