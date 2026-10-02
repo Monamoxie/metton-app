@@ -32,6 +32,23 @@ import ToggleColorMode from "@/components/ToggleColorMode";
 import CreateWorkspaceDialog from "@/components/workspace/CreateWorkspaceDialog";
 import { WorkspaceSummary } from "@/types/workspace";
 import { authStore } from "@/stores/auth-store";
+import { menuSections } from "@/components/dashboard/Sidebar";
+
+const getCurrentPageLabel = (pathname: string): string => {
+  for (const section of menuSections) {
+    for (const item of section.items) {
+      if (pathname === item.href || pathname.startsWith(`${item.href}/`)) {
+        return item.text;
+      }
+    }
+  }
+  const lastSegment = pathname.split("/").filter(Boolean).pop();
+  if (!lastSegment) return "Dashboard";
+  return lastSegment
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 interface TopBarProps {
   handleSidebarToggle: () => void;
@@ -70,6 +87,7 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
 
   const currentSlugMatch = pathname.match(/^\/workspace\/([^/]+)/);
   const currentSlug = currentSlugMatch ? currentSlugMatch[1] : null;
+  const currentPageLabel = getCurrentPageLabel(pathname);
 
   return (
     <>
@@ -110,6 +128,20 @@ const TopBar: React.FC<TopBarProps> = ({ handleSidebarToggle }) => {
               alt="Metton"
               sx={{ width: 125, height: 55 }}
             />
+            <Typography
+              sx={{
+                display: { xs: "none", md: "block" },
+                color: "text.secondary",
+                fontSize: 14,
+                fontWeight: 500,
+                ml: 2,
+                pl: 2,
+                borderLeft: "1px solid",
+                borderColor: "divider",
+              }}
+            >
+              {currentPageLabel}
+            </Typography>
           </Box>
 
           <ToggleColorMode
