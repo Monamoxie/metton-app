@@ -44,6 +44,29 @@ class BookingViewTests(TestCase):
         self.assertEqual(event.type, EventTypes.PUBLIC.value)
         self.assertEqual(event.title, "Intro call")
 
+    def test_saved_event_uses_the_submitted_timezone_not_a_hardcoded_utc(self):
+        tomorrow = date.today() + timedelta(days=1)
+        self.client.post(
+            f"/meet/{self.host.public_id}/book",
+            data=json.dumps(
+                {
+                    "start_date": str(tomorrow),
+                    "start_time": "10:00",
+                    "end_date": str(tomorrow),
+                    "end_time": "10:30",
+                    "frequencies": "['no']",
+                    "title": "Intro call",
+                    "email": "guest@example.com",
+                    "note": "Looking forward to it",
+                    "user_timezone": "America/New_York",
+                }
+            ),
+            content_type="application/json",
+        )
+
+        event = Event.objects.get(user=self.host)
+        self.assertEqual(event.timezone, "America/New_York")
+
     def test_booking_for_unknown_user_returns_400(self):
         tomorrow = date.today() + timedelta(days=1)
         response = self.client.post(
@@ -66,6 +89,70 @@ class BookingViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertFalse(Event.objects.exists())
+
+
+class BookingDuplicatePreventionTests(TestCase):
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123"
+        )
+        self.tomorrow = date.today() + timedelta(days=1)
+
+    def _book(self, start_time="10:00", end_time="10:30"):
+        return self.client.post(
+            f"/meet/{self.host.public_id}/book",
+            data=json.dumps(
+                {
+                    "start_date": str(self.tomorrow),
+                    "start_time": start_time,
+                    "end_date": str(self.tomorrow),
+                    "end_time": end_time,
+                    "frequencies": "['no']",
+                    "title": "Intro call",
+                    "email": "guest@example.com",
+                    "note": "Looking forward to it",
+                    "user_timezone": "UTC",
+                }
+            ),
+            content_type="application/json",
+        )
+
+    def test_overlapping_booking_is_rejected_by_default(self):
+        first = self._book()
+        self.assertEqual(first.status_code, 200)
+
+        second = self._book(start_time="10:15", end_time="10:45")
+
+        self.assertEqual(second.status_code, 400)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 1)
+
+    def test_overlapping_booking_allowed_when_host_opts_in(self):
+        schedule = Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="UTC", is_default=True
+        )
+        ScheduleService.update_booking_rules(schedule, allow_multiple_per_slot=True)
+
+        self._book()
+        second = self._book(start_time="10:15", end_time="10:45")
+
+        self.assertEqual(second.status_code, 200)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 2)
+
+    def test_overlapping_booking_rejected_even_with_no_schedule_at_all(self):
+        # Default-false path: no Schedule/ScheduleBookingRules exists for this host yet.
+        self._book()
+        second = self._book(start_time="10:00", end_time="10:30")
+
+        self.assertEqual(second.status_code, 400)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 1)
+
+    def test_non_overlapping_bookings_both_succeed(self):
+        first = self._book(start_time="09:00", end_time="09:30")
+        second = self._book(start_time="10:00", end_time="10:30")
+
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 200)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 2)
 
 
 class BookingCalendarViewTests(TestCase):
@@ -419,6 +506,66 @@ class AvailabilityServiceTests(TestCase):
         )
 
         self.assertEqual(slots, [])
+
+    def test_has_conflicting_booking_true_for_overlap(self):
+        Event.objects.create(
+            user=self.host,
+            title="Existing booking",
+            type=EventTypes.PUBLIC.value,
+            start_date=self.monday,
+            start_time=time(9, 0),
+            end_date=self.monday,
+            end_time=time(9, 30),
+            timezone="UTC",
+        )
+
+        self.assertTrue(
+            AvailabilityService.has_conflicting_booking(
+                self.host, self.monday, time(9, 15), self.monday, time(9, 45), "UTC"
+            )
+        )
+
+    def test_has_conflicting_booking_false_when_no_overlap(self):
+        Event.objects.create(
+            user=self.host,
+            title="Existing booking",
+            type=EventTypes.PUBLIC.value,
+            start_date=self.monday,
+            start_time=time(9, 0),
+            end_date=self.monday,
+            end_time=time(9, 30),
+            timezone="UTC",
+        )
+
+        self.assertFalse(
+            AvailabilityService.has_conflicting_booking(
+                self.host, self.monday, time(9, 30), self.monday, time(10, 0), "UTC"
+            )
+        )
+
+    def test_has_conflicting_booking_respects_buffers(self):
+        Event.objects.create(
+            user=self.host,
+            title="Existing booking",
+            type=EventTypes.PUBLIC.value,
+            start_date=self.monday,
+            start_time=time(9, 0),
+            end_date=self.monday,
+            end_time=time(9, 30),
+            timezone="UTC",
+        )
+
+        self.assertTrue(
+            AvailabilityService.has_conflicting_booking(
+                self.host,
+                self.monday,
+                time(9, 30),
+                self.monday,
+                time(10, 0),
+                "UTC",
+                buffer_before_minutes=15,
+            )
+        )
 
 
 class UserAvailableSlotsViewTests(APITestCase):

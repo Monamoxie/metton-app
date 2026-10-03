@@ -2,7 +2,6 @@ from typing import Any, Union
 from django.http import HttpRequest, HttpResponse
 from django.views.generic import CreateView
 import json
-from core.services.event_service import EventService
 from event.enums import EventTypes
 from event.models import Event
 from identity.models.user import User
@@ -34,7 +33,7 @@ class BookingView(CreateView):
 
         event.user = self.user
         event.type = EventTypes.PUBLIC.value
-        event.timezone = EventService.extract_user_timezone(data=self.data)
+        event.timezone = form.cleaned_data["user_timezone"]
         event.save()
 
         return JsonResponse({"message": "Booking completed", "errors": []}, status=200)

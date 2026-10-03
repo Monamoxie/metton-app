@@ -6,6 +6,7 @@ import pytz
 
 from event.enums import EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
+from identity.models.user import User
 
 
 class AvailabilityService:
@@ -56,7 +57,7 @@ class AvailabilityService:
         # a booking that looks like it's on the day before/after `start_date`/`end_date` in
         # its own timezone can still land inside this range once converted to the host's.
         existing_bookings = cls._existing_bookings_in_utc(
-            schedule, start_date - timedelta(days=1), end_date + timedelta(days=1)
+            schedule.user, start_date - timedelta(days=1), end_date + timedelta(days=1)
         )
 
         # Bucket by the host's own local calendar date — the correct basis for both the
@@ -94,10 +95,46 @@ class AvailabilityService:
 
         return slots
 
+    @classmethod
+    def has_conflicting_booking(
+        cls,
+        host: User,
+        start_date: date_cls,
+        start_time,
+        end_date: date_cls,
+        end_time,
+        timezone_name: str,
+        buffer_before_minutes: int = 0,
+        buffer_after_minutes: int = 0,
+    ) -> bool:
+        """True if `host` already has a PUBLIC booking overlapping the candidate slot, once
+        both sides are converted to UTC. Mirrors the buffer-then-overlap test
+        `_slots_for_window` already applies when deciding which slots to show as available."""
+        tz = pytz.timezone(timezone_name)
+        candidate_start = tz.localize(datetime.combine(start_date, start_time))
+        candidate_end = tz.localize(datetime.combine(end_date, end_time))
+
+        occupied_start = (candidate_start - timedelta(minutes=buffer_before_minutes)).astimezone(
+            pytz.UTC
+        )
+        occupied_end = (candidate_end + timedelta(minutes=buffer_after_minutes)).astimezone(
+            pytz.UTC
+        )
+
+        existing_bookings = cls._existing_bookings_in_utc(
+            host, start_date - timedelta(days=1), end_date + timedelta(days=1)
+        )
+
+        for booking in existing_bookings:
+            if occupied_start < booking["end"] and booking["start"] < occupied_end:
+                return True
+
+        return False
+
     @staticmethod
-    def _existing_bookings_in_utc(schedule: Schedule, start_date, end_date) -> List[dict]:
+    def _existing_bookings_in_utc(user: User, start_date, end_date) -> List[dict]:
         bookings = Event.objects.filter(
-            user=schedule.user,
+            user=user,
             type=EventTypes.PUBLIC.value,
             start_date__range=(start_date, end_date),
         )

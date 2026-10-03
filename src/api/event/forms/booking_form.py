@@ -1,6 +1,8 @@
 from django.http import HttpRequest
 from core.services.event_service import EventService
+from event.exceptions import ScheduleNotFoundError
 from event.models import Event
+from event.services import AvailabilityService, ScheduleService
 from typing import Any, Union
 from django import forms
 
@@ -66,6 +68,35 @@ class BookingForm(forms.ModelForm):
         # Validate end_recur date
         if end_recur and end_recur < start_date:
             self.add_error("end_recur", "End recur date must be after the start date")
+
+        user_timezone = cleaned_data.get("user_timezone")
+        if self.user and start_date and start_time and end_date and end_time and user_timezone:
+            allow_multiple = False
+            buffer_before = 0
+            buffer_after = 0
+            try:
+                schedule = ScheduleService.get_default_for_user(self.user)
+                rules = getattr(schedule, "booking_rules", None)
+                if rules:
+                    allow_multiple = rules.allow_multiple_per_slot
+                    buffer_before = rules.buffer_before_minutes
+                    buffer_after = rules.buffer_after_minutes
+            except ScheduleNotFoundError:
+                pass
+
+            if not allow_multiple and AvailabilityService.has_conflicting_booking(
+                self.user,
+                start_date,
+                start_time,
+                end_date,
+                end_time,
+                user_timezone,
+                buffer_before,
+                buffer_after,
+            ):
+                self.add_error(
+                    None, "This time slot is no longer available. Please choose another time."
+                )
 
         return cleaned_data
 
