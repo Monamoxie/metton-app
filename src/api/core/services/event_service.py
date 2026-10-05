@@ -8,7 +8,10 @@ from django.db.models import Q
 from typing import Union, List
 from identity.models.user import User
 from event.models.event import Event
+from event.models import ScheduleWeeklyHours
 from event.enums import EventTypes
+from event.exceptions import ScheduleNotFoundError
+from event.services import ScheduleService
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 
 class EventService:
@@ -31,38 +34,24 @@ class EventService:
         if not user:
             return []
 
-        events = Event.objects.filter(
-            user=user, type=EventTypes.BUSINESS_HOURS.value
-        ).order_by("created_at")
+        try:
+            schedule = ScheduleService.get_default_for_user(user)
+        except ScheduleNotFoundError:
+            return []
 
-        data = []
-        for event in events:
-            # todo ::: #T000001
-            """Reason for formatting this response as this:
+        weekly_hours = ScheduleWeeklyHours.objects.filter(schedule=schedule).order_by(
+            "day_of_week", "start_time"
+        )
 
-            - The plugin rendering the calendar requires calendar data to be structured in this format:
-            - We've got 2 options
-            - Option 1:  structure it the way the calendar requires
-            - Option 2: structure it as the backend stipulates, and let the Front end convert the data when it receives it
-            
-            - We've choosen to go with Option 1 as a temporary measure
-            - Option 2 will be implemented later on, to ensure we maintain consistency with how responses are structured
-            """
-            event_data = {
-                "id": event.id,
-                "startTime": cls.convert_to_user_timezone(
-                    str(event.start_date), str(event.start_time), event.timezone
-                ),
-                "endTime": cls.convert_to_user_timezone(
-                    str(event.end_date), str(event.end_time), event.timezone
-                ),
-                "daysOfWeek": cls.get_week_indices_from_event(
-                    event.frequency, event.start_date, event.start_time
-                ),
+        return [
+            {
+                "id": entry.id,
+                "startTime": entry.start_time.strftime("%H:%M"),
+                "endTime": entry.end_time.strftime("%H:%M"),
+                "daysOfWeek": [entry.day_of_week],
             }
-            data.append(event_data)
-
-        return data
+            for entry in weekly_hours
+        ]
 
     @classmethod
     def convert_to_user_timezone(cls, date_str: str, time_str: str, user_timezone: str, time_only: bool = False):

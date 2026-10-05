@@ -186,7 +186,30 @@ class UserBusinessHoursViewTests(TestCase):
             email="host@example.com", password="password123"
         )
 
-    def test_returns_business_hours_for_the_host(self):
+    def test_returns_business_hours_from_the_schedule_weekly_hours(self):
+        schedule = Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="UTC", is_default=True
+        )
+        ScheduleWeeklyHours.objects.create(
+            schedule=schedule,
+            day_of_week=1,
+            start_time=time(9, 0),
+            end_time=time(17, 0),
+        )
+
+        response = self.client.get(f"/business-hours/{self.host.public_id}")
+        data = response.json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["startTime"], "09:00")
+        self.assertEqual(data[0]["endTime"], "17:00")
+        self.assertEqual(data[0]["daysOfWeek"], [1])
+
+    def test_ignores_stale_legacy_business_hours_events_with_no_schedule(self):
+        # Simulates pre-migration data with no corresponding Schedule — the bug being fixed:
+        # this endpoint used to read straight from these Event rows regardless of whether the
+        # host's Schedule had since moved on.
         Event.objects.create(
             user=self.host,
             title="Business Hours",
@@ -201,7 +224,33 @@ class UserBusinessHoursViewTests(TestCase):
         response = self.client.get(f"/business-hours/{self.host.public_id}")
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json(), [])
+
+    def test_no_schedule_returns_empty_list(self):
+        response = self.client.get(f"/business-hours/{self.host.public_id}")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_reflects_hours_changed_via_the_schedule_service_immediately(self):
+        schedule = Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="UTC", is_default=True
+        )
+        ScheduleWeeklyHours.objects.create(
+            schedule=schedule, day_of_week=1, start_time=time(9, 0), end_time=time(17, 0)
+        )
+
+        ScheduleService.replace_weekly_hours(
+            schedule,
+            [{"day_of_week": 2, "start_time": time(10, 0), "end_time": time(14, 0)}],
+        )
+
+        response = self.client.get(f"/business-hours/{self.host.public_id}")
+        data = response.json()
+
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["daysOfWeek"], [2])
+        self.assertEqual(data[0]["startTime"], "10:00")
 
 
 def _next_occurrence(day_of_week_ours: int) -> date:
