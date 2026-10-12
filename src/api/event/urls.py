@@ -2,6 +2,8 @@ from django.urls import path
 
 from event.views import (
     BookingView,
+    CreateBookingView,
+    PublicProfileView,
     ScheduleDetailView,
     ScheduleOverrideView,
     UserAvailableSlotsView,
@@ -24,5 +26,15 @@ urlpatterns = [
         "<str:public_id>/slots/",
         UserAvailableSlotsView.as_view(),
         name="user-available-slots",
+    ),
+    path(
+        "<str:public_id>/public-profile/",
+        PublicProfileView.as_view(),
+        name="public-profile",
+    ),
+    path(
+        "<str:public_id>/book/",
+        CreateBookingView.as_view(),
+        name="create-booking",
     ),
 ]

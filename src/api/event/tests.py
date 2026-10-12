@@ -731,3 +731,144 @@ class LegacyScheduleMigrationTests(TestCase):
                 schedule=schedule, date=date(2026, 12, 25), is_unavailable=True
             ).exists()
         )
+
+
+class PublicProfileViewTests(TestCase):
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com",
+            password="password123",
+            name="Alex Morgan",
+            company="Acme Co",
+            position="Consultant",
+            profile_summary="Helping founders scope their MVP.",
+        )
+
+    def test_returns_the_hosts_public_profile(self):
+        response = self.client.get(f"/api/v1/event/{self.host.public_id}/public-profile/")
+
+        self.assertEqual(response.status_code, 200)
+        profile = response.json()["data"]["profile"]
+        self.assertEqual(profile["name"], "Alex Morgan")
+        self.assertEqual(profile["company"], "Acme Co")
+        self.assertEqual(profile["position"], "Consultant")
+        self.assertEqual(profile["profile_summary"], "Helping founders scope their MVP.")
+
+    def test_unknown_public_id_returns_404(self):
+        response = self.client.get("/api/v1/event/no-such-user/public-profile/")
+
+        self.assertEqual(response.status_code, 404)
+
+
+class CreateBookingViewTests(TestCase):
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123"
+        )
+        self.tomorrow = date.today() + timedelta(days=1)
+
+    def _book(self, **overrides):
+        payload = {
+            "start_date": str(self.tomorrow),
+            "start_time": "10:00:00",
+            "end_date": str(self.tomorrow),
+            "end_time": "10:30:00",
+            "title": "Intro call",
+            "email": "guest@example.com",
+            "note": "Looking forward to it",
+            "user_timezone": "UTC",
+            "repeat_type": "no",
+        }
+        payload.update(overrides)
+        return self.client.post(
+            f"/api/v1/event/{self.host.public_id}/book/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+
+    def test_valid_single_booking_creates_a_public_event(self):
+        response = self._book()
+
+        self.assertEqual(response.status_code, 201)
+        event = Event.objects.get(user=self.host)
+        self.assertEqual(event.type, EventTypes.PUBLIC.value)
+        self.assertEqual(event.title, "Intro call")
+        self.assertEqual(event.attendees, "guest@example.com")
+        self.assertEqual(event.frequency, "")
+
+    def test_weekly_recurring_booking_persists_the_correct_frequency(self):
+        response = self._book(
+            repeat_type="weekly",
+            days=["1", "3"],
+            end_recur=str(self.tomorrow + timedelta(days=30)),
+        )
+
+        self.assertEqual(response.status_code, 201)
+        event = Event.objects.get(user=self.host)
+        self.assertEqual(set(event.frequency.split(",")), {"1", "3"})
+        self.assertEqual(event.end_recur, self.tomorrow + timedelta(days=30))
+
+    def test_daily_recurring_booking_persists_all_seven_days(self):
+        response = self._book(
+            repeat_type="daily",
+            end_recur=str(self.tomorrow + timedelta(days=30)),
+        )
+
+        self.assertEqual(response.status_code, 201)
+        event = Event.objects.get(user=self.host)
+        self.assertEqual(set(event.frequency.split(",")), {"0", "1", "2", "3", "4", "5", "6"})
+
+    def test_overlapping_booking_rejected_by_default(self):
+        first = self._book()
+        self.assertEqual(first.status_code, 201)
+
+        second = self._book(start_time="10:15:00", end_time="10:45:00")
+
+        self.assertEqual(second.status_code, 422)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 1)
+
+    def test_overlapping_booking_allowed_when_host_opts_in(self):
+        schedule = Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="UTC", is_default=True
+        )
+        ScheduleService.update_booking_rules(schedule, allow_multiple_per_slot=True)
+
+        self._book()
+        second = self._book(start_time="10:15:00", end_time="10:45:00")
+
+        self.assertEqual(second.status_code, 201)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 2)
+
+    def test_weekly_repeat_without_days_is_rejected_with_a_real_error_message(self):
+        response = self._book(
+            repeat_type="weekly",
+            end_recur=str(self.tomorrow + timedelta(days=30)),
+        )
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("days", response.json()["errors"])
+        self.assertFalse(Event.objects.exists())
+
+    def test_repeating_booking_without_end_recur_is_rejected(self):
+        response = self._book(repeat_type="weekly", days=["1"])
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("end_recur", response.json()["errors"])
+
+    def test_unknown_public_id_returns_404(self):
+        response = self.client.post(
+            "/api/v1/event/no-such-user/book/",
+            data=json.dumps(
+                {
+                    "start_date": str(self.tomorrow),
+                    "start_time": "10:00:00",
+                    "end_date": str(self.tomorrow),
+                    "end_time": "10:30:00",
+                    "email": "guest@example.com",
+                    "user_timezone": "UTC",
+                }
+            ),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 404)

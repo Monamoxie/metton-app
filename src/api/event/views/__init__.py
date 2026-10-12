@@ -10,3 +10,5 @@ from .schedule_manager_view import ScheduleManagerView
 from .schedule_detail_view import ScheduleDetailView
 from .schedule_override_view import ScheduleOverrideView
 from .user_available_slots_view import UserAvailableSlotsView
+from .public_profile_view import PublicProfileView
+from .create_booking_view import CreateBookingView

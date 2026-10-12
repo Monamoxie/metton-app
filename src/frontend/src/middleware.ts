@@ -14,7 +14,10 @@ const PROTECTED_PATTERNS = [
 // neither forced to sign in, nor bounced away for already having a session.
 // The invite-accept flow needs both: an existing user clicking the link while
 // logged in must land on the page, not get redirected to /workspace first.
-const NEUTRAL_PATTERNS = ["^/invitations(/.*)?$"];
+// The public booking page needs the same thing: a host viewing/testing their
+// own link, or any other signed-in Metton user booking with someone else,
+// must not get bounced to /workspace just for having a session.
+const NEUTRAL_PATTERNS = ["^/invitations(/.*)?$", "^/meet(/.*)?$"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

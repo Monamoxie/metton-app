@@ -1,0 +1,2 @@
+class BookingConflictError(Exception):
+    pass
