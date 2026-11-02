@@ -63,23 +63,34 @@ CORS_ALLOW_HEADERS = (
 CSRF_COOKIE_HTTPONLY = True
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 
-HAS_PRIVACY_POLICY = bool(os.environ.get("HAS_PRIVACY_POLICY", False)) == True
+HAS_PRIVACY_POLICY = (
+    os.environ.get("HAS_PRIVACY_POLICY", "False").strip().lower() == "true"
+)
 PRIVACY_POLICY_URL = os.environ.get("PRIVACY_POLICY_URL", None)
 
-HAS_TERMS_OF_SERVICE = bool(os.environ.get("HAS_TERMS_OF_SERVICE", False)) == True
+HAS_TERMS_OF_SERVICE = (
+    os.environ.get("HAS_TERMS_OF_SERVICE", "False").strip().lower() == "true"
+)
 TERMS_OF_SERVICE_URL = os.environ.get("TERMS_OF_SERVICE_URL", None)
 
 HAS_COOKIES_CONSENT_MODE = (
-    bool(os.environ.get("HAS_COOKIES_CONSENT_MODE", False)) == True
+    os.environ.get("HAS_COOKIES_CONSENT_MODE", "False").strip().lower() == "true"
 )
 
-HAS_GOOGLE_TAG_MANAGER = bool(os.environ.get("HAS_GOOGLE_TAG_MANAGER", False)) == True
+HAS_GOOGLE_TAG_MANAGER = (
+    os.environ.get("HAS_GOOGLE_TAG_MANAGER", "False").strip().lower() == "true"
+)
 GOOGLE_TAG_MANAGER_ID = os.environ.get("GOOGLE_TAG_MANAGER_ID", None)
 
-HAS_GOOGLE_RECAPTCHA = bool(os.environ.get("HAS_GOOGLE_RECAPTCHA", False)) == True
+HAS_GOOGLE_RECAPTCHA = (
+    os.environ.get("HAS_GOOGLE_RECAPTCHA", "False").strip().lower() == "true"
+)
 if HAS_GOOGLE_RECAPTCHA:
     RECAPTCHA_PUBLIC_KEY = os.environ.get("GOOGLE_RECAPTCHA_SITE_KEY", None)
     RECAPTCHA_PRIVATE_KEY = os.environ.get("GOOGLE_RECAPTCHA_SECRET_KEY", None)
+else:
+    # keys are never used when disabled, so the fallback Google test keys are fine
+    SILENCED_SYSTEM_CHECKS = ["django_recaptcha.recaptcha_test_key_error"]
 
 # Application definition
 INSTALLED_APPS = [
