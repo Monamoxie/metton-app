@@ -4,7 +4,11 @@ from core.services import EmailService
 
 
 @app.task()
-def email_sender(subject, recipients, template, context):
+def email_sender(subject, recipients, template, context, attachments=None):
     return EmailService.push(
-        subject=subject, recipients=recipients, template=template, context=context
+        subject=subject,
+        recipients=recipients,
+        template=template,
+        context=context,
+        attachments=attachments,
     )

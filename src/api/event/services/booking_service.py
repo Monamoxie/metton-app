@@ -1,10 +1,13 @@
 from typing import Any
 
+from django.db import transaction
+
 from event.enums import EventTypes, RepeatOption
 from event.exceptions import BookingConflictError, ScheduleNotFoundError
 from event.models import Event
 from event.services.availability_service import AvailabilityService
 from event.services.schedule_service import ScheduleService
+from event.utils import send_booking_confirmation_emails
 from identity.models.user import User
 
 ALL_DAYS = [str(day) for day in range(7)]
@@ -52,7 +55,7 @@ class BookingService:
         ):
             raise BookingConflictError()
 
-        return Event.objects.create(
+        booking = Event.objects.create(
             user=host,
             title=validated_data.get("title", ""),
             start_date=validated_data["start_date"],
@@ -66,3 +69,7 @@ class BookingService:
             attendees=validated_data["email"],
             end_recur=validated_data.get("end_recur"),
         )
+
+        transaction.on_commit(lambda: send_booking_confirmation_emails(booking))
+
+        return booking

@@ -1,6 +1,11 @@
 import importlib
 import json
-from datetime import date, time, timedelta
+from datetime import date, datetime, time, timedelta
+from datetime import timezone as dt_timezone
+from unittest.mock import patch
+
+from django.core import mail
+from icalendar import Calendar
 
 from django.apps import apps as real_apps
 from django.test import TestCase
@@ -9,7 +14,8 @@ from rest_framework.test import APITestCase
 
 from event.enums import EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
-from event.services import AvailabilityService, ScheduleService
+from core.services import EmailService
+from event.services import AvailabilityService, BookingInviteService, ScheduleService
 from identity.models.user import User
 
 
@@ -872,3 +878,237 @@ class CreateBookingViewTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 404)
+
+
+class BookingInviteServiceTests(TestCase):
+    # 2030-01-08 is a Tuesday
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123", name="Host Person"
+        )
+
+    def _event(self, **overrides):
+        fields = {
+            "user": self.host,
+            "title": "Intro call",
+            "start_date": date(2030, 1, 8),
+            "start_time": time(10, 0),
+            "end_date": date(2030, 1, 8),
+            "end_time": time(10, 30),
+            "type": EventTypes.PUBLIC.value,
+            "note": "Looking forward to it",
+            "timezone": "America/New_York",
+            "attendees": "guest@example.com",
+        }
+        fields.update(overrides)
+        return Event.objects.create(**fields)
+
+    def _vevent(self, event):
+        ics = BookingInviteService.build_ics(event, "Host Person", "host@example.com")
+        calendar = Calendar.from_ical(ics)
+        return calendar, calendar.walk("VEVENT")[0]
+
+    def test_one_off_booking_is_an_invite_in_the_booking_timezone(self):
+        calendar, vevent = self._vevent(self._event())
+
+        self.assertEqual(calendar["METHOD"], "REQUEST")
+        self.assertEqual(vevent["UID"], f"{Event.objects.get().id}@metton")
+        self.assertEqual(str(vevent["SUMMARY"]), "Intro call")
+        self.assertEqual(str(vevent["DESCRIPTION"]), "Looking forward to it")
+        self.assertEqual(vevent.decoded("DTSTART").tzinfo.key, "America/New_York")
+        self.assertEqual(vevent.decoded("DTSTART").replace(tzinfo=None), datetime(2030, 1, 8, 10, 0))
+        self.assertEqual(vevent.decoded("DTEND").replace(tzinfo=None), datetime(2030, 1, 8, 10, 30))
+        self.assertNotIn("RRULE", vevent)
+        self.assertEqual(
+            [str(tz["TZID"]) for tz in calendar.walk("VTIMEZONE")], ["America/New_York"]
+        )
+
+    def test_invite_names_the_host_as_organizer_and_the_guest_as_attendee(self):
+        _, vevent = self._vevent(self._event())
+
+        self.assertEqual(str(vevent["ORGANIZER"]), "mailto:host@example.com")
+        self.assertEqual(vevent["ORGANIZER"].params["CN"], "Host Person")
+        self.assertEqual(str(vevent["ATTENDEE"]), "mailto:guest@example.com")
+        self.assertEqual(vevent["ATTENDEE"].params["PARTSTAT"], "ACCEPTED")
+
+    def test_untitled_booking_falls_back_to_meeting_with_host(self):
+        _, vevent = self._vevent(self._event(title=""))
+
+        self.assertEqual(str(vevent["SUMMARY"]), "Meeting with Host Person")
+
+    def test_weekly_booking_repeats_on_its_days_until_end_recur(self):
+        _, vevent = self._vevent(
+            self._event(frequency="1,3", end_recur=date(2030, 1, 31))
+        )
+
+        rrule = vevent["RRULE"]
+        self.assertEqual(rrule["FREQ"], ["WEEKLY"])
+        self.assertEqual(rrule["BYDAY"], ["MO", "WE"])
+        # end of 31 Jan in New York (EST, UTC-5), expressed in UTC
+        self.assertEqual(
+            rrule["UNTIL"], [datetime(2030, 2, 1, 4, 59, 59, tzinfo=dt_timezone.utc)]
+        )
+
+    def test_weekly_booking_starts_on_the_first_matching_repeat_day(self):
+        # Tuesday start, repeating Mon/Wed -> the first real occurrence is Wednesday 9th
+        _, vevent = self._vevent(
+            self._event(frequency="1,3", end_recur=date(2030, 1, 31))
+        )
+
+        self.assertEqual(vevent.decoded("DTSTART").replace(tzinfo=None), datetime(2030, 1, 9, 10, 0))
+        self.assertEqual(vevent.decoded("DTEND").replace(tzinfo=None), datetime(2030, 1, 9, 10, 30))
+
+    def test_daily_booking_repeats_on_all_seven_days(self):
+        _, vevent = self._vevent(
+            self._event(frequency="0,1,2,3,4,5,6", end_recur=date(2030, 1, 31))
+        )
+
+        self.assertEqual(
+            vevent["RRULE"]["BYDAY"], ["SU", "MO", "TU", "WE", "TH", "FR", "SA"]
+        )
+
+    def test_repeat_that_never_occurs_before_end_recur_is_a_one_off(self):
+        # Tuesday start, Mondays only, ends Thursday -> no Monday ever falls in range
+        _, vevent = self._vevent(
+            self._event(frequency="1", end_recur=date(2030, 1, 10))
+        )
+
+        self.assertNotIn("RRULE", vevent)
+        self.assertEqual(vevent.decoded("DTSTART").replace(tzinfo=None), datetime(2030, 1, 8, 10, 0))
+
+
+@patch("dashboard.tasks.email_sender.delay")
+class BookingConfirmationEmailTests(TestCase):
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123", name="Host Person"
+        )
+
+    def _book(self, **overrides):
+        payload = {
+            "start_date": "2030-01-08",
+            "start_time": "10:00:00",
+            "end_date": "2030-01-08",
+            "end_time": "10:30:00",
+            "title": "Intro call",
+            "email": "guest@example.com",
+            "note": "Looking forward to it",
+            "user_timezone": "America/New_York",
+            "repeat_type": "no",
+        }
+        payload.update(overrides)
+        # Emails are queued on commit; TestCase never commits, so run the callbacks here
+        with self.captureOnCommitCallbacks(execute=True):
+            return self.client.post(
+                f"/api/v1/event/{self.host.public_id}/book/",
+                data=json.dumps(payload),
+                content_type="application/json",
+            )
+
+    def _sent(self, mock_delay):
+        """{recipient: (subject, template, context, attachments)} for each queued email."""
+        return {
+            call.args[1][0]: (call.args[0], call.args[2], call.args[3], call.args[4])
+            for call in mock_delay.call_args_list
+        }
+
+    def test_booking_emails_the_guest_and_the_host(self, mock_delay):
+        response = self._book()
+
+        self.assertEqual(response.status_code, 201)
+        sent = self._sent(mock_delay)
+        self.assertEqual(set(sent), {"guest@example.com", "host@example.com"})
+        self.assertEqual(sent["guest@example.com"][0], "Confirmed: Intro call")
+        self.assertEqual(sent["host@example.com"][0], "New booking: Intro call")
+        self.assertTrue(sent["guest@example.com"][1].endswith("booking_confirmation_guest.email.html"))
+        self.assertTrue(sent["host@example.com"][1].endswith("booking_confirmation_host.email.html"))
+
+    def test_both_emails_carry_the_ics_invite(self, mock_delay):
+        self._book()
+
+        event = Event.objects.get(user=self.host)
+        for _, _, _, attachments in self._sent(mock_delay).values():
+            [(filename, content, mimetype)] = attachments
+            self.assertEqual(filename, "invite.ics")
+            self.assertEqual(mimetype, "text/calendar; method=REQUEST; charset=UTF-8")
+            vevent = Calendar.from_ical(content).walk("VEVENT")[0]
+            self.assertEqual(vevent["UID"], f"{event.id}@metton")
+
+    def test_guest_sees_their_timezone_and_host_sees_their_schedule_timezone(self, mock_delay):
+        Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="Europe/London", is_default=True
+        )
+
+        self._book()
+
+        sent = self._sent(mock_delay)
+        self.assertEqual(
+            sent["guest@example.com"][2]["when"],
+            "Tuesday, 8 January 2030, 10:00 – 10:30 (America/New_York)",
+        )
+        self.assertEqual(
+            sent["host@example.com"][2]["when"],
+            "Tuesday, 8 January 2030, 15:00 – 15:30 (Europe/London)",
+        )
+
+    def test_host_without_a_schedule_sees_the_booking_timezone(self, mock_delay):
+        self._book()
+
+        self.assertEqual(
+            self._sent(mock_delay)["host@example.com"][2]["when"],
+            "Tuesday, 8 January 2030, 10:00 – 10:30 (America/New_York)",
+        )
+
+    def test_repeating_booking_describes_the_repeat_and_first_occurrence(self, mock_delay):
+        self._book(repeat_type="weekly", days=["1", "3"], end_recur="2030-01-31")
+
+        context = self._sent(mock_delay)["guest@example.com"][2]
+        self.assertEqual(context["repeats"], "Every Monday, Wednesday until 31 January 2030")
+        self.assertTrue(context["when"].startswith("Wednesday, 9 January 2030"))
+
+    def test_rejected_booking_sends_no_email(self, mock_delay):
+        self._book()
+        mock_delay.reset_mock()
+
+        response = self._book(start_time="10:15:00", end_time="10:45:00")
+
+        self.assertEqual(response.status_code, 422)
+        mock_delay.assert_not_called()
+
+    def test_email_failure_does_not_fail_the_saved_booking(self, mock_delay):
+        mock_delay.side_effect = ConnectionError("broker down")
+
+        with self.assertLogs("event.utils", level="ERROR"):
+            response = self._book()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(Event.objects.filter(user=self.host).exists())
+
+
+class EmailServiceAttachmentTests(TestCase):
+    def test_attachments_are_added_to_the_sent_email(self):
+        EmailService.push(
+            subject="Confirmed: Intro call",
+            recipients=["guest@example.com"],
+            template="event/emails/booking_confirmation_guest.email.html",
+            context={"host_name": "Host Person", "title": "Intro call"},
+            attachments=[["invite.ics", "BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n", "text/calendar"]],
+        )
+
+        [message] = mail.outbox
+        self.assertEqual(message.to, ["guest@example.com"])
+        self.assertEqual(message.attachments[0][0], "invite.ics")
+        self.assertEqual(message.attachments[0][2], "text/calendar")
+        self.assertEqual(message.alternatives[0][1], "text/html")
+
+    def test_no_attachments_still_sends_html_email(self):
+        EmailService.push(
+            subject="Hello",
+            recipients="guest@example.com",
+            template="event/emails/booking_confirmation_guest.email.html",
+            context={"host_name": "Host Person", "title": "Intro call"},
+        )
+
+        [message] = mail.outbox
+        self.assertEqual(message.attachments, [])
+        self.assertIn("Host Person", message.alternatives[0][0])

@@ -1,0 +1,79 @@
+{% extends "Base/email.html" %}
+{% block content %}
+<table cellpadding="0" cellspacing="0" border="0" align="center" width="640"
+    style="width: 640px; min-width: 640px;" role="presentation"
+    bgcolor="#ebeaf9">
+    <tbody>
+        <tr>
+            <td valign="top" bgcolor="#FFFFFF">
+                <table cellpadding="0" cellspacing="0" border="0" align="center"
+                    width="640" style="width: 640px; min-width: 640px;"
+                    role="presentation">
+                    <tr>
+                        <td height="60"
+                            style="line-height:60px;min-height:60px;">
+                        </td>
+                    </tr>
+                </table>
+                <table cellpadding="0" cellspacing="0" border="0" align="center"
+                    width="640" style="width: 640px; min-width: 640px;"
+                    role="presentation">
+                    <tbody>
+                        <tr>
+                            <td align="center"
+                                style="color:#45535C;padding:20px 40px 0 40px;font-family: 'Lato', Arial, Helvetica, sans-serif;font-weight:800;font-size:34px;-webkit-font-smoothing:antialiased;line-height:1.2;"
+                                class="table-container mobile-title">
+                                You're booked in! <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center"
+                                style="color:#45535C;padding:20px 40px 0 40px;font-family: 'Lato', Arial, Helvetica, sans-serif;font-weight:normal;font-size:16px;-webkit-font-smoothing:antialiased;line-height:1.4;"
+                                class="table-container">
+                                Your booking with <strong>{{ host_name }}</strong>
+                                is confirmed.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center"
+                                style="color:#45535C;padding:30px 40px 0 40px;font-family: 'Lato', Arial, Helvetica, sans-serif;font-weight:normal;font-size:16px;-webkit-font-smoothing:antialiased;line-height:1.6;"
+                                class="table-container">
+                                <strong>{{ title }}</strong><br />
+                                {{ when }}<br />
+                                {% if repeats %}{{ repeats }}<br />{% endif %}
+                                With {{ host_name }} ({{ host_email }})
+                            </td>
+                        </tr>
+                        {% if note %}
+                        <tr>
+                            <td align="center"
+                                style="color:#45535C;padding:20px 40px 0 40px;font-family: 'Lato', Arial, Helvetica, sans-serif;font-weight:normal;font-size:14px;-webkit-font-smoothing:antialiased;line-height:1.4;"
+                                class="table-container">
+                                Your note: {{ note }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td align="center"
+                                style="color:#45535C;padding:30px 40px 0 40px;font-family: 'Lato', Arial, Helvetica, sans-serif;font-weight:normal;font-size:14px;-webkit-font-smoothing:antialiased;line-height:1.4;"
+                                class="table-container">
+                                A calendar invite is attached - open it to add
+                                this booking to your calendar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table cellpadding="0" cellspacing="0" border="0" align="center"
+                    width="640" style="width: 640px; min-width: 640px;"
+                    role="presentation">
+                    <tr>
+                        <td height="60"
+                            style="line-height:60px;min-height:60px;">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
