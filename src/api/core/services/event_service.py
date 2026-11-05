@@ -2,7 +2,7 @@ import ast
 import string
 import time
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
 import dateutil.parser
 from django.db.models import Q
 from typing import Union, List
@@ -216,7 +216,8 @@ class EventService:
             if frequencies and event.end_recur:
                 event_data["daysOfWeek"] = frequencies
                 event_data["startRecur"] = start
-                event_data["endRecur"] = event.end_recur
+                # FullCalendar's endRecur is exclusive; ours is the last day it happens on
+                event_data["endRecur"] = event.end_recur + timedelta(days=1)
 
             if format_date_time:
                 event_data["start_time"] = start.strftime("%I:%M %p")

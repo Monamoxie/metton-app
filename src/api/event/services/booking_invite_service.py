@@ -1,12 +1,13 @@
-from datetime import date, datetime, time, timedelta
+from datetime import datetime, time
 from datetime import timezone as dt_timezone
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 from zoneinfo import ZoneInfo
 
 from icalendar import Calendar, vCalAddress, vText
 from icalendar import Event as CalendarEvent
 
 from event.models import Event
+from event.services.booking_occurrence_service import BookingOccurrenceService
 
 # Index matches RecurrenceTypes (Sun=0 ... Sat=6), which is how Event.frequency stores days
 ICS_DAY_CODES = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"]
@@ -81,7 +82,7 @@ class BookingInviteService:
 
         first_date = event.start_date
         if days:
-            first_date = cls._first_occurrence(event.start_date, days)
+            first_date = BookingOccurrenceService.first_occurrence(event.start_date, days)
         # Multi-day bookings keep their length when the first occurrence moves forward
         shift = first_date - event.start_date
 
@@ -96,24 +97,6 @@ class BookingInviteService:
 
     @staticmethod
     def recurring_days(event: Event) -> List[int]:
-        """Weekdays (Sun=0) the booking repeats on, or [] when it is a one-off. A repeat whose
-        days never fall on or before end_recur has no real occurrences, so it is treated as
-        a one-off on its start date."""
-        if not event.frequency or not event.end_recur:
-            return []
-
-        days = sorted({int(day) for day in event.frequency.split(",") if day.strip()})
-        first = BookingInviteService._first_occurrence(event.start_date, days)
-        if first is None or first > event.end_recur:
-            return []
-
-        return days
-
-    @staticmethod
-    def _first_occurrence(start_date: date, days: List[int]) -> Optional[date]:
-        """First date on/after start_date that falls on one of `days` (Sun=0)."""
-        for offset in range(7):
-            candidate = start_date + timedelta(days=offset)
-            if (candidate.weekday() + 1) % 7 in days:  # Python Mon=0 -> ours Sun=0
-                return candidate
-        return None
+        return BookingOccurrenceService.recurring_days(
+            event.frequency, event.start_date, event.end_recur
+        )

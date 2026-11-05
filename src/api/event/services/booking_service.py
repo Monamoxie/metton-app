@@ -52,6 +52,8 @@ class BookingService:
             validated_data["user_timezone"],
             buffer_before,
             buffer_after,
+            frequency,
+            validated_data.get("end_recur"),
         ):
             raise BookingConflictError()
 

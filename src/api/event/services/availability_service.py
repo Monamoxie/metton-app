@@ -1,11 +1,13 @@
 from datetime import date as date_cls
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 
 import pytz
+from django.db.models import Q
 
 from event.enums import EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
+from event.services.booking_occurrence_service import BookingOccurrenceService
 from identity.models.user import User
 
 
@@ -106,50 +108,61 @@ class AvailabilityService:
         timezone_name: str,
         buffer_before_minutes: int = 0,
         buffer_after_minutes: int = 0,
+        frequency: str = "",
+        end_recur: Optional[date_cls] = None,
     ) -> bool:
-        """True if `host` already has a PUBLIC booking overlapping the candidate slot, once
-        both sides are converted to UTC. Mirrors the buffer-then-overlap test
-        `_slots_for_window` already applies when deciding which slots to show as available."""
-        tz = pytz.timezone(timezone_name)
-        candidate_start = tz.localize(datetime.combine(start_date, start_time))
-        candidate_end = tz.localize(datetime.combine(end_date, end_time))
-
-        occupied_start = (candidate_start - timedelta(minutes=buffer_before_minutes)).astimezone(
-            pytz.UTC
+        """True if any occurrence of the candidate booking overlaps any occurrence of the
+        host's existing PUBLIC bookings, once both sides are converted to UTC. Mirrors the
+        buffer-then-overlap test `_slots_for_window` already applies when deciding which
+        slots to show as available."""
+        candidates = BookingOccurrenceService.occurrences_in_utc(
+            start_date, start_time, end_date, end_time, timezone_name, frequency, end_recur
         )
-        occupied_end = (candidate_end + timedelta(minutes=buffer_after_minutes)).astimezone(
-            pytz.UTC
-        )
+        if not candidates:
+            return False
 
+        last_date = end_recur if end_recur and frequency else end_date
         existing_bookings = cls._existing_bookings_in_utc(
-            host, start_date - timedelta(days=1), end_date + timedelta(days=1)
+            host, start_date - timedelta(days=1), last_date + timedelta(days=1)
         )
 
-        for booking in existing_bookings:
-            if occupied_start < booking["end"] and booking["start"] < occupied_end:
-                return True
+        for candidate in candidates:
+            occupied_start = candidate["start"] - timedelta(minutes=buffer_before_minutes)
+            occupied_end = candidate["end"] + timedelta(minutes=buffer_after_minutes)
+            for booking in existing_bookings:
+                if occupied_start < booking["end"] and booking["start"] < occupied_end:
+                    return True
 
         return False
 
     @staticmethod
     def _existing_bookings_in_utc(user: User, start_date, end_date) -> List[dict]:
+        """Every occurrence of the user's PUBLIC bookings starting within [start_date,
+        end_date] (by each booking's own local date) - including later occurrences of
+        repeating bookings that started before the range."""
         bookings = Event.objects.filter(
+            Q(start_date__range=(start_date, end_date))
+            | (
+                Q(start_date__lte=end_date, end_recur__gte=start_date)
+                & ~Q(frequency="")
+            ),
             user=user,
             type=EventTypes.PUBLIC.value,
-            start_date__range=(start_date, end_date),
         )
         result = []
         for booking in bookings:
-            booking_tz = pytz.timezone(booking.timezone)
-            result.append(
-                {
-                    "start": booking_tz.localize(
-                        datetime.combine(booking.start_date, booking.start_time)
-                    ).astimezone(pytz.UTC),
-                    "end": booking_tz.localize(
-                        datetime.combine(booking.end_date, booking.end_time)
-                    ).astimezone(pytz.UTC),
-                }
+            result.extend(
+                BookingOccurrenceService.occurrences_in_utc(
+                    booking.start_date,
+                    booking.start_time,
+                    booking.end_date,
+                    booking.end_time,
+                    booking.timezone,
+                    booking.frequency,
+                    booking.end_recur,
+                    range_start=start_date,
+                    range_end=end_date,
+                )
             )
         return result
 

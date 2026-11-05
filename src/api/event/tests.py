@@ -14,7 +14,7 @@ from rest_framework.test import APITestCase
 
 from event.enums import EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
-from core.services import EmailService
+from core.services import EmailService, EventService
 from event.services import AvailabilityService, BookingInviteService, ScheduleService
 from identity.models.user import User
 
@@ -1112,3 +1112,143 @@ class EmailServiceAttachmentTests(TestCase):
         [message] = mail.outbox
         self.assertEqual(message.attachments, [])
         self.assertIn("Host Person", message.alternatives[0][0])
+
+
+class RecurringBookingConflictTests(TestCase):
+    # 2030-01-07 is a Monday, 2030-01-08 a Tuesday
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123"
+        )
+
+    def _existing(self, **overrides):
+        fields = {
+            "user": self.host,
+            "title": "Existing booking",
+            "type": EventTypes.PUBLIC.value,
+            "start_date": date(2030, 1, 7),
+            "start_time": time(10, 0),
+            "end_date": date(2030, 1, 7),
+            "end_time": time(10, 30),
+            "timezone": "UTC",
+        }
+        fields.update(overrides)
+        return Event.objects.create(**fields)
+
+    def _conflicts(self, start_date, frequency="", end_recur=None, start="10:00", end="10:30"):
+        return AvailabilityService.has_conflicting_booking(
+            self.host,
+            start_date,
+            time.fromisoformat(start),
+            start_date,
+            time.fromisoformat(end),
+            "UTC",
+            frequency=frequency,
+            end_recur=end_recur,
+        )
+
+    def test_later_occurrence_of_an_existing_weekly_booking_blocks_a_one_off(self):
+        self._existing(frequency="1", end_recur=date(2030, 2, 28))
+
+        # Three Mondays after the existing booking started
+        self.assertTrue(self._conflicts(date(2030, 1, 28)))
+
+    def test_existing_weekly_booking_does_not_block_its_off_days(self):
+        self._existing(frequency="1", end_recur=date(2030, 2, 28))
+
+        self.assertFalse(self._conflicts(date(2030, 1, 29)))  # Tuesday
+
+    def test_existing_weekly_booking_blocks_its_end_recur_date(self):
+        self._existing(frequency="1", end_recur=date(2030, 1, 28))
+
+        self.assertTrue(self._conflicts(date(2030, 1, 28)))
+        self.assertFalse(self._conflicts(date(2030, 2, 4)))
+
+    def test_new_weekly_booking_clashing_on_a_later_occurrence_is_rejected(self):
+        self._existing(start_date=date(2030, 1, 21), end_date=date(2030, 1, 21))
+
+        self.assertTrue(
+            self._conflicts(date(2030, 1, 7), frequency="1", end_recur=date(2030, 1, 31))
+        )
+
+    def test_new_weekly_booking_ignores_its_start_date_when_it_is_not_a_repeat_day(self):
+        # Existing one-off on Tuesday 8th; new booking starts that Tuesday but only
+        # repeats on Mondays, so it never actually occupies the 8th
+        self._existing(start_date=date(2030, 1, 8), end_date=date(2030, 1, 8))
+
+        self.assertFalse(
+            self._conflicts(date(2030, 1, 8), frequency="1", end_recur=date(2030, 1, 31))
+        )
+
+    def test_two_weekly_bookings_on_different_days_do_not_clash(self):
+        self._existing(frequency="1", end_recur=date(2030, 3, 31))
+
+        self.assertFalse(
+            self._conflicts(date(2030, 1, 8), frequency="2,4", end_recur=date(2030, 3, 31))
+        )
+
+    def test_api_rejects_a_one_off_on_a_later_occurrence_of_a_weekly_booking(self):
+        self._existing(frequency="1", end_recur=date(2030, 2, 28))
+
+        response = self.client.post(
+            f"/api/v1/event/{self.host.public_id}/book/",
+            data=json.dumps(
+                {
+                    "start_date": "2030-01-28",
+                    "start_time": "10:00:00",
+                    "end_date": "2030-01-28",
+                    "end_time": "10:30:00",
+                    "email": "guest@example.com",
+                    "user_timezone": "UTC",
+                }
+            ),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(Event.objects.filter(user=self.host).count(), 1)
+
+    def test_available_slots_exclude_later_occurrences_of_a_weekly_booking(self):
+        schedule = Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="UTC", is_default=True
+        )
+        ScheduleWeeklyHours.objects.create(
+            schedule=schedule, day_of_week=MONDAY, start_time=time(9, 0), end_time=time(10, 0)
+        )
+        monday = _next_occurrence(MONDAY)
+        # Started two weeks ago, so `monday` is only reached through the repeat
+        self._existing(
+            start_date=monday - timedelta(weeks=2),
+            end_date=monday - timedelta(weeks=2),
+            start_time=time(9, 0),
+            end_time=time(9, 30),
+            frequency=str(MONDAY),
+            end_recur=monday + timedelta(weeks=4),
+        )
+
+        slots = AvailabilityService.get_available_slots(
+            schedule, monday, monday, duration_minutes=30
+        )
+
+        self.assertEqual([(slot["start"].hour, slot["start"].minute) for slot in slots], [(9, 30)])
+
+
+class CalendarEventDataTests(TestCase):
+    def test_end_recur_is_sent_as_the_day_after_because_fullcalendar_excludes_it(self):
+        host = User.objects.create_user(email="host@example.com", password="password123")
+        event = Event.objects.create(
+            user=host,
+            title="Weekly",
+            type=EventTypes.PUBLIC.value,
+            start_date=date(2030, 1, 7),
+            start_time=time(10, 0),
+            end_date=date(2030, 1, 7),
+            end_time=time(10, 30),
+            timezone="UTC",
+            frequency="1",
+            end_recur=date(2030, 1, 28),
+        )
+
+        [data] = EventService.prep_event_data([event])
+
+        self.assertEqual(data["endRecur"], date(2030, 1, 29))
