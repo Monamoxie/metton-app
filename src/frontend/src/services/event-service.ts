@@ -1,5 +1,27 @@
 import dayjs, { Dayjs } from "dayjs";
 import { DateInput, EventInput } from "@fullcalendar/core";
+import axiosClient from "@/utils/axios-client";
+import { ApiResponse } from "@/types/api";
+import * as Utils from "@/utils/utils";
+
+// -- Fetch the current user's bookings and unavailable days for a date range --
+export const getCalendar = async (
+  start: string, // "YYYY-MM-DD", inclusive
+  end: string // "YYYY-MM-DD", inclusive
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.get("/event/calendar/", {
+      params: { start, end },
+      headers: Utils.getAuthApiHeader(),
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
 
 // -- // --
 export function isSlotClosed(slot: any, closedSlots: any[]) {

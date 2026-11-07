@@ -1,7 +1,9 @@
 "use client";
 import React, { useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
-import { Box } from "@mui/material";
+import { Alert, Box } from "@mui/material";
+import dayjs from "dayjs";
+import { DatesSetArg, EventInput } from "@fullcalendar/core";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import EventToolBar from "./EventToolBar";
@@ -9,26 +11,31 @@ import EventCalendar from "./EventCalendar";
 import * as EventService from "@/services/event-service";
 import CalendarSlotMenu from "../CalendarSlotMenu";
 import EventManager from "./EventManager";
-import { SelectedSlot } from "@/types/event";
+import { CalendarBooking, CalendarData, SelectedSlot } from "@/types/event";
 
-const initialEvents = [
-  {
-    id: "1",
-    title: "Design onboarding",
-    start: "2025-08-18T09:30:00",
-    end: "2025-08-18T17:30:00",
-    tag: "Work",
-  },
-  {
-    id: "2",
-    title: "Studies",
-    start: "2025-08-17T19:00:00",
-    end: "2025-08-17T19:00:00",
-    tag: "personal",
-  },
+// FullCalendar's range end is exclusive; the API takes inclusive local dates
+export function calendarRangeParams(range: { start: Date; end: Date }) {
+  return {
+    start: dayjs(range.start).format("YYYY-MM-DD"),
+    end: dayjs(range.end).subtract(1, "day").format("YYYY-MM-DD"),
+  };
+}
 
-  // ...more events
-];
+export function toCalendarEvents(bookings: CalendarBooking[]): EventInput[] {
+  return bookings.map((booking) => ({
+    id: booking.id,
+    title: booking.title || booking.attendees[0] || "Booking",
+    start: booking.start,
+    end: booking.end,
+    extendedProps: {
+      bookingId: booking.booking_id,
+      attendees: booking.attendees,
+      note: booking.note,
+      timezone: booking.timezone,
+      isRecurring: booking.is_recurring,
+    },
+  }));
+}
 
 export default function EventCard() {
   const calendarRef = useRef<FullCalendar | null>(null);
@@ -44,17 +51,39 @@ export default function EventCard() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedSlots, setSelectedSlots] = useState<null | SelectedSlot>(null);
 
-  const closedSlots = [
-    {
-      start: "2025-07-19T09:00:00",
-      end: "2025-07-23T10:00:00",
-      reason: "UNAVAILABLE",
-    },
-    { start: "2025-06-25", end: "2025-06-30", reason: "Maintenance" },
-    // ...more
-  ];
+  const [events, setEvents] = useState<EventInput[]>([]);
+  const [closedSlots, setClosedSlots] = useState<
+    { start: string; end: string; reason: string }[]
+  >([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  // Ignores responses for a range the user has already navigated away from
+  const latestRangeKey = useRef("");
 
-  const [events, setEvents] = useState(initialEvents);
+  const handleDatesSet = async (range: DatesSetArg) => {
+    const { start, end } = calendarRangeParams(range);
+    const rangeKey = `${start}_${end}`;
+    latestRangeKey.current = rangeKey;
+
+    const response = await EventService.getCalendar(start, end);
+    if (latestRangeKey.current !== rangeKey) return;
+
+    if (response.code !== 200) {
+      setLoadError(response.message || "Unable to load your calendar.");
+      return;
+    }
+
+    const data = response.data as CalendarData;
+    setLoadError(null);
+    setEvents(toCalendarEvents(data.bookings));
+    setClosedSlots(
+      data.unavailable.map((day) => ({
+        start: day.start,
+        end: day.end,
+        reason: "UNAVAILABLE",
+      }))
+    );
+  };
+
   const backgroundEvents = closedSlots.map((slot, idx) => ({
     id: `closed-${idx}`,
     start: slot.start,
@@ -136,6 +165,12 @@ export default function EventCard() {
         setShowFuture={setShowFuture}
       />
 
+      {loadError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {loadError}
+        </Alert>
+      )}
+
       <EventCalendar
         calendarRef={calendarRef}
         isMobile={isMobile}
@@ -144,6 +179,7 @@ export default function EventCard() {
         showFuture={showFuture}
         handleDateSelect={handleDateSelect}
         handleEventClick={handleEventClick}
+        handleDatesSet={handleDatesSet}
         isSlotClosed={(slot) => EventService.isSlotClosed(slot, closedSlots)}
       />
 

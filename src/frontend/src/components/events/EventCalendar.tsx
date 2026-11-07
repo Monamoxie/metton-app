@@ -4,7 +4,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { UseMediaQueryOptions } from "@mui/system/useMediaQuery";
 import { DateInput, EventInput } from "@fullcalendar/core";
-import { DateSelectArg } from "@fullcalendar/core";
+import { DateSelectArg, DatesSetArg } from "@fullcalendar/core";
 import { Chip, Tooltip, Box } from "@mui/material";
 import { EVENT_CALENDAR } from "@/styles/modules/event.css";
 
@@ -17,6 +17,7 @@ interface EventCalendarProps {
   handleDateSelect: (selectInfo: DateSelectArg) => void;
   isSlotClosed: (slot: any) => boolean;
   handleEventClick?: (info: any) => void;
+  handleDatesSet?: (range: DatesSetArg) => void;
 }
 
 export default function EventCalendar(props: EventCalendarProps) {
@@ -72,6 +73,7 @@ export default function EventCalendar(props: EventCalendarProps) {
         }
         selectOverlap={(event) => true} // todo: configurable
         eventClick={props.handleEventClick}
+        datesSet={props.handleDatesSet}
       />
     </Box>
   );
