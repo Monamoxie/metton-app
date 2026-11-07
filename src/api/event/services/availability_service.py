@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 
 import pytz
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 
 from event.enums import EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
@@ -136,11 +136,11 @@ class AvailabilityService:
         return False
 
     @staticmethod
-    def _existing_bookings_in_utc(user: User, start_date, end_date) -> List[dict]:
-        """Every occurrence of the user's PUBLIC bookings starting within [start_date,
-        end_date] (by each booking's own local date) - including later occurrences of
-        repeating bookings that started before the range."""
-        bookings = Event.objects.filter(
+    def public_bookings_in_range(user: User, start_date, end_date) -> QuerySet:
+        """The user's PUBLIC bookings with an occurrence that may start within [start_date,
+        end_date] - one-offs starting in range, plus repeating bookings that started before
+        it but are still running. Expand with BookingOccurrenceService for exact dates."""
+        return Event.objects.filter(
             Q(start_date__range=(start_date, end_date))
             | (
                 Q(start_date__lte=end_date, end_recur__gte=start_date)
@@ -149,8 +149,13 @@ class AvailabilityService:
             user=user,
             type=EventTypes.PUBLIC.value,
         )
+
+    @classmethod
+    def _existing_bookings_in_utc(cls, user: User, start_date, end_date) -> List[dict]:
+        """Every occurrence of the user's PUBLIC bookings starting within [start_date,
+        end_date] (by each booking's own local date)."""
         result = []
-        for booking in bookings:
+        for booking in cls.public_bookings_in_range(user, start_date, end_date):
             result.extend(
                 BookingOccurrenceService.occurrences_in_utc(
                     booking.start_date,

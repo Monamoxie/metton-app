@@ -12,3 +12,4 @@ from .schedule_override_view import ScheduleOverrideView
 from .user_available_slots_view import UserAvailableSlotsView
 from .public_profile_view import PublicProfileView
 from .create_booking_view import CreateBookingView
+from .calendar_view import CalendarView

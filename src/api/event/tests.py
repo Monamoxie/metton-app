@@ -1252,3 +1252,135 @@ class CalendarEventDataTests(TestCase):
         [data] = EventService.prep_event_data([event])
 
         self.assertEqual(data["endRecur"], date(2030, 1, 29))
+
+
+class CalendarViewTests(APITestCase):
+    # 2030-01-07 is a Monday
+    url = "/api/v1/event/calendar/"
+
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123"
+        )
+        self.client.force_authenticate(user=self.host)
+
+    def _booking(self, user=None, **overrides):
+        fields = {
+            "user": user or self.host,
+            "title": "Intro call",
+            "type": EventTypes.PUBLIC.value,
+            "start_date": date(2030, 1, 8),
+            "start_time": time(10, 0),
+            "end_date": date(2030, 1, 8),
+            "end_time": time(10, 30),
+            "timezone": "UTC",
+            "attendees": "guest@example.com",
+        }
+        fields.update(overrides)
+        return Event.objects.create(**fields)
+
+    def _get(self, start="2030-01-07", end="2030-01-13"):
+        return self.client.get(self.url, {"start": start, "end": end})
+
+    def _bookings(self, **params):
+        return self._get(**params).json()["data"]["bookings"]
+
+    def test_returns_bookings_in_range_as_utc_times(self):
+        self._booking(timezone="America/New_York")
+
+        response = self._get()
+
+        self.assertEqual(response.status_code, 200)
+        [booking] = response.json()["data"]["bookings"]
+        self.assertEqual(booking["title"], "Intro call")
+        self.assertEqual(booking["start"], "2030-01-08T15:00:00Z")
+        self.assertEqual(booking["end"], "2030-01-08T15:30:00Z")
+        self.assertEqual(booking["attendees"], ["guest@example.com"])
+        self.assertFalse(booking["is_recurring"])
+
+    def test_repeating_booking_appears_once_per_occurrence_in_range(self):
+        # Started weeks earlier and repeats Mondays and Wednesdays
+        booking = self._booking(
+            start_date=date(2029, 12, 3),
+            end_date=date(2029, 12, 3),
+            frequency="1,3",
+            end_recur=date(2030, 3, 31),
+        )
+
+        bookings = self._bookings()
+
+        # Mon 14th is the extra day of slack past `end` that the endpoint always includes
+        self.assertEqual(
+            [entry["start"] for entry in bookings],
+            ["2030-01-07T10:00:00Z", "2030-01-09T10:00:00Z", "2030-01-14T10:00:00Z"],
+        )
+        self.assertTrue(all(entry["booking_id"] == str(booking.id) for entry in bookings))
+        self.assertTrue(all(entry["is_recurring"] for entry in bookings))
+        self.assertEqual(len({entry["id"] for entry in bookings}), 3)
+
+    def test_repeating_booking_stops_after_end_recur(self):
+        self._booking(
+            start_date=date(2029, 12, 3),
+            end_date=date(2029, 12, 3),
+            frequency="1,3",
+            end_recur=date(2030, 1, 7),
+        )
+
+        self.assertEqual(
+            [entry["start"] for entry in self._bookings()], ["2030-01-07T10:00:00Z"]
+        )
+
+    def test_excludes_bookings_outside_the_range(self):
+        self._booking(start_date=date(2030, 2, 1), end_date=date(2030, 2, 1))
+
+        self.assertEqual(self._bookings(), [])
+
+    def test_excludes_other_users_bookings_and_non_public_events(self):
+        other = User.objects.create_user(email="other@example.com", password="password123")
+        self._booking(user=other)
+        self._booking(type=EventTypes.BUSINESS_HOURS.value)
+
+        self.assertEqual(self._bookings(), [])
+
+    def test_unavailable_override_is_a_full_day_in_the_schedule_timezone(self):
+        schedule = Schedule.objects.create(
+            user=self.host, name="Working Hours", timezone="Europe/Berlin", is_default=True
+        )
+        ScheduleOverride.objects.create(schedule=schedule, date=date(2030, 1, 9), is_unavailable=True)
+        # Custom hours are not a closed day
+        ScheduleOverride.objects.create(
+            schedule=schedule,
+            date=date(2030, 1, 10),
+            is_unavailable=False,
+            start_time=time(9, 0),
+            end_time=time(12, 0),
+        )
+
+        unavailable = self._get().json()["data"]["unavailable"]
+
+        # Berlin is UTC+1 in January
+        self.assertEqual(
+            unavailable,
+            [
+                {
+                    "date": "2030-01-09",
+                    "start": "2030-01-08T23:00:00Z",
+                    "end": "2030-01-09T23:00:00Z",
+                }
+            ],
+        )
+
+    def test_no_schedule_means_no_unavailable_days(self):
+        self.assertEqual(self._get().json()["data"]["unavailable"], [])
+
+    def test_invalid_or_reversed_dates_return_422(self):
+        self.assertEqual(self._get(start="nope").status_code, 422)
+        self.assertEqual(self._get(start="2030-01-13", end="2030-01-07").status_code, 422)
+
+    def test_range_longer_than_a_year_returns_422(self):
+        self.assertEqual(self._get(start="2030-01-01", end="2031-06-01").status_code, 422)
+
+    def test_requires_authentication(self):
+        self.client.force_authenticate(user=None)
+
+        self.assertEqual(self._get().status_code, 401)

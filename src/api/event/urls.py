@@ -2,6 +2,7 @@ from django.urls import path
 
 from event.views import (
     BookingView,
+    CalendarView,
     CreateBookingView,
     PublicProfileView,
     ScheduleDetailView,
@@ -12,6 +13,7 @@ from event.views import (
 urlpatterns = [
     path("<str:public_id>/book", BookingView.as_view(), name="book"),
     path("schedule/", ScheduleDetailView.as_view(), name="schedule-detail"),
+    path("calendar/", CalendarView.as_view(), name="calendar"),
     path(
         "schedule/overrides/",
         ScheduleOverrideView.as_view(),
