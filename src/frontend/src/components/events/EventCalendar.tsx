@@ -21,11 +21,24 @@ interface EventCalendarProps {
 }
 
 export default function EventCalendar(props: EventCalendarProps) {
-  const filteredEvents = props.events.filter((event) => {
+  // Destructured so the React Compiler lint only treats calendarRef as a ref, not all of props
+  const {
+    calendarRef,
+    isMobile,
+    showPast,
+    showFuture,
+    events,
+    handleDateSelect,
+    isSlotClosed,
+    handleEventClick,
+    handleDatesSet,
+  } = props;
+
+  const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.start as Date);
     const now = new Date();
-    if (!props.showPast && eventDate < now) return false;
-    if (!props.showFuture && eventDate > now) return false;
+    if (!showPast && eventDate < now) return false;
+    if (!showFuture && eventDate > now) return false;
     return true;
   });
 
@@ -50,30 +63,30 @@ export default function EventCalendar(props: EventCalendarProps) {
   return (
     <Box sx={EVENT_CALENDAR}>
       <FullCalendar
-        ref={props.calendarRef}
+        ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={props.isMobile ? "timeGridDay" : "timeGridWeek"}
+        initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
         selectable
         selectMirror
         events={filteredEvents}
-        select={props.handleDateSelect}
+        select={handleDateSelect}
         eventColor={"#008000"} // todo
         eventContent={renderEventContent}
         validRange={{
-          start: props.showPast
+          start: showPast
             ? undefined
             : new Date().toISOString().slice(0, 10),
-          end: props.showFuture
+          end: showFuture
             ? undefined
             : new Date().toISOString().slice(0, 10),
         }}
-        selectAllow={(selectInfo) => !props.isSlotClosed(selectInfo)}
+        selectAllow={(selectInfo) => !isSlotClosed(selectInfo)}
         dayCellClassNames={(arg) =>
-          props.isSlotClosed(arg) ? ["fc-closed-slot"] : []
+          isSlotClosed(arg) ? ["fc-closed-slot"] : []
         }
         selectOverlap={(event) => true} // todo: configurable
-        eventClick={props.handleEventClick}
-        datesSet={props.handleDatesSet}
+        eventClick={handleEventClick}
+        datesSet={handleDatesSet}
       />
     </Box>
   );
