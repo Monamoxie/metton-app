@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from event.enums import BookingStatus
+
 
 class CalendarBookingSerializer(serializers.Serializer):
     """One occurrence of a booking. Repeating bookings appear once per occurrence, all
@@ -14,3 +16,4 @@ class CalendarBookingSerializer(serializers.Serializer):
     note = serializers.CharField(allow_blank=True)
     timezone = serializers.CharField()
     is_recurring = serializers.BooleanField()
+    status = serializers.ChoiceField(choices=BookingStatus.options())

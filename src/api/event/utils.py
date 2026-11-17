@@ -12,6 +12,7 @@ from event.services.schedule_service import ScheduleService
 logger = logging.getLogger(__name__)
 
 EMAIL_TEMPLATE_DIR = os.path.join(settings.BASE_DIR, "event/templates/event/emails")
+STATUS_TEMPLATE = os.path.join(EMAIL_TEMPLATE_DIR, "booking_status.email.html")
 
 
 def send_booking_confirmation_emails(event: Event) -> bool:
@@ -31,14 +32,7 @@ def send_booking_confirmation_emails(event: Event) -> bool:
             BookingInviteService.MIMETYPE,
         ]
 
-        context = {
-            "host_name": host_name,
-            "host_email": host.email,
-            "guest_emails": ", ".join(guest_emails),
-            "title": event.title or f"Meeting with {host_name}",
-            "note": event.note,
-            "repeats": _describe_repeat(event),
-        }
+        context = _booking_context(event)
 
         email_sender.delay(
             f"Confirmed: {context['title']}",
@@ -59,6 +53,86 @@ def send_booking_confirmation_emails(event: Event) -> bool:
         return False
 
     return True
+
+
+def send_booking_request_emails(event: Event) -> bool:
+    """A booking that needs the host's approval: tell the guest it's been received and the
+    host there's a request waiting. No .ics yet - that goes out once it's accepted."""
+    from dashboard.tasks import email_sender
+
+    try:
+        host = event.user
+        context = _booking_context(event)
+        guest_emails = BookingInviteService.guest_emails(event)
+
+        email_sender.delay(
+            f"Request received: {context['title']}",
+            guest_emails,
+            STATUS_TEMPLATE,
+            {
+                **context,
+                "heading": "Request received",
+                "message": f"Your booking request has been sent to {context['host_name']}. "
+                "You'll get another email once they respond.",
+                "when": _describe_when(event, event.timezone),
+            },
+        )
+        email_sender.delay(
+            f"Booking request: {context['title']}",
+            [host.email],
+            STATUS_TEMPLATE,
+            {
+                **context,
+                "heading": "New booking request",
+                "message": f"{context['guest_emails']} asked to book time with you. "
+                "Accept or decline it from your calendar on Metton.",
+                "when": _describe_when(event, _host_timezone(event)),
+            },
+        )
+    except Exception:
+        logger.exception("Failed to send booking request emails for %s", event.id)
+        return False
+
+    return True
+
+
+def send_booking_declined_email(event: Event) -> bool:
+    from dashboard.tasks import email_sender
+
+    try:
+        context = _booking_context(event)
+
+        email_sender.delay(
+            f"Declined: {context['title']}",
+            BookingInviteService.guest_emails(event),
+            STATUS_TEMPLATE,
+            {
+                **context,
+                "heading": "Booking declined",
+                "message": f"{context['host_name']} can't make this time. "
+                "You're welcome to book another slot.",
+                "when": _describe_when(event, event.timezone),
+            },
+        )
+    except Exception:
+        logger.exception("Failed to send booking declined email for %s", event.id)
+        return False
+
+    return True
+
+
+def _booking_context(event: Event) -> dict:
+    host = event.user
+    host_name = host.name or host.email
+
+    return {
+        "host_name": host_name,
+        "host_email": host.email,
+        "guest_emails": ", ".join(BookingInviteService.guest_emails(event)),
+        "title": event.title or f"Meeting with {host_name}",
+        "note": event.note,
+        "repeats": _describe_repeat(event),
+    }
 
 
 def _host_timezone(event: Event) -> str:

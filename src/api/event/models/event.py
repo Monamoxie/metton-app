@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
-from event.enums import EventTypes
+from event.enums import BookingStatus, EventTypes
 from core import settings
 
 
@@ -17,6 +17,11 @@ class Event(models.Model):
     frequency = models.CharField("frequency", blank=True, max_length=100)
     type = models.CharField(
         choices=EventTypes.options(), default=EventTypes.PUBLIC.value, max_length=2
+    )
+    status = models.CharField(
+        choices=BookingStatus.options(),
+        default=BookingStatus.CONFIRMED.value,
+        max_length=10,
     )
     note = models.TextField("note", blank=True, max_length=250)
     timezone = models.CharField("timezone", blank=True, max_length=100)

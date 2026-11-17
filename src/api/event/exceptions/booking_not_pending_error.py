@@ -1,0 +1,2 @@
+class BookingNotPendingError(Exception):
+    pass

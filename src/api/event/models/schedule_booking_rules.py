@@ -16,6 +16,8 @@ class ScheduleBookingRules(models.Model):
     # null = no daily cap.
     daily_booking_limit = models.IntegerField(null=True, blank=True)
     allow_multiple_per_slot = models.BooleanField(default=False)
+    # true = new bookings start PENDING until the host accepts or declines them.
+    requires_approval = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

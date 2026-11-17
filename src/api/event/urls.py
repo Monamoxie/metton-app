@@ -1,6 +1,7 @@
 from django.urls import path
 
 from event.views import (
+    BookingDecisionView,
     BookingView,
     CalendarView,
     CreateBookingView,
@@ -14,6 +15,16 @@ urlpatterns = [
     path("<str:public_id>/book", BookingView.as_view(), name="book"),
     path("schedule/", ScheduleDetailView.as_view(), name="schedule-detail"),
     path("calendar/", CalendarView.as_view(), name="calendar"),
+    path(
+        "bookings/<uuid:booking_id>/accept/",
+        BookingDecisionView.as_view(action="accept"),
+        name="booking-accept",
+    ),
+    path(
+        "bookings/<uuid:booking_id>/decline/",
+        BookingDecisionView.as_view(action="decline"),
+        name="booking-decline",
+    ),
     path(
         "schedule/overrides/",
         ScheduleOverrideView.as_view(),

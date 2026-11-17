@@ -10,3 +10,4 @@ class BookingSerializer(serializers.Serializer):
     end_time = serializers.TimeField()
     frequency = serializers.CharField()
     end_recur = serializers.DateField(allow_null=True)
+    status = serializers.CharField()

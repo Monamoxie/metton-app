@@ -29,6 +29,18 @@ class EventTypes(Enum):
             raise ValueError(f"No member with value {value}")
 
 
+class BookingStatus(Enum):
+    """Only CONFIRMED bookings block a slot; PENDING ones wait for the host's decision."""
+
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    DECLINED = "declined"
+
+    @classmethod
+    def options(cls):
+        return [(status.value, status.name.title()) for status in cls]
+
+
 class RecurrenceTypes(Enum):
     NO_REPEAT = "no"
     EVERY_SUNDAY = "0"

@@ -10,3 +10,4 @@ class ScheduleBookingRulesSerializer(serializers.Serializer):
         required=False, allow_null=True, min_value=1
     )
     allow_multiple_per_slot = serializers.BooleanField(required=False)
+    requires_approval = serializers.BooleanField(required=False)

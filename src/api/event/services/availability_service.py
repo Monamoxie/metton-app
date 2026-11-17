@@ -5,7 +5,7 @@ from typing import List, Optional
 import pytz
 from django.db.models import Q, QuerySet
 
-from event.enums import EventTypes
+from event.enums import BookingStatus, EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
 from event.services.booking_occurrence_service import BookingOccurrenceService
 from identity.models.user import User
@@ -136,10 +136,18 @@ class AvailabilityService:
         return False
 
     @staticmethod
-    def public_bookings_in_range(user: User, start_date, end_date) -> QuerySet:
+    def public_bookings_in_range(
+        user: User, start_date, end_date, include_pending: bool = False
+    ) -> QuerySet:
         """The user's PUBLIC bookings with an occurrence that may start within [start_date,
         end_date] - one-offs starting in range, plus repeating bookings that started before
-        it but are still running. Expand with BookingOccurrenceService for exact dates."""
+        it but are still running. Expand with BookingOccurrenceService for exact dates.
+        Declined bookings are never returned; pending ones only when asked, since they
+        don't block a slot until the host accepts them."""
+        statuses = [BookingStatus.CONFIRMED.value]
+        if include_pending:
+            statuses.append(BookingStatus.PENDING.value)
+
         return Event.objects.filter(
             Q(start_date__range=(start_date, end_date))
             | (
@@ -148,6 +156,7 @@ class AvailabilityService:
             ),
             user=user,
             type=EventTypes.PUBLIC.value,
+            status__in=statuses,
         )
 
     @classmethod

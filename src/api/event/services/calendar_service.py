@@ -28,7 +28,7 @@ class CalendarService:
 
         occurrences = []
         for booking in AvailabilityService.public_bookings_in_range(
-            user, range_start, range_end
+            user, range_start, range_end, include_pending=True
         ):
             is_recurring = bool(BookingInviteService.recurring_days(booking))
             for occurrence in BookingOccurrenceService.occurrences_in_utc(
@@ -53,6 +53,7 @@ class CalendarService:
                         "note": booking.note,
                         "timezone": booking.timezone,
                         "is_recurring": is_recurring,
+                        "status": booking.status,
                     }
                 )
 

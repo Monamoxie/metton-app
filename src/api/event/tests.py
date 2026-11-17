@@ -12,7 +12,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from event.enums import EventTypes
+from event.enums import BookingStatus, EventTypes
 from event.models import Event, Schedule, ScheduleOverride, ScheduleWeeklyHours
 from core.services import EmailService, EventService
 from event.services import AvailabilityService, BookingInviteService, ScheduleService
@@ -1384,3 +1384,176 @@ class CalendarViewTests(APITestCase):
         self.client.force_authenticate(user=None)
 
         self.assertEqual(self._get().status_code, 401)
+
+
+@patch("dashboard.tasks.email_sender.delay")
+class BookingApprovalTests(APITestCase):
+    """requires_approval on the host's booking rules: bookings start PENDING and the host
+    accepts or declines them."""
+
+    def setUp(self):
+        self.host = User.objects.create_user(
+            email="host@example.com", password="password123", name="Host Person"
+        )
+        self.other_host = User.objects.create_user(
+            email="other@example.com", password="password123"
+        )
+        schedule = ScheduleService.get_or_create_default_for_user(self.host)
+        ScheduleService.update_booking_rules(schedule, requires_approval=True)
+
+    def _book(self, **overrides):
+        payload = {
+            "start_date": "2030-01-08",
+            "start_time": "10:00:00",
+            "end_date": "2030-01-08",
+            "end_time": "10:30:00",
+            "title": "Intro call",
+            "email": "guest@example.com",
+            "user_timezone": "UTC",
+            "repeat_type": "no",
+        }
+        payload.update(overrides)
+        with self.captureOnCommitCallbacks(execute=True):
+            return self.client.post(
+                f"/api/v1/event/{self.host.public_id}/book/",
+                data=json.dumps(payload),
+                content_type="application/json",
+            )
+
+    def _decide(self, booking, action, user=None):
+        self.client.force_authenticate(user=user or self.host)
+        with self.captureOnCommitCallbacks(execute=True):
+            return self.client.post(f"/api/v1/event/bookings/{booking.id}/{action}/")
+
+    def _pending(self):
+        self._book()
+        return Event.objects.get(user=self.host)
+
+    def test_booking_starts_pending_and_emails_a_request_not_a_confirmation(self, mock_delay):
+        response = self._book()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["data"]["booking"]["status"], "pending")
+        subjects = {call.args[1][0]: call.args[0] for call in mock_delay.call_args_list}
+        self.assertEqual(subjects["guest@example.com"], "Request received: Intro call")
+        self.assertEqual(subjects["host@example.com"], "Booking request: Intro call")
+        # No invite until it's accepted
+        for call in mock_delay.call_args_list:
+            self.assertEqual(len(call.args), 4)
+
+    def test_booking_is_confirmed_straight_away_without_the_rule(self, mock_delay):
+        ScheduleService.update_booking_rules(
+            ScheduleService.get_default_for_user(self.host), requires_approval=False
+        )
+
+        self._book()
+
+        self.assertEqual(Event.objects.get(user=self.host).status, "confirmed")
+
+    def test_pending_booking_does_not_block_the_slot(self, mock_delay):
+        self._book()
+
+        second = self._book(email="other-guest@example.com")
+
+        self.assertEqual(second.status_code, 201)
+
+    def test_accepting_confirms_and_sends_the_invite(self, mock_delay):
+        booking = self._pending()
+        mock_delay.reset_mock()
+
+        response = self._decide(booking, "accept")
+
+        self.assertEqual(response.status_code, 200)
+        booking.refresh_from_db()
+        self.assertEqual(booking.status, BookingStatus.CONFIRMED.value)
+        subjects = {call.args[1][0]: call.args[0] for call in mock_delay.call_args_list}
+        self.assertEqual(subjects["guest@example.com"], "Confirmed: Intro call")
+        for call in mock_delay.call_args_list:
+            self.assertEqual(len(call.args), 5)
+
+    def test_accepted_booking_blocks_the_slot(self, mock_delay):
+        booking = self._pending()
+        self._decide(booking, "accept")
+
+        self.client.force_authenticate(user=None)
+        response = self._book(email="late-guest@example.com")
+
+        self.assertEqual(response.status_code, 422)
+
+    def test_accepting_fails_if_the_slot_was_taken_meanwhile(self, mock_delay):
+        first = self._pending()
+        self._book(email="second@example.com")
+        second = Event.objects.get(attendees="second@example.com")
+        self._decide(first, "accept")
+
+        response = self._decide(second, "accept")
+
+        self.assertEqual(response.status_code, 422)
+        second.refresh_from_db()
+        self.assertEqual(second.status, BookingStatus.PENDING.value)
+
+    def test_declining_emails_the_guest_and_frees_the_calendar(self, mock_delay):
+        booking = self._pending()
+        mock_delay.reset_mock()
+
+        response = self._decide(booking, "decline")
+
+        self.assertEqual(response.status_code, 200)
+        booking.refresh_from_db()
+        self.assertEqual(booking.status, BookingStatus.DECLINED.value)
+        [call] = mock_delay.call_args_list
+        self.assertEqual(call.args[0], "Declined: Intro call")
+        self.assertEqual(call.args[1], ["guest@example.com"])
+
+        calendar = self.client.get(
+            "/api/v1/event/calendar/", {"start": "2030-01-07", "end": "2030-01-13"}
+        )
+        self.assertEqual(calendar.json()["data"]["bookings"], [])
+
+    def test_a_decided_booking_cannot_be_decided_again(self, mock_delay):
+        booking = self._pending()
+        self._decide(booking, "decline")
+
+        self.assertEqual(self._decide(booking, "accept").status_code, 409)
+        self.assertEqual(self._decide(booking, "decline").status_code, 409)
+
+    def test_only_the_host_can_decide(self, mock_delay):
+        booking = self._pending()
+
+        response = self._decide(booking, "accept", user=self.other_host)
+
+        self.assertEqual(response.status_code, 404)
+        booking.refresh_from_db()
+        self.assertEqual(booking.status, BookingStatus.PENDING.value)
+
+    def test_deciding_requires_login(self, mock_delay):
+        booking = self._pending()
+        self.client.force_authenticate(user=None)
+
+        response = self.client.post(f"/api/v1/event/bookings/{booking.id}/accept/")
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_calendar_shows_pending_bookings_with_their_status(self, mock_delay):
+        self._pending()
+        self.client.force_authenticate(user=self.host)
+
+        response = self.client.get(
+            "/api/v1/event/calendar/", {"start": "2030-01-07", "end": "2030-01-13"}
+        )
+
+        [booking] = response.json()["data"]["bookings"]
+        self.assertEqual(booking["status"], "pending")
+
+    def test_requires_approval_can_be_set_on_the_schedule(self, mock_delay):
+        self.client.force_authenticate(user=self.host)
+
+        response = self.client.patch(
+            "/api/v1/event/schedule/",
+            {"booking_rules": {"requires_approval": False}},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        rules = response.json()["data"]["schedule"]["booking_rules"]
+        self.assertFalse(rules["requires_approval"])
