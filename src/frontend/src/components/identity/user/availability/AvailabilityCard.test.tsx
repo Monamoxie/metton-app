@@ -32,6 +32,7 @@ const scheduleResponse = {
         buffer_after_minutes: 0,
         daily_booking_limit: null,
         allow_multiple_per_slot: false,
+        requires_approval: false,
       },
       created_at: "",
       updated_at: "",
@@ -121,6 +122,34 @@ describe("AvailabilityCard", () => {
         weekly_hours: [{ day_of_week: 1, start_time: "09:00:00", end_time: "17:00:00" }],
         booking_rules: scheduleResponse.data.schedule.booking_rules,
       });
+    });
+  });
+
+  it("saves the Require approval switch with the booking rules", async () => {
+    vi.mocked(ScheduleService.getSchedule).mockResolvedValue(scheduleResponse as any);
+    vi.mocked(ScheduleService.updateSchedule).mockResolvedValue({
+      code: 200,
+      message: "Updated",
+      errors: null,
+      data: null,
+    } as any);
+
+    render(<AvailabilityCard />);
+    await screen.findByText("Monday");
+
+    const approval = screen.getByRole("checkbox", { name: "Require approval" });
+    expect(approval).not.toBeChecked();
+
+    const user = userEvent.setup();
+    await user.click(approval);
+    await user.click(screen.getByRole("button", { name: /save changes/i }));
+
+    await waitFor(() => {
+      expect(ScheduleService.updateSchedule).toHaveBeenCalledWith(
+        expect.objectContaining({
+          booking_rules: expect.objectContaining({ requires_approval: true }),
+        })
+      );
     });
   });
 

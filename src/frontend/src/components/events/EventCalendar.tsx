@@ -47,6 +47,26 @@ export default function EventCalendar(props: EventCalendarProps) {
       return <Box className="event-closed-slots">{eventInfo.event.title}</Box>;
     }
 
+    // A booking still waiting for the host's decision: dashed outline instead of a fill
+    if (eventInfo.event.extendedProps.status === "pending") {
+      return (
+        <Tooltip title={`${eventInfo.event.title} (awaiting your approval)`}>
+          <Chip
+            label={eventInfo.event.title}
+            size="small"
+            variant="outlined"
+            sx={{
+              fontWeight: "bold",
+              bgcolor: "background.paper",
+              color: "text.primary",
+              border: "1px dashed",
+              borderColor: "text.secondary",
+            }}
+          />
+        </Tooltip>
+      );
+    }
+
     // Normal event
     return (
       <Tooltip title={eventInfo.event.title}>

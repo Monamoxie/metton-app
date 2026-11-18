@@ -105,3 +105,29 @@ export const isDateClosedOrBlocked = (
 
   return false;
 }
+
+// -- Host's decision on a pending booking --
+const decideBooking = async (
+  bookingId: string,
+  action: "accept" | "decline"
+): Promise<ApiResponse> => {
+  try {
+    const response = await axiosClient.post(
+      `/event/bookings/${bookingId}/${action}/`,
+      {},
+      { headers: Utils.getAuthApiHeader() }
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return Utils.ApiExceptionHandler(error.message);
+  }
+};
+
+export const acceptBooking = (bookingId: string) =>
+  decideBooking(bookingId, "accept");
+
+export const declineBooking = (bookingId: string) =>
+  decideBooking(bookingId, "decline");

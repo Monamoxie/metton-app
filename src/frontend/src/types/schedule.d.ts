@@ -18,6 +18,7 @@ export interface BookingRules {
   buffer_after_minutes: number;
   daily_booking_limit: number | null;
   allow_multiple_per_slot: boolean;
+  requires_approval: boolean;
 }
 
 export interface Schedule {

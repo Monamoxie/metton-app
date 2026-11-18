@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
-import { Alert, Box } from "@mui/material";
+import { Alert, Box, Popover } from "@mui/material";
 import dayjs from "dayjs";
 import { DatesSetArg, EventInput } from "@fullcalendar/core";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -12,6 +12,8 @@ import * as EventService from "@/services/event-service";
 import CalendarSlotMenu from "../CalendarSlotMenu";
 import EventManager from "./EventManager";
 import { CalendarBooking, CalendarData, SelectedSlot } from "@/types/event";
+import BookingRequestCard from "./BookingRequestCard";
+import BookingRequestsPanel, { uniquePendingBookings } from "./BookingRequestsPanel";
 
 // FullCalendar's range end is exclusive; the API takes inclusive local dates
 export function calendarRangeParams(range: { start: Date; end: Date }) {
@@ -33,6 +35,7 @@ export function toCalendarEvents(bookings: CalendarBooking[]): EventInput[] {
       note: booking.note,
       timezone: booking.timezone,
       isRecurring: booking.is_recurring,
+      status: booking.status,
     },
   }));
 }
@@ -56,11 +59,30 @@ export default function EventCard() {
     { start: string; end: string; reason: string }[]
   >([]);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [bookings, setBookings] = useState<CalendarBooking[]>([]);
+  const [busyBookingId, setBusyBookingId] = useState<string | null>(null);
+  const [decisionError, setDecisionError] = useState<string | null>(null);
+  const [pendingChip, setPendingChip] = useState<{
+    anchor: HTMLElement;
+    bookingId: string;
+  } | null>(null);
   // Ignores responses for a range the user has already navigated away from
   const latestRangeKey = useRef("");
+  const currentRange = useRef<{ start: string; end: string } | null>(null);
 
-  const handleDatesSet = async (range: DatesSetArg) => {
-    const { start, end } = calendarRangeParams(range);
+  // FullCalendar re-fires datesSet on re-renders, and every load re-renders: only fetch
+  // when the visible range actually changed
+  const handleDatesSet = (range: DatesSetArg) => {
+    const params = calendarRangeParams(range);
+    const current = currentRange.current;
+    if (current && current.start === params.start && current.end === params.end) {
+      return;
+    }
+    loadRange(params);
+  };
+
+  const loadRange = async ({ start, end }: { start: string; end: string }) => {
+    currentRange.current = { start, end };
     const rangeKey = `${start}_${end}`;
     latestRangeKey.current = rangeKey;
 
@@ -74,6 +96,7 @@ export default function EventCard() {
 
     const data = response.data as CalendarData;
     setLoadError(null);
+    setBookings(data.bookings);
     setEvents(toCalendarEvents(data.bookings));
     setClosedSlots(
       data.unavailable.map((day) => ({
@@ -82,6 +105,36 @@ export default function EventCard() {
         reason: "UNAVAILABLE",
       }))
     );
+  };
+
+  const pendingRequests = uniquePendingBookings(bookings);
+  const popoverBooking = pendingChip
+    ? pendingRequests.find((b) => b.booking_id === pendingChip.bookingId)
+    : undefined;
+
+  const decide = async (
+    booking: CalendarBooking,
+    action: "accept" | "decline"
+  ) => {
+    setBusyBookingId(booking.booking_id);
+    setDecisionError(null);
+    try {
+      const response =
+        action === "accept"
+          ? await EventService.acceptBooking(booking.booking_id)
+          : await EventService.declineBooking(booking.booking_id);
+
+      if (response.code !== 200) {
+        setDecisionError(
+          response.message || `Unable to ${action} this booking.`
+        );
+      }
+      setPendingChip(null);
+      // Reload either way: a failed decision usually means the booking changed under us
+      if (currentRange.current) await loadRange(currentRange.current);
+    } finally {
+      setBusyBookingId(null);
+    }
   };
 
   const backgroundEvents = closedSlots.map((slot, idx) => ({
@@ -120,6 +173,14 @@ export default function EventCard() {
   const handleEventClick = (info: any) => {
     if (info.event.display === "background") {
       info.jsEvent.preventDefault();
+      return;
+    }
+
+    if (info.event.extendedProps.status === "pending") {
+      setPendingChip({
+        anchor: info.jsEvent.target,
+        bookingId: info.event.extendedProps.bookingId,
+      });
       return;
     }
 
@@ -171,17 +232,52 @@ export default function EventCard() {
         </Alert>
       )}
 
-      <EventCalendar
-        calendarRef={calendarRef}
-        isMobile={isMobile}
-        events={allEvents}
-        showPast={showPast}
-        showFuture={showFuture}
-        handleDateSelect={handleDateSelect}
-        handleEventClick={handleEventClick}
-        handleDatesSet={handleDatesSet}
-        isSlotClosed={(slot) => EventService.isSlotClosed(slot, closedSlots)}
-      />
+      <Box
+        sx={{
+          display: "grid",
+          gap: 2,
+          gridTemplateColumns: { xs: "1fr", lg: "1fr 320px" },
+        }}
+      >
+        <EventCalendar
+          calendarRef={calendarRef}
+          isMobile={isMobile}
+          events={allEvents}
+          showPast={showPast}
+          showFuture={showFuture}
+          handleDateSelect={handleDateSelect}
+          handleEventClick={handleEventClick}
+          handleDatesSet={handleDatesSet}
+          isSlotClosed={(slot) => EventService.isSlotClosed(slot, closedSlots)}
+        />
+
+        <BookingRequestsPanel
+          requests={pendingRequests}
+          busyBookingId={busyBookingId}
+          highlightedBookingId={pendingChip?.bookingId ?? null}
+          error={decisionError}
+          onAccept={(booking) => decide(booking, "accept")}
+          onDecline={(booking) => decide(booking, "decline")}
+        />
+      </Box>
+
+      <Popover
+        open={Boolean(popoverBooking)}
+        anchorEl={pendingChip?.anchor}
+        onClose={() => setPendingChip(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        {popoverBooking && (
+          <Box sx={{ width: 300, p: 1.5 }}>
+            <BookingRequestCard
+              booking={popoverBooking}
+              busy={busyBookingId === popoverBooking.booking_id}
+              onAccept={(booking) => decide(booking, "accept")}
+              onDecline={(booking) => decide(booking, "decline")}
+            />
+          </Box>
+        )}
+      </Popover>
 
       {/* todo::: rename to CalendarMenu ???  */}
       <CalendarSlotMenu

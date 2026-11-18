@@ -7,6 +7,8 @@ export interface SelectedSlot {
 }
 
 // One occurrence of a booking; repeating bookings share booking_id
+export type BookingStatus = "pending" | "confirmed" | "declined";
+
 export interface CalendarBooking {
   id: string;
   booking_id: string;
@@ -17,6 +19,7 @@ export interface CalendarBooking {
   note: string;
   timezone: string;
   is_recurring: boolean;
+  status: BookingStatus;
 }
 
 export interface CalendarUnavailableDay {

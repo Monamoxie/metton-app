@@ -53,6 +53,7 @@ const DEFAULT_RULES: BookingRules = {
   buffer_after_minutes: 0,
   daily_booking_limit: null,
   allow_multiple_per_slot: false,
+  requires_approval: false,
 };
 
 type DayRange = { start_time: string; end_time: string };
@@ -482,11 +483,22 @@ export default function AvailabilityCard() {
           <SettingsRow
             label="Multiple bookings per slot"
             description="Allow more than one client to book the exact same time slot."
-            last
           >
             <Switch
               checked={rules.allow_multiple_per_slot}
               onChange={(e) => setRules({ ...rules, allow_multiple_per_slot: e.target.checked })}
+            />
+          </SettingsRow>
+
+          <SettingsRow
+            label="Require approval"
+            description="New bookings wait for you to accept or decline them. Guests are emailed either way, and the calendar invite is only sent once you accept. A requested time stays open to other guests until then."
+            last
+          >
+            <Switch
+              checked={rules.requires_approval}
+              onChange={(e) => setRules({ ...rules, requires_approval: e.target.checked })}
+              slotProps={{ input: { "aria-label": "Require approval" } }}
             />
           </SettingsRow>
         </Card>
